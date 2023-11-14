@@ -11,17 +11,18 @@ export const theme = createTheme({
         light: '#396781',
       },
       secondary: {
-        main: '#FFFFFF'
-      },
-      tertiary: {
-        main: "#FFFFFF"
+        main: '#E3ECF1',
+        dark: '#DBF7FF'
       },
       warning: {
         main: '#FF6347'
       },
       greys: {
-        main: '#666666',
-        dark: '#333333'
+        main: '#C6D0D6',
+        dark: '#B3B3B3'
+      },
+      links: {
+        main:  '#B8EFFF'
       }
     },
   })
