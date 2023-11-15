@@ -7,8 +7,8 @@ import Button from '../Components/Buttons';
 
 function AdminProfile() {
     return (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width:"100vw", height:"100vh" }}>
-            <Paper sx={{boxShadow:3, maxWidth: "460px", width: "60%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
+        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100vw", height: "100vh" }}>
+            <Paper sx={{ boxShadow: 3, maxWidth: "460px", width: "60%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
                 <Box sx={{ width: "100%", height: "fit-content", display: "flex", flexDirection: "column", gap: "30px", justifyContent: "center", alignItems: "center" }}>
                     <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                         <SectionSubHeading>
