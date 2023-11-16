@@ -13,7 +13,7 @@ function AdminManagement() {
     }
     return (
         <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", height: "100vh"}}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: "100%", height:"50vh", marginLeft: "auto", marginRight: "auto"}}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: {lg:"50%", xs: "100%"}, height:"50vh", marginLeft: "auto", marginRight: "auto"}}>
                 <Box sx={{ maxWidth: "240px", alignSelf: "flex-start" }}>
                     <Button text={"Add New Admin"} buttonFunction={handleToggleForm} isIconButton={true} toggle={isShowForm ? "up" : "down"} />
                 </Box>
