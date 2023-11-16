@@ -8,6 +8,8 @@ function AdminManagement() {
     const [fullName, setFullName] = useState("")
     const [email, setEmail] = useState("")
     const [phoneNumber, setPhoneNumber] = useState("")
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     const [validations, setValidations] = useState({
         fullName: {
             errorStatus: "",
@@ -45,7 +47,12 @@ function AdminManagement() {
             setValidations(prev => {
                 return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
-        }else{
+        }else if (!emailRegex.test(email)) {
+            setValidations(prev => {
+              return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[2] } };
+            });
+          }
+        else{
             setValidations(prev => {
                 return { ...prev, email: { errorStatus: "", errorMessage: "" } }
             }) 

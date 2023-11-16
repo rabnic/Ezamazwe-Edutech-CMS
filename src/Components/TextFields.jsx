@@ -6,13 +6,13 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 export default function TextFields({ label, type = "text", errorStatus, errorMessage, state, setState }) {
 
     return (
-        <>
             <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
                 <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
                 <OutlinedInput value={state} type={type} required placeholder="Enter" variant="outlined" sx={{
                     width: "100%", height: "50px", fontSize: "16px", borderRadius: "10px",
                     "& .MuiOutlinedInput-notchedOutline": {
                         borderColor: "primary.light",
+                        borderWidth: 2
                     },
                     "&:hover > .MuiOutlinedInput-notchedOutline": {
                         borderColor: "primary.main"
@@ -22,7 +22,6 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
                     <InputLabel sx={{ color: "warning.main", fontSize: "12px", marginTop: "10px", marginLeft: "5px" }}>{errorMessage}</InputLabel>
                     : null}
             </Box>
-        </>
     )
 }
 
@@ -55,6 +54,8 @@ export const TextFieldPassword = ({ label, errorStatus, errorMessage, setState, 
                 placeholder={`${label}`} variant="outlined" sx={{
                     width: "100%", height: "50px", fontSize: "16px", borderRadius: "10px", borderColor: "primary.light", "& .MuiOutlinedInput-notchedOutline": {
                         borderColor: "primary.light",
+                        borderWidth: 2
+
                     },
                     "&:hover > .MuiOutlinedInput-notchedOutline": {
                         borderColor: "primary.main"
@@ -67,7 +68,7 @@ export const TextFieldPassword = ({ label, errorStatus, errorMessage, setState, 
             }
             {
                 isForgot &&
-                <Link style={{ width: "100%", textAlign: "right", cursor: "pointer", fontSize: "16px", fontWeight: "400" }}>
+                <Link style={{ width: "100%", textAlign: "right", cursor: "pointer", fontSize: "16px", fontWeight: "400",marginTop: "10px" }}>
                     Forgot Your password?
                 </Link>
             }

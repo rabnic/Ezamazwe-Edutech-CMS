@@ -7,32 +7,40 @@ import Button from '../Components/Buttons';
 
 
 const ResetPassword = () => {
-    const [email, setEmail] = useState("")
-    const [validations, setValidations] = useState({
-        email: {
-            errorStatus: "",
-            errorMessage: ""
-        },
+  const [email, setEmail] = useState("")
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    })
+  const [validations, setValidations] = useState({
+    email: {
+      errorStatus: "",
+      errorMessage: ""
+    },
 
-    const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email"]
+  })
 
-    const handleReset = () => {
-        validateInput()
+  const warningMessages = ["* Input is required", "* Incorrect email", "* Invalid email"]
 
+  const handleReset = () => {
+    validateInput()
+
+  }
+  const validateInput = () => {
+    if (email === "") {
+      setValidations(prev => {
+        return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[0] } }
+      })
+
+    }else if (!emailRegex.test(email)) {
+      setValidations(prev => {
+        return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[2] } };
+      });
     }
-    const validateInput = () => {
-        if (email === "") {
-            setValidations(prev => {
-                return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[0] } }
-            })
-        }else{
-            setValidations(prev => {
-                return { ...prev, email: { errorStatus: "", errorMessage: "" } }
-            }) 
-        }
+     else {
+      setValidations(prev => {
+        return { ...prev, email: { errorStatus: "", errorMessage: "" } }
+      })
     }
+  }
 
 
 
@@ -57,13 +65,13 @@ const ResetPassword = () => {
                 Login to your account
               </SectionSubHeading>
             </Box>
-            <TextFields label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email}/>
+            <TextFields label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
 
-            <Typography sx={{color:"primary.main", lineHeight:"24px"}}>
-            You will receive a reset password link in your email  if provided email is recognized
+            <Typography sx={{ color: "primary.main", lineHeight: "24px" }}>
+              You will receive a reset password link in your email  if provided email is recognized
             </Typography>
             <Box sx={{ marginTop: "30px" }}>
-              <Button text={"Reset"} buttonFunction={() => {handleReset()}} />
+              <Button text={"Reset"} buttonFunction={() => { handleReset() }} />
             </Box>
           </Box>
         </Paper>

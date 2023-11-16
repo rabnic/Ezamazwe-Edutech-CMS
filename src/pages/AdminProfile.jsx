@@ -9,6 +9,9 @@ function AdminProfile() {
     const [email, setEmail] = useState("")
     const [password, setPassWord] = useState("")
     const [confirmPassword, setConfirmPassWord] = useState("")
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const [passwordMatch, setPasswordMatch] = useState(true);
+
     const [validations, setValidations] = useState({
         email: {
             errorStatus: "",
@@ -27,7 +30,7 @@ function AdminProfile() {
 
     })
 
-    const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email"]
+    const warningMessages = ["* Input is required", "* Incorrect email or password", "* Password doesn't match", "* Password is not strong"]
 
     const handleProfile = () => {
         validateInput()
@@ -47,7 +50,12 @@ function AdminProfile() {
             setValidations(prev => {
                 return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
-        } else {
+        } else if (!passwordRegex.test(password)) {
+            setValidations(prev => {
+                return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[3] } };
+            });
+        }
+        else {
             setValidations(prev => {
                 return { ...prev, password: { errorStatus: "", errorMessage: "" } }
             })
@@ -57,7 +65,12 @@ function AdminProfile() {
             setValidations(prev => {
                 return { ...prev, confirmPassword: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
-        } else {
+        } else if (confirmPassword !== password) {
+            setValidations(prev => {
+                return { ...prev, confirmPassword: { errorStatus: "yes", errorMessage: warningMessages[2] } };
+            });
+        }
+        else {
             setValidations(prev => {
                 return { ...prev, confirmPassword: { errorStatus: "", errorMessage: "" } }
             })
@@ -72,9 +85,9 @@ function AdminProfile() {
                             Change Your Password
                         </SectionSubHeading>
                     </Box>
-                    <TextFieldPassword isForgot={false} label={"Old Password"} errorStatus={validations.email.errorMessage} errorMessage={validations.email.errorMessage} setState={setEmail} state={email}/>
-                    <TextFieldPassword isForgot={false} label={"New Password"} errorStatus={validations.password.errorMessage} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password}/>
-                    <TextFieldPassword isForgot={false} label={"Confirm Password"} errorStatus={validations.confirmPassword.errorMessage} errorMessage={validations.confirmPassword.errorMessage} setState={setConfirmPassWord} state={confirmPassword}/>
+                    <TextFieldPassword isForgot={false} label={"Old Password"} errorStatus={validations.email.errorMessage} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
+                    <TextFieldPassword isForgot={false} label={"New Password"} errorStatus={validations.password.errorMessage} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password} />
+                    <TextFieldPassword isForgot={false} label={"Confirm Password"} errorStatus={validations.confirmPassword.errorMessage} errorMessage={validations.confirmPassword.errorMessage} setState={setConfirmPassWord} state={confirmPassword} />
                     <Box sx={{ marginTop: "30px" }}>
                         <Button text={"Save"} buttonFunction={() => handleProfile()} />
                     </Box>

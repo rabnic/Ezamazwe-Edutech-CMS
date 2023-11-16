@@ -6,11 +6,13 @@ import SectionHeading from '../Components/SectionHeading'
 import SectionSubHeading from '../Components/SectionSubHeading'
 import TextFields, { TextFieldPassword } from '../Components/TextFields';
 import Button from '../Components/Buttons';
-// import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 export default function SignIn() {
   const [email, setEmail] = useState("")
   const [password, setPassWord] = useState("")
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
   const [validations, setValidations] = useState({
     email: {
       errorStatus: "",
@@ -24,7 +26,7 @@ export default function SignIn() {
 
   })
 
-  const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email"]
+  const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email", "* Password is not strong"]
 
   const handleSignIn = () => {
     validateInput()
@@ -33,23 +35,34 @@ export default function SignIn() {
   const validateInput = () => {
     if (email === "") {
       setValidations(prev => {
-        return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[0] } }
-      })
+        return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[0] } };
+      });
+    } else if (!emailRegex.test(email)) {
+      setValidations(prev => {
+        return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[2] } };
+      });
     } else {
       setValidations(prev => {
-        return { ...prev, email: { errorStatus: "", errorMessage: "" } }
-      })
+        return { ...prev, email: { errorStatus: "", errorMessage: "" } };
+      });
     }
+  
     if (password === "") {
       setValidations(prev => {
-        return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[0] } }
-      })
-    } else {
+        return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[0] } };
+      });
+    } else if (!passwordRegex.test(password)) {
       setValidations(prev => {
-        return { ...prev, password: { errorStatus: "", errorMessage: "" } }
-      })
+        return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[3] } };
+      });
     }
-  }
+    
+    else {
+      setValidations(prev => {
+        return { ...prev, password: { errorStatus: "", errorMessage: "" } };
+      });
+    }
+  };
 
   const isMobile = useMediaQuery('(max-width:768px)')
 
