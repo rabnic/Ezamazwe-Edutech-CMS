@@ -1,11 +1,68 @@
 import { Box, Paper } from '@mui/material'
-import React from 'react'
+import React, { useState } from 'react'
 import { TextFieldPassword } from '../Components/TextFields'
 import SectionSubHeading from '../Components/SectionSubHeading'
 import Button from '../Components/Buttons';
 
 
 function AdminProfile() {
+    const [email, setEmail] = useState("")
+    const [password, setPassWord] = useState("")
+    const [confirmPassword, setConfirmPassWord] = useState("")
+    const [validations, setValidations] = useState({
+        email: {
+            errorStatus: "",
+            errorMessage: ""
+        },
+
+        password: {
+            errorStatus: "",
+            errorMessage: ""
+        },
+
+        confirmPassword: {
+            errorStatus: "",
+            errorMessage: ""
+        },
+
+    })
+
+    const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email"]
+
+    const handleProfile = () => {
+        validateInput()
+
+    }
+    const validateInput = () => {
+        if (email === "") {
+            setValidations(prev => {
+                return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[0] } }
+            })
+        } else {
+            setValidations(prev => {
+                return { ...prev, email: { errorStatus: "", errorMessage: "" } }
+            })
+        }
+        if (password === "") {
+            setValidations(prev => {
+                return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[0] } }
+            })
+        } else {
+            setValidations(prev => {
+                return { ...prev, password: { errorStatus: "", errorMessage: "" } }
+            })
+        }
+
+        if (confirmPassword === "") {
+            setValidations(prev => {
+                return { ...prev, confirmPassword: { errorStatus: "yes", errorMessage: warningMessages[0] } }
+            })
+        } else {
+            setValidations(prev => {
+                return { ...prev, confirmPassword: { errorStatus: "", errorMessage: "" } }
+            })
+        }
+    }
     return (
         <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100vw", height: "100vh" }}>
             <Paper sx={{ boxShadow: 3, maxWidth: "460px", width: "60%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
@@ -15,11 +72,11 @@ function AdminProfile() {
                             Change Your Password
                         </SectionSubHeading>
                     </Box>
-                    <TextFieldPassword isForgot={false} label={"Old Password"} errorStatus={"yes"} errorMessage={"* Input is required"} setState={() => { }} />
-                    <TextFieldPassword isForgot={false} label={"New Password"} errorStatus={"yes"} errorMessage={"* Input is required"} setState={() => { }} />
-                    <TextFieldPassword isForgot={false} label={"Confirm Password"} errorStatus={"yes"} errorMessage={"* Input is required"} setState={() => { }} />
+                    <TextFieldPassword isForgot={false} label={"Old Password"} errorStatus={validations.email.errorMessage} errorMessage={validations.email.errorMessage} setState={setEmail} state={email}/>
+                    <TextFieldPassword isForgot={false} label={"New Password"} errorStatus={validations.password.errorMessage} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password}/>
+                    <TextFieldPassword isForgot={false} label={"Confirm Password"} errorStatus={validations.confirmPassword.errorMessage} errorMessage={validations.confirmPassword.errorMessage} setState={setConfirmPassWord} state={confirmPassword}/>
                     <Box sx={{ marginTop: "30px" }}>
-                        <Button text={"Save"} buttonFunction={() => { }} />
+                        <Button text={"Save"} buttonFunction={() => handleProfile()} />
                     </Box>
                 </Box>
             </Paper>
