@@ -5,6 +5,8 @@ import TextFields from '../Components/TextFields';
 import PageHeading from '../Components/PageHeading';
 import PageSubHeading from '../Components/PageSubHeading';
 import PageHeadingContainer from '../Components/PageHeadingContainer';
+import PhoneNumber, { parsePhoneNumberFromString } from 'libphonenumber-js';
+
 
 function AdminManagement() {
     const [isShowForm, setIsShowForm] = useState(false)
@@ -12,6 +14,9 @@ function AdminManagement() {
     const [email, setEmail] = useState("")
     const [phoneNumber, setPhoneNumber] = useState("")
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    // const phoneNumberRegex = /^(\+27|0)[1-9]\d{8}$/;
+
+
 
     const [validations, setValidations] = useState({
         fullName: {
@@ -31,12 +36,24 @@ function AdminManagement() {
 
     })
 
-    const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email"]
+    const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email", "* Please enter a 10-digit number starting with +27."]
+
+    // Invalid phone number. Please enter a 10-digit number starting with +27.
 
     const handleAdmin = () => {
         validateInput()
 
     }
+
+
+    const countryCode = "+27"
+    const validatePhoneNumber = (phoneNumber, countryCode) => {
+        const parsedNumber = parsePhoneNumberFromString(phoneNumber, countryCode);
+        return parsedNumber ? parsedNumber.isValid() : false;
+    };
+
+
+
     const validateInput = () => {
         if (fullName === "") {
             setValidations(prev => {
@@ -46,7 +63,9 @@ function AdminManagement() {
             setValidations(prev => {
                 return { ...prev, fullName: { errorStatus: "", errorMessage: "" } }
             })
-        } if (email === "") {
+        }
+
+        if (email === "") {
             setValidations(prev => {
                 return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
@@ -54,15 +73,19 @@ function AdminManagement() {
             setValidations(prev => {
                 return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[2] } };
             });
-        }
-        else {
+        } else {
             setValidations(prev => {
                 return { ...prev, email: { errorStatus: "", errorMessage: "" } }
             })
         }
+
         if (phoneNumber === "") {
             setValidations(prev => {
                 return { ...prev, phoneNumber: { errorStatus: "yes", errorMessage: warningMessages[0] } }
+            })
+        } else if (!validatePhoneNumber(phoneNumber, countryCode)) {
+            setValidations(prev => {
+                return { ...prev, phoneNumber: { errorStatus: "yes", errorMessage: <span className="error-message">{warningMessages[3]}</span> } }
             })
         } else {
             setValidations(prev => {
@@ -70,6 +93,7 @@ function AdminManagement() {
             })
         }
     }
+
 
     const handleToggleForm = () => {
         console.log(isShowForm)

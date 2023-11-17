@@ -37,14 +37,12 @@ function App() {
       <Box sx={{ width: "270px", height: "100vh" }}>
         <SideNavigation />
       </Box>
-
       <Box sx={{ width: "100%", display: "flex", flex: "2", flexDirection: "column", padding: "15px", paddingTop: "0px" }} >
         <Box sx={{ width: "100%", height: "100px", display: "flex", flexDirection: "row" }}>
           <TopAppBar />
         </Box>
         <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", paddingTop: "15px" }} style={{ overflow: 'scroll' }}>
           <Routes>
-            <Route index element={<SignIn />} />
             <Route path="Home" element={<Home />} />
             <Route path="Courses" element={<Courses />} />
             <Route path="AddNewCourse" element={<AddNewCourse />} />
@@ -57,7 +55,6 @@ function App() {
         </Box>
       </Box>
     </Box>
-
   );
 }
 
