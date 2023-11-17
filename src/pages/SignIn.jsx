@@ -1,6 +1,4 @@
-
-import { Visibility, VisibilityOff } from '@mui/icons-material';
-import { Box, Container, Grid, IconButton, InputAdornment, Paper, TextField, Typography, useMediaQuery } from '@mui/material'
+import { Box, Paper, useMediaQuery } from '@mui/material'
 import React, { useState } from 'react'
 import SectionHeading from '../Components/SectionHeading'
 import SectionSubHeading from '../Components/SectionSubHeading'
@@ -75,7 +73,7 @@ export default function SignIn() {
     <Box width={"100%"} height={"100vh"} sx={{ display: "flex" }}>
       {!isMobile && (
         <Box bgcolor={"#fff"} sx={{ width: "35%", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <img src={require("../assets/Logo.jpg")} width={"80%"} />
+          <img src={require("../assets/Logo.jpg")} width={"80%"} alt="Ezamazwe Logo"/>
         </Box>
       )}
 
