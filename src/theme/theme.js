@@ -23,6 +23,9 @@ export const theme = createTheme({
       },
       links: {
         main:  '#B8EFFF'
+      },
+      white: {
+        main: "#FFFFFF",
       }
     },
   })
