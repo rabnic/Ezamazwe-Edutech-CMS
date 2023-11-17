@@ -44,30 +44,30 @@ const ResetPassword = () => {
 
 
 
-  const isMobile = useMediaQuery('(max-width:768px)')
+  const isMobile = useMediaQuery('(max-width:1000px)')
 
   return (
     <Box width={"100%"} height={"100vh"} sx={{ display: "flex" }}>
       {!isMobile && (
         <Box bgcolor={"#fff"} sx={{ width: "35%", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <img src={require("../assets/Logo.jpg")} width={"80%"} />
+          <img src={require("../assets/Logo.jpg")} width={"80%"} alt="Ezamazwe Logo"/>
         </Box>
       )}
 
       <Box bgcolor={"#1C3F53"} sx={{ width: { sm: "100%", lg: "65%" }, height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Paper sx={{ maxWidth: "460px", width: "60%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
+        <Paper sx={{ maxWidth: "500px", width: "60%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
           <Box sx={{ width: "100%", height: "fit-content", display: "flex", flexDirection: "column", gap: "30px", justifyContent: "center", alignItems: "center" }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               <SectionHeading>
                 EZAMAZWE EDUTECH
               </SectionHeading>
               <SectionSubHeading>
-                Login to your account
+                Reset your password
               </SectionSubHeading>
             </Box>
             <TextFields label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
 
-            <Typography sx={{ color: "primary.main", lineHeight: "24px" }}>
+            <Typography sx={{ color: "primary.main", lineHeight: "24px", textAlign:"center" }}>
               You will receive a reset password link in your email  if provided email is recognized
             </Typography>
             <Box sx={{ marginTop: "30px" }}>
@@ -77,7 +77,6 @@ const ResetPassword = () => {
         </Paper>
       </Box>
     </Box>
-
   )
 }
 

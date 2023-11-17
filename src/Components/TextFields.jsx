@@ -3,6 +3,9 @@ import { Box, IconButton, InputAdornment, Link, OutlinedInput, Typography } from
 import { useState } from 'react';
 import { Visibility, VisibilityOff } from '@mui/icons-material';
 
+import { useNavigate } from 'react-router-dom';
+
+
 export default function TextFields({ label, type = "text", errorStatus, errorMessage, state, setState }) {
 
     return (
@@ -27,6 +30,8 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
 
 
 export const TextFieldPassword = ({ label, errorStatus, errorMessage, setState, isForgot = true }) => {
+  const navigate = useNavigate()
+
 
 
     const [showPassword, setShowPassword] = useState(false);
@@ -68,7 +73,7 @@ export const TextFieldPassword = ({ label, errorStatus, errorMessage, setState, 
             }
             {
                 isForgot &&
-                <Link style={{ width: "100%", textAlign: "right", cursor: "pointer", fontSize: "16px", fontWeight: "400",marginTop: "10px" }}>
+                <Link href="ResetPassword" style={{ width: "100%", textAlign: "right", cursor: "pointer", fontSize: "16px", fontWeight: "400",marginTop: "10px" }}>
                     Forgot Your password?
                 </Link>
             }

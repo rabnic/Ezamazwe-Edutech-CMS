@@ -3,6 +3,9 @@ import React, { useState } from 'react'
 import { TextFieldPassword } from '../Components/TextFields'
 import SectionSubHeading from '../Components/SectionSubHeading'
 import Button from '../Components/Buttons';
+import PageHeading from '../Components/PageHeading';
+import PageSubHeading from '../Components/PageSubHeading';
+import PageHeadingContainer from '../Components/PageHeadingContainer';
 
 
 function AdminProfile() {
@@ -77,23 +80,52 @@ function AdminProfile() {
         }
     }
     return (
-        <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-            <Paper sx={{ boxShadow: 3, maxWidth: "460px", width: "60%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
-                <Box sx={{ width: "100%", height: "fit-content", display: "flex", flexDirection: "column", gap: "30px", justifyContent: "center", alignItems: "center" }}>
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                        <SectionSubHeading>
-                            Change Your Password
-                        </SectionSubHeading>
-                    </Box>
-                    <TextFieldPassword isForgot={false} label={"Old Password"} errorStatus={validations.email.errorMessage} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
-                    <TextFieldPassword isForgot={false} label={"New Password"} errorStatus={validations.password.errorMessage} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password} />
-                    <TextFieldPassword isForgot={false} label={"Confirm Password"} errorStatus={validations.confirmPassword.errorMessage} errorMessage={validations.confirmPassword.errorMessage} setState={setConfirmPassWord} state={confirmPassword} />
-                    <Box sx={{ marginTop: "30px" }}>
-                        <Button text={"Save"} buttonFunction={() => handleProfile()} />
-                    </Box>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px" }}>
+            <PageHeadingContainer 
+                heading="Admin Profile"
+                subHeading="Some sub heading for this page"
+            />
+            
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: "100%", height: "100%", marginLeft: "auto", marginRight: "auto" }}>
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                    <Paper sx={{ boxShadow: 3, maxWidth: "460px", width: "60%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
+                        <Box sx={{ width: "100%", height: "fit-content", display: "flex", flexDirection: "column", gap: "30px", justifyContent: "center", alignItems: "center" }}>
+                            <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                                <SectionSubHeading>
+                                    Change Your Password
+                                </SectionSubHeading>
+                            </Box>
+                            <TextFieldPassword isForgot={false} label={"Old Password"} errorStatus={validations.email.errorMessage} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
+                            <TextFieldPassword isForgot={false} label={"New Password"} errorStatus={validations.password.errorMessage} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password} />
+                            <TextFieldPassword isForgot={false} label={"Confirm Password"} errorStatus={validations.confirmPassword.errorMessage} errorMessage={validations.confirmPassword.errorMessage} setState={setConfirmPassWord} state={confirmPassword} />
+                            <Box sx={{ marginTop: "30px" }}>
+                                <Button text={"Save"} buttonFunction={() => handleProfile()} />
+                            </Box>
+                        </Box>
+                    </Paper>
                 </Box>
-            </Paper>
+                {/* */}
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                    <Paper sx={{ boxShadow: 3, maxWidth: "460px", width: "60%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
+                        <Box sx={{ width: "100%", height: "fit-content", display: "flex", flexDirection: "column", gap: "30px", justifyContent: "center", alignItems: "center" }}>
+                            <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                                <SectionSubHeading>
+                                    Change Your Password
+                                </SectionSubHeading>
+                            </Box>
+                            <TextFieldPassword isForgot={false} label={"Old Password"} errorStatus={validations.email.errorMessage} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
+                            <TextFieldPassword isForgot={false} label={"New Password"} errorStatus={validations.password.errorMessage} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password} />
+                            <TextFieldPassword isForgot={false} label={"Confirm Password"} errorStatus={validations.confirmPassword.errorMessage} errorMessage={validations.confirmPassword.errorMessage} setState={setConfirmPassWord} state={confirmPassword} />
+                            <Box sx={{ marginTop: "30px" }}>
+                                <Button text={"Save"} buttonFunction={() => handleProfile()} />
+                            </Box>
+                        </Box>
+                    </Paper>
+                </Box>
+            </Box>
+
         </Box>
+
     )
 }
 

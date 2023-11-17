@@ -4,6 +4,7 @@ import { Box } from '@mui/material';
 import TextFields from '../Components/TextFields';
 import PageHeading from '../Components/PageHeading';
 import PageSubHeading from '../Components/PageSubHeading';
+import PageHeadingContainer from '../Components/PageHeadingContainer';
 
 function AdminManagement() {
     const [isShowForm, setIsShowForm] = useState(false)
@@ -75,22 +76,21 @@ function AdminManagement() {
         setIsShowForm(!isShowForm)
     }
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", height: "100%" }}>
-            <Box sx={{display:"flex", flexDirection:"column", gap:"10px"}}>
-                <PageHeading>
-                    Admin Management
-                </PageHeading>
-                <PageSubHeading>
-                    Some sub heading for this page
-                </PageSubHeading>
-            </Box>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: "80%", height: "50vh", marginLeft: "auto", marginRight: "auto" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px"}}>
+            
+            <PageHeadingContainer 
+                heading="Admin Management"
+                subHeading="Some sub heading for this page"
+            />
+            
+            
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "50px", width: "100%", height: "100%", marginLeft: "auto", marginRight: "auto" }}>
                 <Box sx={{ maxWidth: "240px", alignSelf: "flex-start" }}>
                     <Button text={"Add New Admin"} buttonFunction={handleToggleForm} isIconButton={true} toggle={isShowForm ? "up" : "down"} />
                 </Box>
                 {
                     isShowForm &&
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", border: 2, borderColor: "greys.main", width: "fit-content", padding: "60px", borderRadius: "5px", alignItems: { xs: "center", md: "flex-start" } }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", border: 2, borderColor: "greys.main", width: "fit-content",margin: "0", padding: "60px", borderRadius: "5px", alignItems: { xs: "center", md: "flex-start" } }}>
                         <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: "10px", }}>
                             <TextFields label={"Full Name"} errorStatus={validations.fullName.errorStatus} errorMessage={validations.fullName.errorMessage} setState={setFullName} state={fullName} />
                             <TextFields label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
