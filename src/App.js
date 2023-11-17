@@ -10,6 +10,7 @@ import TutorApplications from './pages/TutorApplications';
 import Subscribers from './pages/Subscribers';
 import AdminManagement from './pages/AdminManagement';
 import AdminProfile from './pages/AdminProfile';
+import SignIn from './pages/SignIn'
 
 import { Route, Routes } from 'react-router-dom';
 
@@ -30,7 +31,7 @@ function App() {
         </Box>
         <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", border: "1px solid green" }}>
           <Routes>
-            <Route index element={<Home />} />
+            <Route index element={<SignIn />} />
             <Route path="Home" element={<Home />} />
             <Route path="Courses" element={<Courses />} />
             <Route path="AddNewCourse" element={<AddNewCourse />} />

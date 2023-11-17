@@ -2,6 +2,8 @@ import React, { useState } from 'react'
 import Button from '../Components/Buttons';
 import { Box } from '@mui/material';
 import TextFields from '../Components/TextFields';
+import PageHeading from '../Components/PageHeading';
+import PageSubHeading from '../Components/PageSubHeading';
 
 function AdminManagement() {
     const [isShowForm, setIsShowForm] = useState(false)
@@ -43,19 +45,19 @@ function AdminManagement() {
             setValidations(prev => {
                 return { ...prev, fullName: { errorStatus: "", errorMessage: "" } }
             })
-        }  if (email === "") {
+        } if (email === "") {
             setValidations(prev => {
                 return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
-        }else if (!emailRegex.test(email)) {
+        } else if (!emailRegex.test(email)) {
             setValidations(prev => {
-              return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[2] } };
+                return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[2] } };
             });
-          }
-        else{
+        }
+        else {
             setValidations(prev => {
                 return { ...prev, email: { errorStatus: "", errorMessage: "" } }
-            }) 
+            })
         }
         if (phoneNumber === "") {
             setValidations(prev => {
@@ -73,8 +75,16 @@ function AdminManagement() {
         setIsShowForm(!isShowForm)
     }
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", height: "100vh" }}>
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: { lg: "50%", xs: "100%" }, height: "50vh", marginLeft: "auto", marginRight: "auto" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", justifyContent: "center", width: "100%", height: "100%" }}>
+            <Box sx={{display:"flex", flexDirection:"column", gap:"10px"}}>
+                <PageHeading>
+                    Admin Management
+                </PageHeading>
+                <PageSubHeading>
+                    Some sub heading for this page
+                </PageSubHeading>
+            </Box>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: "80%", height: "50vh", marginLeft: "auto", marginRight: "auto" }}>
                 <Box sx={{ maxWidth: "240px", alignSelf: "flex-start" }}>
                     <Button text={"Add New Admin"} buttonFunction={handleToggleForm} isIconButton={true} toggle={isShowForm ? "up" : "down"} />
                 </Box>
@@ -82,14 +92,15 @@ function AdminManagement() {
                     isShowForm &&
                     <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", border: 2, borderColor: "greys.main", width: "fit-content", padding: "60px", borderRadius: "5px", alignItems: { xs: "center", md: "flex-start" } }}>
                         <Box sx={{ display: "flex", flexDirection: { xs: "column", md: "row" }, gap: "10px", }}>
-                            <TextFields label={"Full Name"} errorStatus={validations.fullName.errorStatus} errorMessage={validations.fullName.errorMessage} setState={setFullName}  state={fullName}/>
-                            <TextFields label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email}/>
-                            <TextFields label={"Phone Number"} errorStatus={validations.phoneNumber.errorStatus}errorMessage={validations.phoneNumber.errorMessage}setState={setPhoneNumber} state={phoneNumber}/>
+                            <TextFields label={"Full Name"} errorStatus={validations.fullName.errorStatus} errorMessage={validations.fullName.errorMessage} setState={setFullName} state={fullName} />
+                            <TextFields label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
+                            <TextFields label={"Phone Number"} errorStatus={validations.phoneNumber.errorStatus} errorMessage={validations.phoneNumber.errorMessage} setState={setPhoneNumber} state={phoneNumber} />
                         </Box>
-                        <Button text={"Save"} buttonFunction={() => {handleAdmin()}} />
+                        <Button text={"Save"} buttonFunction={() => { handleAdmin() }} />
                     </Box>
                 }
             </Box>
+
         </Box>
     )
 }

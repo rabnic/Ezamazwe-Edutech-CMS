@@ -7,7 +7,12 @@ import SectionSubHeading from '../Components/SectionSubHeading'
 import TextFields, { TextFieldPassword } from '../Components/TextFields';
 import Button from '../Components/Buttons';
 
+import { useNavigate } from 'react-router-dom';
+
+
 export default function SignIn() {
+  const navigate = useNavigate()
+
   const [email, setEmail] = useState("")
   const [password, setPassWord] = useState("")
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
