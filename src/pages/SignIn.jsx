@@ -6,13 +6,62 @@ import SectionHeading from '../Components/SectionHeading'
 import SectionSubHeading from '../Components/SectionSubHeading'
 import TextFields, { TextFieldPassword } from '../Components/TextFields';
 import Button from '../Components/Buttons';
-// import { Visibility, VisibilityOff } from '@material-ui/icons';
 
 export default function SignIn() {
-  const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState("")
+  const [password, setPassWord] = useState("")
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
-  const handleTogglePasswordVisibility = () => {
-    setShowPassword(!showPassword);
+  const [validations, setValidations] = useState({
+    email: {
+      errorStatus: "",
+      errorMessage: ""
+    },
+
+    password: {
+      errorStatus: "",
+      errorMessage: ""
+    },
+
+  })
+
+  const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email", "* Password is not strong"]
+
+  const handleSignIn = () => {
+    validateInput()
+
+  }
+  const validateInput = () => {
+    if (email === "") {
+      setValidations(prev => {
+        return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[0] } };
+      });
+    } else if (!emailRegex.test(email)) {
+      setValidations(prev => {
+        return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[2] } };
+      });
+    } else {
+      setValidations(prev => {
+        return { ...prev, email: { errorStatus: "", errorMessage: "" } };
+      });
+    }
+  
+    if (password === "") {
+      setValidations(prev => {
+        return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[0] } };
+      });
+    } else if (!passwordRegex.test(password)) {
+      setValidations(prev => {
+        return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[3] } };
+      });
+    }
+    
+    else {
+      setValidations(prev => {
+        return { ...prev, password: { errorStatus: "", errorMessage: "" } };
+      });
+    }
   };
 
   const isMobile = useMediaQuery('(max-width:768px)')
@@ -26,9 +75,9 @@ export default function SignIn() {
       )}
 
       <Box bgcolor={"#1C3F53"} sx={{ width: { sm: "100%", lg: "65%" }, height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Paper sx={{ maxWidth: "460px", width: "60%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft:"auto", marginRight:"auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
+        <Paper sx={{ maxWidth: "460px", width: "60%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
           <Box sx={{ width: "100%", height: "fit-content", display: "flex", flexDirection: "column", gap: "30px", justifyContent: "center", alignItems: "center" }}>
-            <Box sx={{display:"flex", flexDirection:"column",gap:"10px"}}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               <SectionHeading>
                 EZAMAZWE EDUTECH
               </SectionHeading>
@@ -36,10 +85,10 @@ export default function SignIn() {
                 Login to your account
               </SectionSubHeading>
             </Box>
-            <TextFields label={"Email"} errorStatus={"yes"} errorMessage={"* Input is required"} setState={() => { }} />
-            <TextFieldPassword label={"Password"} errorStatus={"yes"} errorMessage={"* Input is required"} setState={() => { }} />
-            <Box sx={{marginTop:"30px"}}>
-            <Button text={"Sign In"} buttonFunction={() => { }} />
+            <TextFields label={"Email"} errorStatus={validations.email.errorStatus} type="email" errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
+            <TextFieldPassword label={"Password"} errorStatus={validations.password.errorStatus} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password} />
+            <Box sx={{ marginTop: "30px" }}>
+              <Button text={"Sign In"} buttonFunction={() => { handleSignIn() }} />
             </Box>
           </Box>
         </Paper>
