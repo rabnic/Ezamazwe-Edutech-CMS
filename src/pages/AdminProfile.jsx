@@ -10,7 +10,6 @@ function AdminProfile() {
     const [password, setPassWord] = useState("")
     const [confirmPassword, setConfirmPassWord] = useState("")
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
-    const [passwordMatch, setPasswordMatch] = useState(true);
 
     const [validations, setValidations] = useState({
         email: {
@@ -30,7 +29,14 @@ function AdminProfile() {
 
     })
 
-    const warningMessages = ["* Input is required", "* Incorrect email or password", "* Password doesn't match", "* Password is not strong"]
+    const warningMessages = ["* Input is required", "* Incorrect email or password", "* Password doesn't match"]
+    const Passwordwarning = [
+        " At least one lowercase letter",
+        "At least one uppercase letter",
+        "At least one digit",
+        "At least one special character",
+        "Minimum length of 8 characters"
+    ]
 
     const handleProfile = () => {
         validateInput()
@@ -52,7 +58,7 @@ function AdminProfile() {
             })
         } else if (!passwordRegex.test(password)) {
             setValidations(prev => {
-                return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[3] } };
+                return { ...prev, password: { errorStatus: "yes", errorMessage: <ul>{Passwordwarning.map((item, index) => (<li key={index}>{item}</li>))}</ul> } };
             });
         }
         else {
@@ -67,7 +73,7 @@ function AdminProfile() {
             })
         } else if (confirmPassword !== password) {
             setValidations(prev => {
-                return { ...prev, confirmPassword: { errorStatus: "yes", errorMessage: warningMessages[2] } };
+                return { ...prev, confirmPassword: { errorStatus: "yes", errorMessage: Passwordwarning[2] } };
             });
         }
         else {
