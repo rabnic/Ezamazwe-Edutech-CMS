@@ -7,7 +7,7 @@ function MainContainerLayout({children}) {
   return (
     <Box sx={{ display: "flex", flexDirection: "row" }} style={{ maxHeight: '100vh', overflow: "hidden" }}>
 
-        <Box sx={{ width: "270px", height: "100vh" }}>
+        <Box sx={{ width: {lg:"270px", md:"270px" ,sm: "80px"}, height: "100vh"}}>
           <SideNavigation />
         </Box>
         <Box sx={{ width: "100%", display: "flex", flex: "2", flexDirection: "column", padding: "15px", paddingTop: "0px" }} >
