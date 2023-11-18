@@ -30,7 +30,7 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
 
 
 export const TextFieldPassword = ({ label, errorStatus, errorMessage, setState, isForgot = true }) => {
-  const navigate = useNavigate()
+    const navigate = useNavigate()
 
 
 
@@ -73,7 +73,7 @@ export const TextFieldPassword = ({ label, errorStatus, errorMessage, setState, 
             }
             {
                 isForgot &&
-                <Link href="ResetPassword" style={{ width: "100%", textAlign: "right", cursor: "pointer", fontSize: "16px", fontWeight: "400",marginTop: "10px" }}>
+                <Link href="reset-password" style={{ width: "100%", textAlign: "right", cursor: "pointer", fontSize: "16px", fontWeight: "400", marginTop: "10px" }}>
                     Forgot Your password?
                 </Link>
             }

@@ -1,7 +1,4 @@
 import './App.css';
-import { Box } from '@mui/material';
-import { useState } from 'react';
-import SideNavigation from './Components/navigation/SideNavigation';
 import Home from './pages/Home';
 import Courses from './pages/Courses';
 import AddNewCourse from './pages/AddNewCourse';
@@ -11,51 +8,40 @@ import Subscribers from './pages/Subscribers';
 import AdminManagement from './pages/AdminManagement';
 import AdminProfile from './pages/AdminProfile';
 import SignIn from './pages/SignIn';
-import ResetPassword from  './pages/ResetPassword';
-import TopAppBar from './Components/TopAppBar';
+import ResetPassword from './pages/ResetPassword';
+import { useAuthContext } from './context/authContext';
 
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import MainContainerLayout from './Components/layouts/MainContainerLayout';
+import ProtectedRoute from './routes/ProtectedRoute';
 
 function App() {
-  const [activeTab, setActiveTab] = useState("Home");
+  const { isAuthenticated, } = useAuthContext();
 
-  const handleNavigation = (tabName) => {
-    setActiveTab(tabName);
+  if (!isAuthenticated) {
+    return (
+      <Routes>
+        <Route path="/" element={<SignIn />} />
+        <Route path='/reset-password' element={<ResetPassword />} />
+        <Route path='*' element={<Navigate to="/" />} />
+      </Routes>
+    )
+  } else {
+    return (
+      <MainContainerLayout>
+        <Routes>
+          <Route path="/" element={<ProtectedRoute component={Home} />} />
+          <Route path="courses" element={<ProtectedRoute component={Courses} />} />
+          <Route path="add-new-course" element={<ProtectedRoute component={AddNewCourse} />} />
+          <Route path="tutors" element={<ProtectedRoute component={Tutors} />} />
+          <Route path="tutor-applications" element={<ProtectedRoute component={TutorApplications} />} />
+          <Route path="subscribers" element={<ProtectedRoute component={Subscribers} />} />
+          <Route path="admin-management" element={<ProtectedRoute component={AdminManagement} />} />
+          <Route path="admin-profile" element={<AdminProfile />} />
+        </Routes>
+      </MainContainerLayout>
+    );
   }
-
-  // return (
-  //   <Routes>
-  //     <Route index element={<SignIn />} />
-  //     <Route path='ResetPassword' element={<ResetPassword />} />
-
-  //   </Routes>
-  // )
-
-  return (
-    <Box sx={{ display: "flex", flexDirection: "row" }} style={{ maxHeight: '100vh', overflow: "hidden" }}>
-
-      <Box sx={{ width: "270px", height: "100vh" }}>
-        <SideNavigation />
-      </Box>
-      <Box sx={{ width: "100%", display: "flex", flex: "2", flexDirection: "column", padding: "15px", paddingTop: "0px" }} >
-        <Box sx={{ width: "100%", height: "100px", display: "flex", flexDirection: "row" }}>
-          <TopAppBar />
-        </Box>
-        <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", paddingTop: "15px" }} style={{ overflow: 'scroll' }}>
-          <Routes>
-            <Route path="Home" element={<Home />} />
-            <Route path="Courses" element={<Courses />} />
-            <Route path="AddNewCourse" element={<AddNewCourse />} />
-            <Route path="Tutors" element={<Tutors />} />
-            <Route path="TutorApplications" element={<TutorApplications />} />
-            <Route path="Subscribers" element={<Subscribers />} />
-            <Route path="AdminManagement" element={<AdminManagement />} />
-            <Route path="AdminProfile" element={<AdminProfile />} />
-          </Routes>
-        </Box>
-      </Box>
-    </Box>
-  );
 }
 
 export default App;

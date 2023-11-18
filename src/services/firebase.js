@@ -92,7 +92,7 @@ export const CreateNewUser = async (email, firstName, lastName, phoneNumber, rol
   }
 }
 
-export const AdminLogin = async (auth, emailA, password, message) => {
+export const AdminLogin = async (emailA, password) => {
 
   const url = 'https://ezamazwe-edutech-nodejs.onrender.com/admin-login';
 
