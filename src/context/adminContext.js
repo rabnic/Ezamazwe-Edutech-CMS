@@ -4,21 +4,17 @@ const AdminContext = createContext();
 
 export const AdminProvider = ({ children }) => {
     const [admin, setAdmin] = useState({
-        name: "Nicholas",
+        email: "",
         passwordChanged: false
     })
+    console.log("---admin-context", admin)
 
-    const loadAdmin = () => {
-        setAdmin(
-            {
-                name: "Nicholas",
-                passwordChanged: false
-            }
-        )
+    const loadAdmin = (_admin) => {
+        setAdmin(_admin)
     }
 
     return (
-        <AdminContext.Provider value={{ admin }}>
+        <AdminContext.Provider value={{ admin, loadAdmin }}>
             {children}
         </AdminContext.Provider>
     );

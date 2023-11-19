@@ -25,7 +25,7 @@ const routePaths = {
 }
 
 function SideNavigation() {
-  const { signOut, isAuthenticated } = useAuthContext();
+  const { signOut } = useAuthContext();
   const location = useLocation();
 
   const currentPath = location.pathname.replace("/", "")

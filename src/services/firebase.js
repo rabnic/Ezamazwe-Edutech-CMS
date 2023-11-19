@@ -218,14 +218,17 @@ export const logout = () => {
 //   // setMessage(error)
 // }
 
-export const ResetPasswordFunction = async (user, oldPassword, newPassword) => {
+export const ResetPasswordFunction = async (oldPassword, newPassword) => {
+  const user = auth.currentUser;
   console.log("User currently logged in:", user);
   try {
     // Re-authenticate the user with their current password
     const credential = EmailAuthProvider.credential(user.email, oldPassword);
-    await reauthenticateWithCredential(user, credential);
+    const reAuthed = await reauthenticateWithCredential(user, credential);
+    console.log("reAuthed", reAuthed)
     // If re-authentication is successful, update the password
-    await updatePassword(user, newPassword);
+    const updatedPass = await updatePassword(user, newPassword);
+    console.log("updatedPass", updatedPass)
     console.log('Password reset successful:', user);
     alert('Password reset successful.');
   } catch (error) {
@@ -243,6 +246,7 @@ export const ResetPasswordFunction = async (user, oldPassword, newPassword) => {
 // Forgot password function
 export const ForgotPasswordFunction = async (email) => {
   console.log("Forgot password", email);
+
   try {
     const apiUrl = await fetch(`https://ezamazwe-edutech-nodejs.onrender.com/reset-password`,
       {
@@ -253,7 +257,8 @@ export const ForgotPasswordFunction = async (email) => {
         body: JSON.stringify({ email: email }),
       });
     const response = await apiUrl.json();
-    alert("Email for password reset has been sent")
+    return response;
+    // alert("Email for password reset has been sent")
     // Handle the response here
     console.log('Server Response:', response);
   } catch (error) {

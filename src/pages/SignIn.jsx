@@ -7,16 +7,18 @@ import Button from '../Components/Buttons';
 
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../context/authContext';
-import { AdminLogin } from '../services/firebase';
+import { useAdminContext } from '../context/adminContext';
+import { AdminLogin, auth } from '../services/firebase';
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 
 export default function SignIn() {
   const navigate = useNavigate();
   const { signIn, isAuthenticated } = useAuthContext();
+  const { loadAdmin } = useAdminContext();
   const [email, setEmail] = useState("")
   const [password, setPassWord] = useState("")
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-  const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
   const [validations, setValidations] = useState({
     email: {
@@ -34,26 +36,42 @@ export default function SignIn() {
   const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email", "* Password is not strong"]
 
   const handleSignIn = async () => {
+    const allFieldsValid = validateInput()
+    if (!allFieldsValid) return;
+
     const response = await AdminLogin(email, password)
-    if (response.message === 'Authorized') {
+    console.log("response", response)
+    if (response.message === "Invalid credentials") {
 
+    } else if (response.message === "Password has not been changed") {
+      // This is just to test sdk login
+      signInWithEmailAndPassword(auth, email, password).then((data) => {
+        console.log(data);
+      })
+      loadAdmin(
+        {
+          email: email,
+          passwordChanged: false
+        }
+      )
+      signIn() // sets authorization state in authContext
     } else {
-
+      alert("Invalid credentials")
     }
-
-
-    // validateInput()
-    signIn();
+    // signIn();
   }
   const validateInput = () => {
+    let allFieldsValid = true;
     if (email === "") {
       setValidations(prev => {
         return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[0] } };
       });
+      allFieldsValid = false;
     } else if (!emailRegex.test(email)) {
       setValidations(prev => {
         return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[2] } };
       });
+      allFieldsValid = false;
     } else {
       setValidations(prev => {
         return { ...prev, email: { errorStatus: "", errorMessage: "" } };
@@ -64,17 +82,13 @@ export default function SignIn() {
       setValidations(prev => {
         return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[0] } };
       });
-    } else if (!passwordRegex.test(password)) {
-      setValidations(prev => {
-        return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[3] } };
-      });
-    }
-
-    else {
+      allFieldsValid = false;
+    } else {
       setValidations(prev => {
         return { ...prev, password: { errorStatus: "", errorMessage: "" } };
       });
     }
+    return allFieldsValid;
   };
 
   const isMobile = useMediaQuery('(max-width:1000px)')
