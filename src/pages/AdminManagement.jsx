@@ -6,6 +6,7 @@ import PageHeading from '../Components/PageHeading';
 import PageSubHeading from '../Components/PageSubHeading';
 import PageHeadingContainer from '../Components/PageHeadingContainer';
 import PhoneNumber, { parsePhoneNumberFromString } from 'libphonenumber-js';
+import { createNewAdmin } from '../services/firebase';
 
 
 function AdminManagement() {
@@ -40,8 +41,13 @@ function AdminManagement() {
 
     // Invalid phone number. Please enter a 10-digit number starting with +27.
 
-    const handleAdmin = () => {
-        validateInput()
+    const handleCreateAdmin = async () => {
+        // validateInput()
+        try {
+            await createNewAdmin(email, fullName, phoneNumber)
+        } catch (error) {
+            console.log('Error creating admin', error)
+        }
 
     }
 
@@ -120,7 +126,7 @@ function AdminManagement() {
                             <TextFields label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
                             <TextFields label={"Phone Number"} errorStatus={validations.phoneNumber.errorStatus} errorMessage={validations.phoneNumber.errorMessage} setState={setPhoneNumber} state={phoneNumber} />
                         </Box>
-                        <Button text={"Save"} buttonFunction={() => { handleAdmin() }} />
+                        <Button text={"Save"} buttonFunction={() => { handleCreateAdmin() }} />
                     </Box>
                 }
             </Box>

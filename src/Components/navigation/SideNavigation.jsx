@@ -12,6 +12,7 @@ import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/authContext';
+import { useAdminContext } from '../../context/adminContext';
 
 const routePaths = {
   "": "Home",
@@ -26,6 +27,8 @@ const routePaths = {
 
 function SideNavigation() {
   const { signOut } = useAuthContext();
+  const { admin } = useAdminContext();
+
   const location = useLocation();
 
   const currentPath = location.pathname.replace("/", "")
@@ -66,7 +69,10 @@ function SideNavigation() {
         <SideNavTab Icon={AddBoxIcon} text={"Tutor Applications"} navigateFunction={() => { handleNavigation("tutor-applications") }} active={activeTab === "TutorApplications"} />
         <SideNavTab Icon={SchoolIcon} text={"Subscribers"} navigateFunction={() => { handleNavigation("subscribers") }} active={activeTab === "Subscribers"} />
         <SideNavTab Icon={PersonIcon} text={"Admin Profile"} navigateFunction={() => { handleNavigation("admin-profile") }} active={activeTab === "AdminProfile"} />
-        <SideNavTab Icon={SupervisorAccountIcon} text={"Admins"} navigateFunction={() => { handleNavigation("admin-management") }} active={activeTab === "AdminManagement"} />
+        {
+          admin.permissions === "owner" &&
+          <SideNavTab Icon={SupervisorAccountIcon} text={"Admins"} navigateFunction={() => { handleNavigation("admin-management") }} active={activeTab === "AdminManagement"} />
+        }
       </Box>
       <Box sx={{ marginTop: "auto", width: "calc(100% - 15px)", display: "flex", justifyContent: "center", height: "80px", paddingRight: "15px" }}>
         <SideNavLogoutTab Icon={LogoutIcon} text={"Sign Out"} navigateFunction={handleSignOut} />
