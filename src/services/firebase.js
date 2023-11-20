@@ -4,7 +4,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
+import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword, onAuthStateChanged, getIdTokenResult } from 'firebase/auth';
 import { getStorage, ref } from "firebase/storage"
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 
@@ -286,4 +286,26 @@ export const ForgotPasswordFunction = async (email) => {
   } catch (error) {
     console.log("Error resetting password", error);
   }
+}
+
+const checkAuthState = () => {
+  let authState = null;
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const idTokenResult = await getIdTokenResult(user, true);
+      const customClaims = idTokenResult.claims;
+      console.log("Custom claims",  customClaims );
+
+      const adminData = {
+        fullname:"Admin",
+        email: customClaims.email,
+        passwordChanged: !customClaims.forcePasswordReset,
+        phoneNumber: customClaims.phone_number,
+        uid: customClaims.user_id,
+        admin: customClaims.admin,
+        permissions: customClaims.permissions
+      }
+      // console.log("Custom obj",  adminData );
+    }
+  })
 }
