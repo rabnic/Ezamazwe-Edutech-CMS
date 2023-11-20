@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../context/authContext';
 import { useAdminContext } from '../context/adminContext';
 import { AdminLogin, auth } from '../services/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { getIdTokenResult, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 
 
 export default function SignIn() {
@@ -18,7 +18,7 @@ export default function SignIn() {
   const { loadAdmin } = useAdminContext();
   const [email, setEmail] = useState("")
   const [password, setPassWord] = useState("")
-  const [isLoading, setIsLoading] = useState(false)
+  const [isLoading, setIsloading] = useState(false)
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [validations, setValidations] = useState({
     email: {
@@ -36,39 +36,66 @@ export default function SignIn() {
   const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email", "* Password is not strong"]
 
   const handleSignIn = async () => {
+    console.log("Trying to sign in")
     const allFieldsValid = validateInput()
     if (!allFieldsValid) return;
 
     try {
-      setIsLoading(true)
+      setIsloading(true);
       const response = await AdminLogin(email, password)
       console.log("response", response)
-      if (response.message === "Invalid credentials") {
+      if (response.message === "Authorized") {
+        console.log("after authorized");
 
-      } else if (response.message === "Password has not been changed") {
-        // This is just to test sdk login
         signInWithEmailAndPassword(auth, email, password).then((data) => {
-          console.log(data);
+          console.log("Response user data", data);
+
+          onAuthStateChanged(auth, async (user) => {
+            if (user) {
+              const idTokenResult = await getIdTokenResult(user, true);
+              const customClaims = idTokenResult.claims;
+              console.log("Custom claims", customClaims);
+
+              const adminData = {
+                fullname: "Admin",
+                email: customClaims.email,
+                passwordChanged: !customClaims.forcePasswordReset,
+                phoneNumber: customClaims.phone_number,
+                uid: customClaims.user_id,
+                admin: customClaims.admin,
+                permissions: customClaims.permissions
+              }
+              // console.log("Custom obj",  adminData );
+
+              loadAdmin(adminData)
+
+              signIn()
+
+            }
+          })
+        }).catch((error) => {
+          console.log("error", error.code);
+          alert("auth/invalid-login-credentials")
         })
-        loadAdmin(
-          {
-            email: email,
-            passwordChanged: false
-          }
-        )
-        signIn() // sets authorization state in authContext
+
+
+      } else if (response.message === "Not Authorized") {
+        console.log("after authorized");
+
+        alert("Not Authorized")
+        // This is just to test sdk login
+        // sets authorization state in authContext
       } else {
         alert("Invalid credentials")
       }
     } catch (error) {
 
     } finally {
-      setIsLoading(false)
+      setIsloading(false)
     }
 
-
-    // signIn();
   }
+
   const validateInput = () => {
     let allFieldsValid = true;
     if (email === "") {
@@ -124,7 +151,7 @@ export default function SignIn() {
             <TextFields label={"Email"} errorStatus={validations.email.errorStatus} type="email" errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
             <TextFieldPassword label={"Password"} errorStatus={validations.password.errorStatus} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password} />
             <Box sx={{ marginTop: "30px" }}>
-              <Button text={"Sign In"} isLoading={isLoading} buttonFunction={() => { handleSignIn() }} />
+              <Button text={"Sign In"} buttonFunction={() => { handleSignIn() }} isIconButton={isLoading} iconType='loader' />
             </Box>
           </Box>
         </Paper>

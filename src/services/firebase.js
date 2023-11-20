@@ -4,7 +4,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
+import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword, onAuthStateChanged, getIdTokenResult } from 'firebase/auth';
 import { getStorage, ref } from "firebase/storage"
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 
@@ -67,7 +67,7 @@ const value = collection(database, "admin")
 // }
 
 
-export const CreateNewUser = async (email, firstName, lastName, phoneNumber, role) => {
+export const createNewAdmin = async (email, fullName, phoneNumber) => {
   // e.preventDefault();
 
   try {
@@ -77,13 +77,13 @@ export const CreateNewUser = async (email, firstName, lastName, phoneNumber, rol
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, firstName, lastName, phoneNumber, role }),
+      body: JSON.stringify({ email, fullName, phoneNumber }),
     });
 
     const responseData = await response.json();
     // setMessage(responseData.message);
 
-    console.log("Details: ", email, firstName, lastName, phoneNumber, role);
+    console.log("Details: ", email, fullName, phoneNumber);
     console.log("Creating user: ", responseData);
 
   } catch (error) {
@@ -212,7 +212,7 @@ export const logout = () => {
 //   // console.log("Logged in:: ", (response.data.message))
 
 // } catch (error) {
-
+//  https://ezamazwe-edutech-nodejs.onrender.com/update-password-reset
 
 //   console.log("Unable to login:: ", error);
 //   // setMessage(error)
@@ -243,14 +243,13 @@ export const ResetPasswordFunction = async (oldPassword, newPassword) => {
   }
 };
 
-// Forgot password function
-export const ForgotPasswordFunction = async (email) => {
-  console.log("Forgot password", email);
+export const updatePasswordReset = async (email) => {
+  console.log("update password reset", email);
 
   try {
-    const apiUrl = await fetch(`https://ezamazwe-edutech-nodejs.onrender.com/reset-password`,
+    const apiUrl = await fetch(`https://ezamazwe-edutech-nodejs.onrender.com/update-password-reset`,
       {
-        method: 'POST',
+        method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
         },
@@ -264,4 +263,49 @@ export const ForgotPasswordFunction = async (email) => {
   } catch (error) {
     console.log("Error resetting password", error);
   }
+}
+
+// Forgot password function
+export const ForgotPasswordFunction = async (email) => {
+  console.log("Forgot password", email);
+  const url = "https://ezamazwe-edutech-cms.netlify.app"
+  try {
+    const apiUrl = await fetch(`https://ezamazwe-edutech-nodejs.onrender.com/reset-password`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: email, url: url }),
+      });
+    const response = await apiUrl.json();
+    return response;
+    // alert("Email for password reset has been sent")
+    // Handle the response here
+    console.log('Server Response:', response);
+  } catch (error) {
+    console.log("Error resetting password", error);
+  }
+}
+
+const checkAuthState = () => {
+  let authState = null;
+  onAuthStateChanged(auth, async (user) => {
+    if (user) {
+      const idTokenResult = await getIdTokenResult(user, true);
+      const customClaims = idTokenResult.claims;
+      console.log("Custom claims",  customClaims );
+
+      const adminData = {
+        fullname:"Admin",
+        email: customClaims.email,
+        passwordChanged: !customClaims.forcePasswordReset,
+        phoneNumber: customClaims.phone_number,
+        uid: customClaims.user_id,
+        admin: customClaims.admin,
+        permissions: customClaims.permissions
+      }
+      // console.log("Custom obj",  adminData );
+    }
+  })
 }

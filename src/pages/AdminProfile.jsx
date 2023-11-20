@@ -6,7 +6,7 @@ import Button from '../Components/Buttons';
 import PageHeading from '../Components/PageHeading';
 import PageSubHeading from '../Components/PageSubHeading';
 import PageHeadingContainer from '../Components/PageHeadingContainer';
-import { ResetPasswordFunction } from '../services/firebase';
+import { ResetPasswordFunction, updatePasswordReset } from '../services/firebase';
 import { useAdminContext } from '../context/adminContext';
 
 
@@ -48,19 +48,19 @@ function AdminProfile() {
     const handleChangePassword = async () => {
         // const allFieldsValid = validateInput();
         // if (!allFieldsValid) return;
-        loadAdmin(
-            {
-                email: admin.email,
-                passwordChanged: true
-            }
-        )
+        
 
-        // try {
-        //     await ResetPasswordFunction(oldPassword, newPassword);
-        //     // navigate('/CreateAdmin');
-        // } catch (error) {
-        //     console.log("Error occured at reset password function:", error);
-        // }
+        try {
+            await ResetPasswordFunction(oldPassword, newPassword);
+            await updatePasswordReset(admin.email)
+            loadAdmin(
+                prev => {
+                    return {...prev, passwordChanged:true}
+                }
+            )
+        } catch (error) {
+            console.log("Error occured at reset password function:", error);
+        }
     }
 
 
