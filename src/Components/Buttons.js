@@ -1,8 +1,15 @@
 import { Button } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import CircularProgress from '@mui/material/CircularProgress';
 
-export default function button({ text, buttonFunction, isIconButton = false, toggle = "down" }) {
+const Icon = {
+    "down": <KeyboardArrowDownIcon />,
+    "up": <KeyboardArrowUpIcon />,
+    "loader": <CircularProgress />
+}
+
+export default function button({ text, buttonFunction ,isIconButton = false, iconType = "down" }) {
     return (
         <>
             <Button variant="contained"
@@ -15,10 +22,7 @@ export default function button({ text, buttonFunction, isIconButton = false, tog
 
                 endIcon={
                     isIconButton ?
-                        toggle === "up" ?
-                            <KeyboardArrowUpIcon />
-                            :
-                            <KeyboardArrowDownIcon />
+                        Icon[iconType]
                         :
                         null
                 }

@@ -39,25 +39,38 @@ export default function SignIn() {
     const allFieldsValid = validateInput()
     if (!allFieldsValid) return;
 
-    const response = await AdminLogin(email, password)
-    console.log("response", response)
-    if (response.message === "Invalid credentials") {
+    signInWithEmailAndPassword(auth, email, password).then((data) => {
+      console.log(data);
+    signIn()
 
-    } else if (response.message === "Password has not been changed") {
-      // This is just to test sdk login
-      signInWithEmailAndPassword(auth, email, password).then((data) => {
-        console.log(data);
-      })
-      loadAdmin(
-        {
-          email: email,
-          passwordChanged: false
-        }
-      )
-      signIn() // sets authorization state in authContext
-    } else {
-      alert("Invalid credentials")
-    }
+    }).catch((error) => {
+      if (error.code === "auth/invalid-email") {
+        console.log("Invalid email");
+      } else if (error.code === "auth/invalid-password") {
+        console.log("Invalid password");
+      } else {
+        console.log(error);
+      }
+    })
+    // const response = await AdminLogin(email, password)
+    // console.log("response", response)
+    // if (response.message === "Invalid credentials") {
+
+    // } else if (response.message === "Password has not been changed") {
+    //   // This is just to test sdk login
+    //   signInWithEmailAndPassword(auth, email, password).then((data) => {
+    //     console.log(data);
+    //   })
+    //   loadAdmin(
+    //     {
+    //       email: email,
+    //       passwordChanged: false
+    //     }
+    //   )
+    //   signIn() // sets authorization state in authContext
+    // } else {
+    //   alert("Invalid credentials")
+    // }
     // signIn();
   }
   const validateInput = () => {
@@ -115,7 +128,7 @@ export default function SignIn() {
             <TextFields label={"Email"} errorStatus={validations.email.errorStatus} type="email" errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
             <TextFieldPassword label={"Password"} errorStatus={validations.password.errorStatus} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password} />
             <Box sx={{ marginTop: "30px" }}>
-              <Button text={"Sign In"} buttonFunction={() => { handleSignIn() }} />
+              <Button text={"Sign In"} buttonFunction={() => { handleSignIn() }} isIconButton={true} iconType='loader'/>
             </Box>
           </Box>
         </Paper>

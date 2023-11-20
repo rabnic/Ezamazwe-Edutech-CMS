@@ -110,7 +110,7 @@ function AdminManagement() {
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "50px", width: "100%", height: "100%", marginLeft: "auto", marginRight: "auto" }}>
                 <Box sx={{ maxWidth: "240px", alignSelf: "flex-start" }}>
-                    <Button text={"Add New Admin"} buttonFunction={handleToggleForm} isIconButton={true} toggle={isShowForm ? "up" : "down"} />
+                    <Button text={"Add New Admin"} buttonFunction={handleToggleForm} isIconButton={true} iconType={isShowForm ? "up" : "down"} />
                 </Box>
                 {
                     isShowForm &&
