@@ -22,7 +22,7 @@ function App() {
     return (
       <Routes>
         <Route path="/" element={<SignIn />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
+        <Route path='reset-password' element={<ResetPassword />} />
         <Route path='*' element={<Navigate to="/" />} />
       </Routes>
     )

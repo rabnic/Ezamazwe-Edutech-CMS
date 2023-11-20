@@ -6,7 +6,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 const Icon = {
     "down": <KeyboardArrowDownIcon />,
     "up": <KeyboardArrowUpIcon />,
-    "loader": <CircularProgress />
+    "loader": <CircularProgress thickness={6} color="white" size={18}/>
 }
 
 export default function button({ text, buttonFunction ,isIconButton = false, iconType = "down" }) {
@@ -16,7 +16,8 @@ export default function button({ text, buttonFunction ,isIconButton = false, ico
                 sx={{
                     backgroundColor: "#1C3F53",
                     width: { sm: "150px", md: "200px", lg: "230px" },
-                    borderRadius: 20, minWidth: "150px"
+                    borderRadius: 20, minWidth: "150px",
+                    height: "36.5px"
                 }}
                 onClick={() => buttonFunction()}
 
@@ -27,7 +28,12 @@ export default function button({ text, buttonFunction ,isIconButton = false, ico
                         null
                 }
             >
-                {text}
+                {
+                    iconType === "loader" && isIconButton ?
+                    null
+                    :
+                    text 
+                }
             </Button>
         </>
     )

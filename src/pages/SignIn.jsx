@@ -18,6 +18,7 @@ export default function SignIn() {
   const { loadAdmin } = useAdminContext();
   const [email, setEmail] = useState("")
   const [password, setPassWord] = useState("")
+  const [isLoading, setIsloading] = useState(false)
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const [validations, setValidations] = useState({
@@ -36,61 +37,66 @@ export default function SignIn() {
   const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email", "* Password is not strong"]
 
   const handleSignIn = async () => {
+    console.log("Trying to sign in")
     const allFieldsValid = validateInput()
     if (!allFieldsValid) return;
 
-    const response = await AdminLogin(email, password)
-    console.log("response", response)
-    if (response.message === "Authorized") {
-      console.log("after authorized");
+    try {
+      setIsloading(true);
+      const response = await AdminLogin(email, password)
+      console.log("response", response)
+      if (response.message === "Authorized") {
+        console.log("after authorized");
 
+        signInWithEmailAndPassword(auth, email, password).then((data) => {
+          console.log("Response user data", data);
 
-      signInWithEmailAndPassword(auth, email, password).then((data) => {
-        console.log("Response user data", data);
+          onAuthStateChanged(auth, async (user) => {
+            if (user) {
+              const idTokenResult = await getIdTokenResult(user, true);
+              const customClaims = idTokenResult.claims;
+              console.log("Custom claims", customClaims);
 
-        onAuthStateChanged(auth, async (user) => {
-          if (user) {
-            const idTokenResult = await getIdTokenResult(user, true);
-            const customClaims = idTokenResult.claims;
-            console.log("Custom claims",  customClaims );
+              const adminData = {
+                fullname: "Admin",
+                email: customClaims.email,
+                passwordChanged: !customClaims.forcePasswordReset,
+                phoneNumber: customClaims.phone_number,
+                uid: customClaims.user_id,
+                admin: customClaims.admin,
+                permissions: customClaims.permissions
+              }
+              // console.log("Custom obj",  adminData );
 
-            const adminData = {
-              fullname:"Admin",
-              email: customClaims.email,
-              passwordChanged: !customClaims.forcePasswordReset,
-              phoneNumber: customClaims.phone_number,
-              uid: customClaims.user_id,
-              admin: customClaims.admin,
-              permissions: customClaims.permissions
+              loadAdmin(adminData)
+
+              signIn()
+
             }
-            // console.log("Custom obj",  adminData );
-
-            loadAdmin(adminData)
-
-            signIn()
-
-          }
+          })
+        }).catch((error) => {
+          console.log("error", error.code);
+          alert("auth/invalid-login-credentials")
         })
 
 
+      } else if (response.message === "Not Authorized") {
+        console.log("after authorized");
 
-      }).catch((error) => {
-        console.log("error", error.code);
-        alert("auth/invalid-login-credentials")
-      })
+        alert("Not Authorized")
+        // This is just to test sdk login
+        // sets authorization state in authContext
+      } else {
+        alert("Invalid credentials")
+      }
+    } catch (error) {
 
-
-    } else if (response.message === "Not Authorized") {
-      console.log("after authorized");
-
-      alert("Not Authorized")
-      // This is just to test sdk login
-      // sets authorization state in authContext
-    } else {
-      alert("Invalid credentials")
+    } finally {
+      setIsloading(false)
     }
-    // signIn();
+
   }
+
   const validateInput = () => {
     let allFieldsValid = true;
     if (email === "") {
@@ -146,7 +152,7 @@ export default function SignIn() {
             <TextFields label={"Email"} errorStatus={validations.email.errorStatus} type="email" errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
             <TextFieldPassword label={"Password"} errorStatus={validations.password.errorStatus} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password} />
             <Box sx={{ marginTop: "30px" }}>
-              <Button text={"Sign In"} buttonFunction={() => { handleSignIn() }} isIconButton={true} iconType='loader'/>
+              <Button text={"Sign In"} buttonFunction={() => { handleSignIn() }} isIconButton={isLoading} iconType='loader' />
             </Box>
           </Box>
         </Paper>
