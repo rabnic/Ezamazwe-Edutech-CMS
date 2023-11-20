@@ -51,7 +51,7 @@ function SideNavigation() {
   const isSmallScreen = useMediaQuery('(max-width:576px)')
   const textOnSmallScreen = useMediaQuery('(max-width:576px)')
 
-  const isMediumScreen = useMediaQuery('(max-width:768px)')
+  const isMediumScreen = useMediaQuery('(max-width:900px)')
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -216,9 +216,9 @@ function SideNavigation() {
                 active={activeTab === "AdminManagement"}
               />
             </Box>
-            <Box sx={{ marginTop: "auto", width: "calc(100% - 15px)", display: "flex", justifyContent: "center", height: "80px", paddingRight: "15px" }}>
+            <Box sx={{ marginTop: "auto", width: "100%" ,display: "flex", justifyContent: "center", height: "80px", paddingRight:isMediumScreen ? 0 : "15px" }}>
               <SideNavLogoutTab
-                Icon={LogoutIcon} text={"Sign Out"} navigateFunction={() => { }} />
+                Icon={LogoutIcon} text={isMediumScreen ? null : "Sign Out"} navigateFunction={() => { }} />
             </Box>
           </Box>
         ):(
@@ -291,9 +291,9 @@ function SideNavigation() {
               active={activeTab === "AdminManagement"}
             />
           </Box>
-          <Box sx={{ marginTop: "auto", width: "calc(100% - 15px)", display: "flex", justifyContent: "center", height: "80px", paddingRight: "15px" }}>
+          <Box sx={{ marginTop: "auto", width: "calc(100% - 15px)", display: "flex", justifyContent: "center", height: "80px", paddingRight: isSmallScreen ? 0 :"15px" }}>
             <SideNavLogoutTab
-              Icon={LogoutIcon} text={"Sign Out"} navigateFunction={() => { }} />
+              Icon={LogoutIcon} text={isSmallScreen ? null :"Sign Out"} navigateFunction={() => { }} />
           </Box>
         </Box>
       ))}
