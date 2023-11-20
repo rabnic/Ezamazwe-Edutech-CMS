@@ -1,4 +1,4 @@
-import { Box } from '@mui/material'
+import { Box, Drawer, IconButton, Menu, useMediaQuery } from '@mui/material'
 import React, { useState } from 'react'
 import SideNavTab from './SideNavTab'
 import SideNavLogoutTab from './SideNavLogoutTab'
@@ -13,6 +13,7 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/authContext';
 import { useAdminContext } from '../../context/adminContext';
+import { Cancel } from '@mui/icons-material';
 
 const routePaths = {
   "": "Home",
@@ -51,7 +52,7 @@ function SideNavigation() {
   const isSmallScreen = useMediaQuery('(max-width:576px)')
   const textOnSmallScreen = useMediaQuery('(max-width:576px)')
 
-  const isMediumScreen = useMediaQuery('(max-width:900px)')
+  const isMediumScreen = useMediaQuery('(max-width:768px)')
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -70,7 +71,7 @@ function SideNavigation() {
             onClick={handleDrawerToggle}
             sx={{ display: { md: 'none' } }}
           >
-            <MenuIcon />
+            <Menu />
           </IconButton>
           <Drawer
             anchor="top"
