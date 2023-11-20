@@ -5,7 +5,12 @@ const AdminContext = createContext();
 export const AdminProvider = ({ children }) => {
     const [admin, setAdmin] = useState({
         email: "",
-        passwordChanged: false
+        fullName:"Admin",
+        passwordChanged: false,
+        phoneNumber:"",
+        uid:"",
+        admin:false,
+        permissions:"",
     })
     console.log("---admin-context", admin)
 

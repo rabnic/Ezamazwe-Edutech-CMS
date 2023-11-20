@@ -9,7 +9,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../context/authContext';
 import { useAdminContext } from '../context/adminContext';
 import { AdminLogin, auth } from '../services/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { getIdTokenResult, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 
 
 export default function SignIn() {
@@ -39,38 +39,56 @@ export default function SignIn() {
     const allFieldsValid = validateInput()
     if (!allFieldsValid) return;
 
-    signInWithEmailAndPassword(auth, email, password).then((data) => {
-      console.log(data);
-    signIn()
+    const response = await AdminLogin(email, password)
+    console.log("response", response)
+    if (response.message === "Authorized") {
+      console.log("after authorized");
 
-    }).catch((error) => {
-      if (error.code === "auth/invalid-email") {
-        console.log("Invalid email");
-      } else if (error.code === "auth/invalid-password") {
-        console.log("Invalid password");
-      } else {
-        console.log(error);
-      }
-    })
-    // const response = await AdminLogin(email, password)
-    // console.log("response", response)
-    // if (response.message === "Invalid credentials") {
 
-    // } else if (response.message === "Password has not been changed") {
-    //   // This is just to test sdk login
-    //   signInWithEmailAndPassword(auth, email, password).then((data) => {
-    //     console.log(data);
-    //   })
-    //   loadAdmin(
-    //     {
-    //       email: email,
-    //       passwordChanged: false
-    //     }
-    //   )
-    //   signIn() // sets authorization state in authContext
-    // } else {
-    //   alert("Invalid credentials")
-    // }
+      signInWithEmailAndPassword(auth, email, password).then((data) => {
+        console.log("Response user data", data);
+
+        onAuthStateChanged(auth, async (user) => {
+          if (user) {
+            const idTokenResult = await getIdTokenResult(user, true);
+            const customClaims = idTokenResult.claims;
+            console.log("Custom claims",  customClaims );
+
+            const adminData = {
+              fullname:"Admin",
+              email: customClaims.email,
+              passwordChanged: !customClaims.forcePasswordReset,
+              phoneNumber: customClaims.phone_number,
+              uid: customClaims.user_id,
+              admin: customClaims.admin,
+              permissions: customClaims.permissions
+            }
+            // console.log("Custom obj",  adminData );
+
+            loadAdmin(adminData)
+
+            signIn()
+
+          }
+        })
+
+
+
+      }).catch((error) => {
+        console.log("error", error.code);
+        alert("auth/invalid-login-credentials")
+      })
+
+
+    } else if (response.message === "Not Authorized") {
+      console.log("after authorized");
+
+      alert("Not Authorized")
+      // This is just to test sdk login
+      // sets authorization state in authContext
+    } else {
+      alert("Invalid credentials")
+    }
     // signIn();
   }
   const validateInput = () => {
