@@ -141,7 +141,7 @@ function SideNavigation() {
                   active={activeTab === "AdminProfile"}
                 />
                 {
-                  admin.permissions === "owner" &&
+                  admin.permissions === "editor" &&
                   <SideNavTab
                     Icon={SupervisorAccountIcon}
                     text={isSmallScreen ? null : 'Admins'}
@@ -213,7 +213,7 @@ function SideNavigation() {
                 active={activeTab === "AdminProfile"}
               />
               {
-                admin.permissions === "owner" &&
+                admin.permissions === "editor" &&
                 <SideNavTab
                   Icon={SupervisorAccountIcon}
                   text={isSmallScreen ? null : 'Admins'}
@@ -291,7 +291,7 @@ function SideNavigation() {
                 active={activeTab === "AdminProfile"}
               />
               {
-                admin.permissions === "owner" &&
+                admin.permissions === "editor" &&
                 <SideNavTab
                   Icon={SupervisorAccountIcon}
                   text={isSmallScreen ? null : 'Admins'}

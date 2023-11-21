@@ -7,6 +7,7 @@ import PageSubHeading from '../Components/PageSubHeading';
 import PageHeadingContainer from '../Components/PageHeadingContainer';
 import PhoneNumber, { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { createNewAdmin } from '../services/firebase';
+import TableLayout from '../Components/TableLayout';
 
 
 function AdminManagement() {
@@ -154,6 +155,7 @@ function AdminManagement() {
                         <Button text={"Save"} buttonFunction={() => { handleCreateAdmin() }} isIconButton={isLoading} iconType='loader' />
                     </Box>
                 }
+                <TableLayout />
             </Box>
 
         </Box>
