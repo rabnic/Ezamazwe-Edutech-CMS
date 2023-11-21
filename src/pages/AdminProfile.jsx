@@ -1,4 +1,4 @@
-import { Box, Paper } from '@mui/material'
+import { Alert, Box, Paper } from '@mui/material'
 import React, { useState } from 'react'
 import { TextFieldPassword } from '../Components/TextFields'
 import SectionSubHeading from '../Components/SectionSubHeading'
@@ -16,6 +16,8 @@ function AdminProfile() {
     const [oldPassword, setOldPassword] = useState("")
     const [newPassword, setNewPassword] = useState("")
     const [confirmPassword, setConfirmPassWord] = useState("")
+    const [isLoading, setIsloading] = useState(false);
+    const [statusAlert, setStatusAlert] = useState({ show: false, message: "", severity: "" });
     const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 
     const [validations, setValidations] = useState({
@@ -48,18 +50,36 @@ function AdminProfile() {
     const handleChangePassword = async () => {
         // const allFieldsValid = validateInput();
         // if (!allFieldsValid) return;
-        
+
 
         try {
+            setIsloading(true)
             await ResetPasswordFunction(oldPassword, newPassword);
             await updatePasswordReset(admin.email)
             loadAdmin(
                 prev => {
-                    return {...prev, passwordChanged:true}
+                    return { ...prev, passwordChanged: true }
                 }
             )
+            setStatusAlert(
+                {
+                    show: true,
+                    message: "Password successfully changed. Access to other pages opened",
+                    severity: "success"
+                }
+            )
+
         } catch (error) {
             console.log("Error occured at reset password function:", error);
+            setStatusAlert(
+                {
+                    show: true,
+                    message: "Could not change password",
+                    severity: "error"
+                }
+            )
+        } finally {
+            setIsloading(false)
         }
     }
 
@@ -126,11 +146,17 @@ function AdminProfile() {
                                     Change Your Password
                                 </SectionSubHeading>
                             </Box>
+                            {
+                                statusAlert.show &&
+                                <Alert severity={statusAlert.severity} >
+                                    {statusAlert.message}
+                                </Alert>
+                            }
                             <TextFieldPassword isForgot={false} label={"Old Password"} errorStatus={validations.password.errorMessage} errorMessage={validations.password.errorMessage} setState={setOldPassword} state={oldPassword} />
                             <TextFieldPassword isForgot={false} label={"New Password"} errorStatus={validations.password.errorMessage} errorMessage={validations.password.errorMessage} setState={setNewPassword} state={newPassword} />
                             <TextFieldPassword isForgot={false} label={"Confirm Password"} errorStatus={validations.confirmPassword.errorMessage} errorMessage={validations.confirmPassword.errorMessage} setState={setConfirmPassWord} state={confirmPassword} />
                             <Box sx={{ marginTop: "30px" }}>
-                                <Button text={"Save"} buttonFunction={() => handleChangePassword()} />
+                                <Button text={"Save"} buttonFunction={() => handleChangePassword()} isIconButton={isLoading} iconType='loader' />
                             </Box>
                         </Box>
                     </Paper>

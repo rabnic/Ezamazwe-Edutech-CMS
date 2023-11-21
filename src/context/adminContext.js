@@ -1,18 +1,21 @@
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth } from '../services/firebase';
+import { auth, checkAuthState } from '../services/firebase';
+import { useAuthContext } from './authContext';
 
 const AdminContext = createContext();
 
 export const AdminProvider = ({ children }) => {
+    const { signIn, signOut } = useAuthContext();
+
     const [admin, setAdmin] = useState({
         email: "",
-        fullName:"Admin",
+        fullName: "Admin",
         passwordChanged: false,
-        phoneNumber:"",
-        uid:"",
-        admin:false,
-        permissions:"",
+        phoneNumber: "",
+        uid: "",
+        admin: false,
+        permissions: "",
     })
     console.log("---admin-context", admin)
 
@@ -21,12 +24,21 @@ export const AdminProvider = ({ children }) => {
     }
 
     useEffect(() => {
-        
-        const unsubscribe = onAuthStateChanged(auth, async (user) => {
-          console.log("current Admin", user)
-        });
+
+        const unsubscribe = () => {
+            checkAuthState().then((adminData) => {
+                console.log("authState", adminData);
+                if (adminData && adminData.admin === true) {
+                    loadAdmin(adminData)
+                    signIn()
+                } else {
+                    signOut()
+                }
+            })
+        }
+
         return () => unsubscribe();
-      }, []);
+    }, []);
 
     return (
         <AdminContext.Provider value={{ admin, loadAdmin }}>

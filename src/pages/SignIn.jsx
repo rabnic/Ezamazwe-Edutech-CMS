@@ -1,4 +1,4 @@
-import { Box, Paper, useMediaQuery } from '@mui/material'
+import { Alert, Box, Paper, useMediaQuery } from '@mui/material'
 import React, { useState } from 'react'
 import SectionHeading from '../Components/SectionHeading'
 import SectionSubHeading from '../Components/SectionSubHeading'
@@ -16,9 +16,10 @@ export default function SignIn() {
   const navigate = useNavigate();
   const { signIn, isAuthenticated } = useAuthContext();
   const { loadAdmin } = useAdminContext();
-  const [email, setEmail] = useState("")
-  const [password, setPassWord] = useState("")
-  const [isLoading, setIsloading] = useState(false)
+  const [email, setEmail] = useState("");
+  const [password, setPassWord] = useState("");
+  const [isLoading, setIsloading] = useState(false);
+  const [statusAlert, setStatusAlert] = useState({ show: false, message: "", severity: "" });
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   const [validations, setValidations] = useState({
     email: {
@@ -66,6 +67,13 @@ export default function SignIn() {
                 permissions: customClaims.permissions
               }
               // console.log("Custom obj",  adminData );
+              setStatusAlert(
+                {
+                  show: true,
+                  message: "You have successfully sign in",
+                  severity: "success"
+                }
+              )
 
               loadAdmin(adminData)
 
@@ -75,18 +83,32 @@ export default function SignIn() {
           })
         }).catch((error) => {
           console.log("error", error.code);
-          alert("auth/invalid-login-credentials")
+          setStatusAlert(
+            {
+              show: true,
+              message: "Invalid sign in credentials",
+              severity: "error"
+            }
+          )
         })
 
 
       } else if (response.message === "Not Authorized") {
-        console.log("after authorized");
-
-        alert("Not Authorized")
-        // This is just to test sdk login
-        // sets authorization state in authContext
+        setStatusAlert(
+          {
+            show: true,
+            message: "Email not authorised",
+            severity: "error"
+          }
+        )
       } else {
-        alert("Invalid credentials")
+        setStatusAlert(
+          {
+            show: true,
+            message: "Invalid credentilas provided",
+            severity: "error"
+          }
+        )
       }
     } catch (error) {
 
@@ -148,8 +170,16 @@ export default function SignIn() {
                 Login to your account
               </SectionSubHeading>
             </Box>
+            {
+              statusAlert.show &&
+              <Alert severity={statusAlert.severity} >
+                {statusAlert.message}
+              </Alert>
+            }
+
             <TextFields label={"Email"} errorStatus={validations.email.errorStatus} type="email" errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
             <TextFieldPassword label={"Password"} errorStatus={validations.password.errorStatus} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password} />
+
             <Box sx={{ marginTop: "30px" }}>
               <Button text={"Sign In"} buttonFunction={() => { handleSignIn() }} isIconButton={isLoading} iconType='loader' />
             </Box>

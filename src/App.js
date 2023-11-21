@@ -18,6 +18,8 @@ import ProtectedRoute from './routes/ProtectedRoute';
 function App() {
   const { isAuthenticated, } = useAuthContext();
 
+  if (isAuthenticated === undefined) return;
+
   if (!isAuthenticated) {
     return (
       <Routes>

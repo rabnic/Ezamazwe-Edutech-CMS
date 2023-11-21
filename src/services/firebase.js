@@ -4,7 +4,7 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword, onAuthStateChanged, getIdTokenResult } from 'firebase/auth';
+import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword, onAuthStateChanged, getIdTokenResult, signOut as signOutFirebase } from 'firebase/auth';
 import { getStorage, ref } from "firebase/storage"
 import { addDoc, collection, getFirestore } from "firebase/firestore";
 
@@ -66,6 +66,13 @@ const value = collection(database, "admin")
 
 // }
 
+export const signOutFromFirebase = () => {
+  if (auth) {
+    signOutFirebase(auth).then(() => {
+      console.log("Sign out successful")
+    })
+  }
+}
 
 export const createNewAdmin = async (email, fullName, phoneNumber) => {
   // e.preventDefault();
@@ -288,24 +295,29 @@ export const ForgotPasswordFunction = async (email) => {
   }
 }
 
-const checkAuthState = () => {
-  let authState = null;
-  onAuthStateChanged(auth, async (user) => {
-    if (user) {
-      const idTokenResult = await getIdTokenResult(user, true);
-      const customClaims = idTokenResult.claims;
-      console.log("Custom claims",  customClaims );
+export const checkAuthState = () => {
+  return new Promise((resolve) => {
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const idTokenResult = await getIdTokenResult(user, true);
+        const customClaims = idTokenResult.claims;
+        console.log("Custom claims", customClaims);
 
-      const adminData = {
-        fullname:"Admin",
-        email: customClaims.email,
-        passwordChanged: !customClaims.forcePasswordReset,
-        phoneNumber: customClaims.phone_number,
-        uid: customClaims.user_id,
-        admin: customClaims.admin,
-        permissions: customClaims.permissions
+        const adminData = {
+          fullname: "Admin",
+          email: customClaims.email,
+          passwordChanged: !customClaims.forcePasswordReset,
+          phoneNumber: customClaims.phone_number,
+          uid: customClaims.user_id,
+          admin: customClaims.admin,
+          permissions: customClaims.permissions
+        }
+        resolve(adminData);
+      } else {
+        resolve(null);
       }
-      // console.log("Custom obj",  adminData );
-    }
-  })
+    });
+  });
 }
+
+

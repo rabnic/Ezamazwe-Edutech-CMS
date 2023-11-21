@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Button from '../Components/Buttons';
-import { Box } from '@mui/material';
+import { Alert, Box } from '@mui/material';
 import TextFields from '../Components/TextFields';
 import PageHeading from '../Components/PageHeading';
 import PageSubHeading from '../Components/PageSubHeading';
@@ -14,8 +14,10 @@ function AdminManagement() {
     const [fullName, setFullName] = useState("")
     const [email, setEmail] = useState("")
     const [phoneNumber, setPhoneNumber] = useState("")
+    const [isLoading, setIsloading] = useState(false);
+    const [statusAlert, setStatusAlert] = useState({ show: false, message: "", severity: "" });
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    // const phoneNumberRegex = /^(\+27|0)[1-9]\d{8}$/;
+    const phoneNumberRegex = /^(\+27|0)[1-9]\d{8}$/;
 
 
 
@@ -44,9 +46,26 @@ function AdminManagement() {
     const handleCreateAdmin = async () => {
         // validateInput()
         try {
+            setIsloading(true)
             await createNewAdmin(email, fullName, phoneNumber)
+            setStatusAlert(
+                {
+                    show: true,
+                    message: "You have successfully create a new admin and default password sent to email address",
+                    severity: "success"
+                }
+            )
         } catch (error) {
             console.log('Error creating admin', error)
+            setStatusAlert(
+                {
+                    show: true,
+                    message: "Could not create admin",
+                    severity: "error"
+                }
+            )
+        } finally {
+            setIsloading(false)
         }
 
     }
@@ -121,12 +140,18 @@ function AdminManagement() {
                 {
                     isShowForm &&
                     <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", border: 2, borderColor: "greys.main", width: "fit-content", margin: "0", padding: "60px", borderRadius: "5px", alignItems: { xs: "center", md: "flex-start" } }}>
+                        {
+                            statusAlert.show &&
+                            <Alert severity={statusAlert.severity} >
+                                {statusAlert.message}
+                            </Alert>
+                        }
                         <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "column", md: "column", lg: "row" }, gap: "10px", }}>
                             <TextFields label={"Full Name"} errorStatus={validations.fullName.errorStatus} errorMessage={validations.fullName.errorMessage} setState={setFullName} state={fullName} />
                             <TextFields label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
                             <TextFields label={"Phone Number"} errorStatus={validations.phoneNumber.errorStatus} errorMessage={validations.phoneNumber.errorMessage} setState={setPhoneNumber} state={phoneNumber} />
                         </Box>
-                        <Button text={"Save"} buttonFunction={() => { handleCreateAdmin() }} />
+                        <Button text={"Save"} buttonFunction={() => { handleCreateAdmin() }} isIconButton={isLoading} iconType='loader' />
                     </Box>
                 }
             </Box>
