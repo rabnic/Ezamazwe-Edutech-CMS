@@ -26,6 +26,7 @@ export const AdminProvider = ({ children }) => {
     useEffect(() => {
         console.log("Trying to check authStateChanged")
         const unsubscribe = () => {
+            console.log({ checkAuthState});
             checkAuthState().then((adminData) => {
                 console.log("authState", adminData);
                 if (adminData && adminData.admin === true) {

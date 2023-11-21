@@ -14,11 +14,12 @@ import { useAuthContext } from './context/authContext';
 import { Route, Routes, Navigate } from 'react-router-dom';
 import MainContainerLayout from './Components/layouts/MainContainerLayout';
 import ProtectedRoute from './routes/ProtectedRoute';
+import LoadingScreen from './pages/LoadingScreen';
 
 function App() {
   const { isAuthenticated, } = useAuthContext();
 
-  // if (isAuthenticated === undefined) return;
+  if (isAuthenticated === undefined) return (<LoadingScreen />);
 
   if (!isAuthenticated) {
     return (

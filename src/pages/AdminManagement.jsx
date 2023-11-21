@@ -45,7 +45,9 @@ function AdminManagement() {
     // Invalid phone number. Please enter a 10-digit number starting with +27.
 
     const handleCreateAdmin = async () => {
-        // validateInput()
+        const allFieldsValid = validateInput()
+        if (!allFieldsValid) return;
+
         try {
             setIsloading(true)
             await createNewAdmin(email, fullName, phoneNumber)
@@ -81,10 +83,14 @@ function AdminManagement() {
 
 
     const validateInput = () => {
+        let allFieldsValid = true;
+
         if (fullName === "") {
             setValidations(prev => {
                 return { ...prev, fullName: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
+            allFieldsValid = false;
+
         } else {
             setValidations(prev => {
                 return { ...prev, fullName: { errorStatus: "", errorMessage: "" } }
@@ -95,10 +101,14 @@ function AdminManagement() {
             setValidations(prev => {
                 return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
+            allFieldsValid = false;
+
         } else if (!emailRegex.test(email)) {
             setValidations(prev => {
                 return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[2] } };
             });
+            allFieldsValid = false;
+
         } else {
             setValidations(prev => {
                 return { ...prev, email: { errorStatus: "", errorMessage: "" } }
@@ -109,15 +119,21 @@ function AdminManagement() {
             setValidations(prev => {
                 return { ...prev, phoneNumber: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
+            allFieldsValid = false;
+
         } else if (!validatePhoneNumber(phoneNumber, countryCode)) {
             setValidations(prev => {
                 return { ...prev, phoneNumber: { errorStatus: "yes", errorMessage: <span className="error-message">{warningMessages[3]}</span> } }
             })
+            allFieldsValid = false;
+
         } else {
             setValidations(prev => {
                 return { ...prev, phoneNumber: { errorStatus: "", errorMessage: "" } }
             })
         }
+        return allFieldsValid;
+
     }
 
 

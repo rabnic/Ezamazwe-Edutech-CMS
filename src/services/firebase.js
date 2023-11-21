@@ -6,7 +6,7 @@ import { getAnalytics } from "firebase/analytics";
 
 import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword, onAuthStateChanged, getIdTokenResult, signOut as signOutFirebase } from 'firebase/auth';
 import { getStorage, ref } from "firebase/storage"
-import { addDoc, collection, getFirestore } from "firebase/firestore";
+import { addDoc, collection, doc, getFirestore, setDoc } from "firebase/firestore";
 
 import { getAuth } from 'firebase/auth'
 // TODO: Add SDKs for Firebase products that you want to use
@@ -296,8 +296,11 @@ export const ForgotPasswordFunction = async (email) => {
 }
 
 export const checkAuthState = () => {
+  console.log("inside checkAuthState")
   return new Promise((resolve) => {
+  console.log("inside new Promise")
     onAuthStateChanged(auth, async (user) => {
+  console.log("inside onAuthStateChanged")
       if (user) {
         const idTokenResult = await getIdTokenResult(user, true);
         const customClaims = idTokenResult.claims;
@@ -323,12 +326,11 @@ export const checkAuthState = () => {
 
 // //////
 // //creates new admin
-// const createAdminToFirestore = async (admin) => {
-//   // await addDoc(adminCollection, { firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, image: uri, passwordChanged: passwordChanged })
-//   const docRef = await setDoc(doc(database, "admins", email), newAdmin)
-//   console.log("Doc Reff ===== ",docRef);
-
-// };
+const createAdminToFirestore = async (admin) => {
+  // await addDoc(adminCollection, { firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, image: uri, passwordChanged: passwordChanged })
+  const docRef = await setDoc(doc(database, "admins", admin.uid), admin)
+  console.log("Doc Reff ===== ",docRef);
+};
 
 
 // //deletes admin
