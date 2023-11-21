@@ -12,7 +12,6 @@ import SupervisorAccountIcon from '@mui/icons-material/SupervisorAccount';
 import LogoutIcon from '@mui/icons-material/Logout';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../../context/authContext';
-//Different
 import MenuIcon from '@mui/icons-material/Menu';
 import { Cancel, Menu } from '@mui/icons-material';
 import { useAdminContext } from '../../context/adminContext';
@@ -53,11 +52,7 @@ function SideNavigation() {
 
 
   const isSmallScreen = useMediaQuery('(max-width:576px)')
-  //Different
-  const textOnSmallScreen = useMediaQuery('(max-width:576px)')
 
-
-  // Different
   const isMediumScreen = useMediaQuery('(max-width:900px)')
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -75,11 +70,11 @@ function SideNavigation() {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ display: { md: 'none' } }}
-          >
+            // sx={{ display: { md: 'none' } }}
+            sx={{ display: { md: 'none' }, position: "relative", left: "15px", }}
 
-            {/* Difference */}
-            <MenuIcon color='#000' />
+          >
+            <MenuIcon color='#000' sx={{ fontSize: "30px" }} />
           </IconButton>
           <Drawer
             anchor="top"
@@ -125,12 +120,6 @@ function SideNavigation() {
                   navigateFunction={() => { handleNavigation("add-new-course") }}
                   active={activeTab === "AddNewCourse"}
                 />
-                {/* <SideNavTab
-                Icon={GroupsIcon}
-                text={isSmallScreen ? null : 'Tutors'}
-                navigateFunction={() => { handleNavigation("Tutors") }}
-                active={activeTab === "Tutors"}
-              /> */}
                 <SideNavTab
                   Icon={AddBoxIcon}
                   text={'Tutors'}
