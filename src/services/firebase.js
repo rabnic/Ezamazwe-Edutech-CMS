@@ -76,7 +76,7 @@ export const signOutFromFirebase = () => {
 
 export const createNewAdmin = async (email, fullName, phoneNumber) => {
   // e.preventDefault();
-
+  let uid = "userRecord.uid"
   try {
     const response = await fetch('https://ezamazwe-edutech-nodejs.onrender.com/create-user', {
 
@@ -321,3 +321,80 @@ export const checkAuthState = () => {
 }
 
 
+// //////
+// //creates new admin
+// const createAdminToFirestore = async (admin) => {
+//   // await addDoc(adminCollection, { firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, image: uri, passwordChanged: passwordChanged })
+//   const docRef = await setDoc(doc(database, "admins", email), newAdmin)
+//   console.log("Doc Reff ===== ",docRef);
+
+// };
+
+
+// //deletes admin
+// const deleteAdmin = async (id) => {
+
+//   const admin = doc(database, "admins", id);
+//   await deleteDoc(admin);
+//   alert("This item was deleted")
+
+// }
+
+// //edit admin
+// const editAdmin = async (id, email, firstName, lastName, phoneNumber, role) => {
+//   setEmail(email)
+//   setFirstName(firstName)
+//   setLastName(lastName)
+//   setPhoneNumber(phoneNumber)
+//   setRole(role)
+//   setPasswordChanged(passwordChanged)
+//   setID(id)
+
+//   // setShow(true)
+
+//   const shopItem = doc(database, "List", id);
+//   // await updateDoc(shopItem, { Item: updatedItem });
+
+
+// };
+
+
+// //udates admin with new information
+// const updateAdmin = async () => {
+//   // setItem(item)
+//   // setQuantity(quantity)
+//   // setID(id)
+
+//   const shopItem = doc(database, "List", id);
+//   // await updateDoc(shopItem, { Item: updatedItem });
+//   await updateDoc(shopItem, { firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, });
+//   alert("Item was updated")
+//   // setShow(false)
+
+
+// };
+
+
+// //gets information from firestore
+// const getAdminList = async () => {
+
+//   //get data from database 
+//   try {
+//       const data = await getDocs(adminCollection);
+
+//       const filtereddata = data.docs.map((doc) => ({
+
+//           //this fucntion  returns the values in the collection
+//           ...doc.data(),
+//           id: doc.id,
+
+//       }));
+
+//       setAdminList(filtereddata);
+//       // setShoppingList(data);
+
+//       console.log(filtereddata);
+//   } catch (error) {
+//       console.error("Error fetching collection", error);
+//   }
+// };
