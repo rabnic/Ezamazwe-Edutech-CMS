@@ -298,9 +298,9 @@ export const ForgotPasswordFunction = async (email) => {
 export const checkAuthState = () => {
   console.log("inside checkAuthState")
   return new Promise((resolve) => {
-  console.log("inside new Promise")
+    console.log("inside new Promise")
     onAuthStateChanged(auth, async (user) => {
-  console.log("inside onAuthStateChanged")
+      console.log("inside onAuthStateChanged")
       if (user) {
         const idTokenResult = await getIdTokenResult(user, true);
         const customClaims = idTokenResult.claims;
@@ -323,13 +323,30 @@ export const checkAuthState = () => {
   });
 }
 
+export const getUserCustomClaims = async (user) => {
+  const idTokenResult = await getIdTokenResult(user, true);
+  const customClaims = idTokenResult.claims;
+  console.log("Custom claims", customClaims);
 
-// //////
+  const adminData = {
+    fullname: "Admin",
+    email: customClaims.email,
+    passwordChanged: !customClaims.forcePasswordReset,
+    phoneNumber: customClaims.phone_number,
+    uid: customClaims.user_id,
+    admin: customClaims.admin,
+    permissions: customClaims.permissions
+  }
+  console.log("====", adminData)
+  return adminData;
+}
+
+// /////
 // //creates new admin
 const createAdminToFirestore = async (admin) => {
   // await addDoc(adminCollection, { firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, image: uri, passwordChanged: passwordChanged })
   const docRef = await setDoc(doc(database, "admins", admin.uid), admin)
-  console.log("Doc Reff ===== ",docRef);
+  console.log("Doc Reff ===== ", docRef);
 };
 
 
@@ -380,7 +397,7 @@ const createAdminToFirestore = async (admin) => {
 // //gets information from firestore
 // const getAdminList = async () => {
 
-//   //get data from database 
+//   //get data from database
 //   try {
 //       const data = await getDocs(adminCollection);
 
