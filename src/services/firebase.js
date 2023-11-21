@@ -194,7 +194,7 @@ export const logout = () => {
 
   const auth = getAuth();
   signOut(auth).then(() => {
-    alert("User has logged out Successfully")
+    console.log("User has logged out Successfully")
     // navigate('/login')
   })
 }
@@ -237,14 +237,14 @@ export const ResetPasswordFunction = async (oldPassword, newPassword) => {
     const updatedPass = await updatePassword(user, newPassword);
     console.log("updatedPass", updatedPass)
     console.log('Password reset successful:', user);
-    alert('Password reset successful.');
+    console.log('Password reset successful.');
   } catch (error) {
     console.error('Error resetting password:', error.message);
     // Handle specific error cases, such as incorrect current password
     if (error.code === 'auth/wrong-password') {
-      alert('Incorrect current password. Please try again.');
+      console.log('Incorrect current password. Please try again.');
     } else {
-      alert('Error resetting password. Please make sure you are logged in.');
+      console.log('Error resetting password. Please make sure you are logged in.');
     }
     throw error; // Re-throw the error to propagate it if needed
   }

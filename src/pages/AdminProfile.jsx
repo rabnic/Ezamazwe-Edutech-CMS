@@ -48,9 +48,8 @@ function AdminProfile() {
     ]
 
     const handleChangePassword = async () => {
-        // const allFieldsValid = validateInput();
-        // if (!allFieldsValid) return;
-
+        const allFieldsValid = validateInput();
+        if (!allFieldsValid) return;
 
         try {
             setIsloading(true)
