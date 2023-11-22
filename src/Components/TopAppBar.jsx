@@ -11,8 +11,8 @@ import AppBarSubHeading from './AppBarSubHeading';
 function TopAppBar() {
 
   return (
-    <AppBar position="static" sx={{ bgcolor: "white.main", display: "flex", justifyContent: "center", alignItems: "center", boxShadow:"0" }} style={{borderBottom:"2px solid black"}}>
-      <Container maxWidth="xl" sx={{ display: "flex"}} style={{padding:"0"}}>
+    <AppBar position="static" sx={{ bgcolor: "white.main", display: "flex", justifyContent: "center", alignItems: "center", boxShadow: "0" }} style={{ borderBottom: "2px solid black" }}>
+      <Container maxWidth="xl" sx={{ display: "flex" }} style={{ padding: "0" }}>
         <Toolbar disableGutters sx={{ flex: "1" }}>
           <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
             <AppBarHeading>Hello, Admin</AppBarHeading>
@@ -20,11 +20,11 @@ function TopAppBar() {
           </Box>
 
           <Box sx={{ flexGrow: 0 }}>
-            <IconButton onClick={() => {}} sx={{ p: 0 }}>
-            <Avatar sx={{ bgcolor: "primary.light" }}>ET</Avatar>
+            <IconButton onClick={() => { }} sx={{ p: 0 }}>
+              <Avatar sx={{ bgcolor: "primary.light" }}>ET</Avatar>
             </IconButton>
           </Box>
-          
+
         </Toolbar>
       </Container>
     </AppBar>
