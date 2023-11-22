@@ -73,10 +73,10 @@ function SideNavigation() {
             sx={{ display: { md: 'none' }, position: "relative", left: "15px", top: "15px" }}
 
           >
-            <MenuIcon color='#000' sx={{ fontSize: "25px" }} />
+            <MenuIcon color='primary' sx={{ fontSize: "25px" }} />
           </IconButton>
           <Drawer
-            anchor="top"
+            anchor="left"
             open={isDrawerOpen}
             onClose={handleDrawerToggle}
             sx={{ display: { xs: 'block', md: 'none' } }}
@@ -87,7 +87,7 @@ function SideNavigation() {
                 aria-label="open drawer"
                 edge="start"
                 onClick={handleDrawerToggle}
-                sx={{ display: { md: 'none' } }}
+                sx={{ display: { md: 'none' }, marginLeft: "auto", color: "#fff" }}
               >
                 <Cancel />
               </IconButton>
