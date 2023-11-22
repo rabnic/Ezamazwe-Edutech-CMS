@@ -101,11 +101,11 @@ function AdminProfile() {
                 return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
         }
-        // else if (!passwordRegex.test(newPassword)) {
-        //     setValidations(prev => {
-        //         return { ...prev, password: { errorStatus: "yes", errorMessage: <ul>{passwordWarningMessages.map((item, index) => (<li key={index}>{item}</li>))}</ul> } };
-        //     });
-        // }
+        else if (!passwordRegex.test(newPassword)) {
+            setValidations(prev => {
+                return { ...prev, password: { errorStatus: "yes", errorMessage: <ul>{passwordWarningMessages.map((item, index) => (<li key={index}>{item}</li>))}</ul> } };
+            });
+        }
         else {
             setValidations(prev => {
                 return { ...prev, password: { errorStatus: "", errorMessage: "" } }
