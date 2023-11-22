@@ -39,6 +39,7 @@ function AdminProfile() {
     })
 
     const warningMessages = ["* Input is required", "* Incorrect email or password", "* Password doesn't match"]
+
     const passwordWarningMessages = [
         " At least one lowercase letter",
         "At least one uppercase letter",
@@ -118,7 +119,7 @@ function AdminProfile() {
             })
         } else if (confirmPassword !== oldPassword) {
             setValidations(prev => {
-                return { ...prev, confirmPassword: { errorStatus: "yes", errorMessage: passwordWarningMessages[2] } };
+                return { ...prev, confirmPassword: { errorStatus: "yes", errorMessage: warningMessages[2] } };
             });
         }
         else {
