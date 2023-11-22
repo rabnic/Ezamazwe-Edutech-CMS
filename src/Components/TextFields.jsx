@@ -1,17 +1,17 @@
 import InputLabel from '@mui/material/InputLabel';
-import { Box, IconButton, InputAdornment, Link, OutlinedInput, Typography } from '@mui/material';
+import { Box, Button, IconButton, InputAdornment, Link, OutlinedInput, Typography } from '@mui/material';
 import { useState } from 'react';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Add, Visibility, VisibilityOff } from '@mui/icons-material';
 
 import { useNavigate } from 'react-router-dom';
 
 
-export default function TextFields({ label, type = "text", errorStatus, errorMessage, state, setState, isMultiline = false, numberOfRows = 1 }) {
+export default function TextFields({ label, type = "text", errorStatus, errorMessage, state, setState, isOutComes = true, handleOutComes }) {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
             <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
-            <OutlinedInput multiline={isMultiline} rows={numberOfRows} value={state} type={type} required placeholder="Enter" variant="outlined" sx={{
+            <OutlinedInput value={state} type={type} required placeholder="Enter" variant="outlined" sx={{
                 width: "100%", height: "50px", fontSize: "16px", borderRadius: "10px",
                 "& .MuiOutlinedInput-notchedOutline": {
                     borderColor: "primary.light",
@@ -24,6 +24,13 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
             {errorStatus ?
                 <InputLabel sx={{ color: "warning.main", fontSize: "12px", marginTop: "10px", marginLeft: "5px" }}>{errorMessage}</InputLabel>
                 : null}
+            {
+                isOutComes &&
+                <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", width: "100%", marginTop: "5px", justifyContent: "flex-end", color: "primary.main" }} onClick={handleOutComes}>
+                    <Add />
+                    Add More
+                </Button>
+            }
         </Box>
     )
 }
@@ -52,7 +59,7 @@ export const TextFieldPassword = ({ label, errorStatus, errorMessage, setState, 
                             onClick={handleClickShowPassword}
                             edge="end"
                         >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
                         </IconButton>
                     </InputAdornment>
                 }

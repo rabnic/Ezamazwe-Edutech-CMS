@@ -177,8 +177,8 @@ export default function SignIn() {
               </Alert>
             }
 
-            <TextFields label={"Email"} errorStatus={validations.email.errorStatus} type="email" errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
-            <TextFieldPassword label={"Password"} errorStatus={validations.password.errorStatus} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password} />
+            <TextFields label={"Email"} isOutComes={false} errorStatus={validations.email.errorStatus} type="email" errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
+            <TextFieldPassword isOutComes={false} label={"Password"} errorStatus={validations.password.errorStatus} errorMessage={validations.password.errorMessage} setState={setPassWord} state={password} />
 
             <Box sx={{ marginTop: "30px" }}>
               <Button text={"Sign In"} buttonFunction={() => { handleSignIn() }} isIconButton={isLoading} iconType='loader' />

@@ -164,9 +164,9 @@ function AdminManagement() {
                             </Alert>
                         }
                         <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "column", md: "column", lg: "row" }, gap: "10px", }}>
-                            <TextFields label={"Full Name"} errorStatus={validations.fullName.errorStatus} errorMessage={validations.fullName.errorMessage} setState={setFullName} state={fullName} />
-                            <TextFields label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
-                            <TextFields label={"Phone Number"} errorStatus={validations.phoneNumber.errorStatus} errorMessage={validations.phoneNumber.errorMessage} setState={setPhoneNumber} state={phoneNumber} />
+                            <TextFields label={"Full Name"} isOutComes={false} errorStatus={validations.fullName.errorStatus} errorMessage={validations.fullName.errorMessage} setState={setFullName} state={fullName} />
+                            <TextFields label={"Email"} isOutComes={false} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
+                            <TextFields label={"Phone Number"} isOutComes={false} errorStatus={validations.phoneNumber.errorStatus} errorMessage={validations.phoneNumber.errorMessage} setState={setPhoneNumber} state={phoneNumber} />
                         </Box>
                         <Button text={"Save"} buttonFunction={() => { handleCreateAdmin() }} isIconButton={isLoading} iconType='loader' />
                     </Box>
