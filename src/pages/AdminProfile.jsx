@@ -130,15 +130,15 @@ function AdminProfile() {
     }
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px", marginLeft: { xs: "-20px" } }}>
             <PageHeadingContainer
                 heading="Admin Profile"
                 subHeading="Some sub heading for this page"
             />
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: "100%", height: "100%", marginLeft: "auto", marginRight: "auto" }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: "100%", height: "100%", marginLeft: "auto", marginRight: "auto", marginLeft: { xs: "10px" } }}>
                 <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-                    <Paper sx={{ boxShadow: 3, maxWidth: { xs: "460px", md: "460px", lg: "550px" }, width: { xs: "90%", md: "80%", lg: "100%" }, height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
+                    <Paper sx={{ boxShadow: 5, maxWidth: { xs: "460px", md: "460px", lg: "550px" }, width: { xs: "90%", md: "80%", lg: "100%" }, height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
                         <Box sx={{ width: "100%", height: "fit-content", display: "flex", flexDirection: "column", gap: "30px", justifyContent: "center", alignItems: "center" }}>
                             <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                                 <SectionSubHeading>

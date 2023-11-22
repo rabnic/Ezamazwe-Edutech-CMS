@@ -70,11 +70,10 @@ function SideNavigation() {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            // sx={{ display: { md: 'none' } }}
-            sx={{ display: { md: 'none' }, position: "relative", left: "15px", }}
+            sx={{ display: { md: 'none' }, position: "relative", left: "15px", top: "15px" }}
 
           >
-            <MenuIcon color='#000' sx={{ fontSize: "30px" }} />
+            <MenuIcon color='#000' sx={{ fontSize: "25px" }} />
           </IconButton>
           <Drawer
             anchor="top"
