@@ -37,12 +37,13 @@ export default function SignIn() {
   const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email", "* Password is not strong"]
 
   const handleSignIn = async () => {
-    console.log("Trying to sign in")
     const allFieldsValid = validateInput()
     if (!allFieldsValid) return;
 
     try {
       setIsloading(true);
+      console.time("Sign-in")
+
       const response = await AdminLogin(email, password)
       console.log("response", response)
       if (response.message === "Authorized") {
@@ -113,6 +114,8 @@ export default function SignIn() {
     } catch (error) {
 
     } finally {
+      console.timeEnd("Sign-in")
+
       setIsloading(false)
     }
 

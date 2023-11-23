@@ -18,15 +18,16 @@ function AdminProfile() {
     const [confirmPassword, setConfirmPassWord] = useState("")
     const [isLoading, setIsloading] = useState(false);
     const [statusAlert, setStatusAlert] = useState({ show: false, message: "", severity: "" });
-    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+    const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&\[\]{}()<>^~\\|/`'"#;:,._+=\-])[\w@$!%*?&\[\]{}()<>^~\\|/`'"#;:,._+=\-]{8,}$/;
+
 
     const [validations, setValidations] = useState({
-        email: {
+        oldPassword: {
             errorStatus: "",
             errorMessage: ""
         },
 
-        password: {
+        newPassword: {
             errorStatus: "",
             errorMessage: ""
         },
@@ -38,18 +39,19 @@ function AdminProfile() {
 
     })
 
-    const warningMessages = ["* Input is required", "* Incorrect email or password", "* Password doesn't match"]
+    const warningMessages = ["* Input is required", "* Incorrect email or password", "* Password doesn't match", "* New and old password match"]
 
     const passwordWarningMessages = [
-        " At least one lowercase letter",
-        "At least one uppercase letter",
-        "At least one digit",
-        "At least one special character",
-        "Minimum length of 8 characters"
+        "* At least one lowercase letter",
+        "* At least one uppercase letter",
+        "* At least one digit",
+        "* At least one special character",
+        "* Minimum length of 8 characters"
     ]
 
     const handleChangePassword = async () => {
         const allFieldsValid = validateInput();
+        console.log("allFieldsValid", allFieldsValid)
         if (!allFieldsValid) return;
 
         try {
@@ -89,27 +91,36 @@ function AdminProfile() {
         let allFieldsValid = true;
         if (oldPassword === "") {
             setValidations(prev => {
-                return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[0] } }
+                return { ...prev, oldPassword: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
+            allFieldsValid = false;
         } else {
             setValidations(prev => {
-                return { ...prev, password: { errorStatus: "", errorMessage: "" } }
+                return { ...prev, oldPassword: { errorStatus: "", errorMessage: "" } }
             })
         }
 
         if (newPassword === "") {
             setValidations(prev => {
-                return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[0] } }
+                return { ...prev, newPassword: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
+            allFieldsValid = false;
+        } else if (oldPassword === newPassword) {
+
+            setValidations(prev => {
+                return { ...prev, newPassword: { errorStatus: "yes", errorMessage: warningMessages[3] } };
+            });
+            allFieldsValid = false;
         }
         else if (!passwordRegex.test(newPassword)) {
             setValidations(prev => {
-                return { ...prev, password: { errorStatus: "yes", errorMessage: <ul>{passwordWarningMessages.map((item, index) => (<li key={index}>{item}</li>))}</ul> } };
+                return { ...prev, newPassword: { errorStatus: "yes", errorMessage: <ul>{passwordWarningMessages.map((item, index) => (<li key={index}>{item}</li>))}</ul> } };
             });
+            allFieldsValid = false;
         }
         else {
             setValidations(prev => {
-                return { ...prev, password: { errorStatus: "", errorMessage: "" } }
+                return { ...prev, newPassword: { errorStatus: "", errorMessage: "" } }
             })
         }
 
@@ -117,16 +128,20 @@ function AdminProfile() {
             setValidations(prev => {
                 return { ...prev, confirmPassword: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
-        } else if (confirmPassword !== oldPassword) {
+            allFieldsValid = false;
+        } else if (confirmPassword !== newPassword) {
+
             setValidations(prev => {
                 return { ...prev, confirmPassword: { errorStatus: "yes", errorMessage: warningMessages[2] } };
             });
+            allFieldsValid = false;
         }
         else {
             setValidations(prev => {
                 return { ...prev, confirmPassword: { errorStatus: "", errorMessage: "" } }
             })
         }
+        return allFieldsValid;
     }
 
     return (
@@ -151,8 +166,8 @@ function AdminProfile() {
                                     {statusAlert.message}
                                 </Alert>
                             }
-                            <TextFieldPassword isForgot={false} label={"Old Password"} errorStatus={validations.password.errorMessage} errorMessage={validations.password.errorMessage} setState={setOldPassword} state={oldPassword} />
-                            <TextFieldPassword isForgot={false} label={"New Password"} errorStatus={validations.password.errorMessage} errorMessage={validations.password.errorMessage} setState={setNewPassword} state={newPassword} />
+                            <TextFieldPassword isForgot={false} label={"Old Password"} errorStatus={validations.oldPassword.errorMessage} errorMessage={validations.oldPassword.errorMessage} setState={setOldPassword} state={oldPassword} />
+                            <TextFieldPassword isForgot={false} label={"New Password"} errorStatus={validations.newPassword.errorMessage} errorMessage={validations.newPassword.errorMessage} setState={setNewPassword} state={newPassword} />
                             <TextFieldPassword isForgot={false} label={"Confirm Password"} errorStatus={validations.confirmPassword.errorMessage} errorMessage={validations.confirmPassword.errorMessage} setState={setConfirmPassWord} state={confirmPassword} />
                             <Box sx={{ marginTop: "30px" }}>
                                 <Button text={"Save"} buttonFunction={() => handleChangePassword()} isIconButton={isLoading} iconType='loader' />
