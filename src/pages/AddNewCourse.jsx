@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import PageSubHeading from '../Components/PageSubHeading'
 import PageHeading from '../Components/PageHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
-import TextFields from '../Components/TextFields'
+import TextFields, { SelectField, TextAreas } from '../Components/TextFields'
 import Button from '../Components/Buttons';
 
 
@@ -181,17 +181,17 @@ function AddNewCourse() {
           <TextFields isOutComes={false} label={"Course Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
           <TextFields isOutComes={false} label={"Type of Course:"} errorStatus={validations.courseType.errorStatus} errorMessage={validations.courseType.errorMessage} setState={setCourseType} state={courseType} />
         </Box>
-        <TextFields isOutComes={false} label={"Course Short Description:"} errorStatus={validations.courseShortDescription.errorStatus} errorMessage={validations.courseShortDescription.errorMessage} setState={setCourseShortDescription} state={courseShortDescription} />
+        <TextAreas isOutComes={false} label={"Course Short Description:"} errorStatus={validations.courseShortDescription.errorStatus} errorMessage={validations.courseShortDescription.errorMessage} setState={setCourseShortDescription} state={courseShortDescription} />
         <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "column", lg: "row" }, gap: "10px" }}>
-          <TextFields isOutComes={false} label={"Course Category:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setCourseCategory} state={courseCategory} />
-          <TextFields isOutComes={false} label={"Grade:"} errorStatus={validations.grade.errorStatus} errorMessage={validations.grade.errorMessage} setState={setGrade} state={grade} />
-          <TextFields isOutComes={false} label={"Subject:"} errorStatus={validations.subject.errorStatus} errorMessage={validations.subject.errorMessage} setState={setSubject} state={setSubject} />
+          <SelectField inputLabel={"Select Category"} label={"Course Category:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setCourseCategory} state={courseCategory} />
+          <SelectField inputLabel={"Select Grade"} label={"Grade:"} errorStatus={validations.grade.errorStatus} errorMessage={validations.grade.errorMessage} setState={setGrade} state={grade} />
+          <SelectField inputLabel={"Select Subject"} label={"Subject:"} errorStatus={validations.subject.errorStatus} errorMessage={validations.subject.errorMessage} setState={setSubject} state={setSubject} />
         </Box>
         <Box>
           <TextFields label={"Learning Outcomes:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutComes} state={learningOutComes} />
           <Typography variant='h6' sx={{ color: "primary.light", fontSize: "18px", fontWeight: "500" }}>Outcomes</Typography>
         </Box>
-        <TextFields isOutComes={false} label={"Course Full Description:"} errorStatus={validations.courseFullDescription.errorStatus} errorMessage={validations.courseFullDescription.errorMessage} setState={setCourseFullDescription} state={courseFullDescription} />
+        <TextAreas label={"Course Full Description:"} errorStatus={validations.courseFullDescription.errorStatus} errorMessage={validations.courseFullDescription.errorMessage} setState={setCourseFullDescription} state={courseFullDescription} />
         <Box sx={{ marginLeft: "auto", marginRight: "auto", marginTop: "30px" }}>
           <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} />
         </Box>
