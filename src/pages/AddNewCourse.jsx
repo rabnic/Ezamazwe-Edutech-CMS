@@ -5,6 +5,7 @@ import PageHeading from '../Components/PageHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
 import TextFields, { SelectField, TextAreas } from '../Components/TextFields'
 import Button from '../Components/Buttons';
+import AddCourseContent from './AddCourseContent'
 
 
 function AddNewCourse() {
@@ -17,7 +18,7 @@ function AddNewCourse() {
   const [subject, setSubject] = useState("")
   const [learningOutComes, setLearningOutComes] = useState("")
 
-
+  const [openModal, setOpenModal] = useState(false)
 
 
 
@@ -164,7 +165,8 @@ function AddNewCourse() {
   }
 
   const handleAddNewCourse = () => {
-    validateInput()
+    // validateInput()
+    setOpenModal(true)
   }
 
 
@@ -196,6 +198,7 @@ function AddNewCourse() {
           <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} />
         </Box>
       </Box>
+      {openModal && <AddCourseContent setOpenModal={setOpenModal} />}
     </Box>
   )
 }

@@ -79,7 +79,7 @@ const ResetPassword = () => {
                 Reset your password
               </SectionSubHeading>
             </Box>
-            <TextFields label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
+            <TextFields isOutComes={false} label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
 
             {
               isEmailSent &&

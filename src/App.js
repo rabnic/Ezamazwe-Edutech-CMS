@@ -15,6 +15,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import MainContainerLayout from './Components/layouts/MainContainerLayout';
 import ProtectedRoute from './routes/ProtectedRoute';
 import LoadingScreen from './pages/LoadingScreen';
+import AddCourseContent from './pages/AddCourseContent';
 
 function App() {
   const { isAuthenticated, } = useAuthContext();
@@ -36,6 +37,7 @@ function App() {
           <Route path="/" element={<ProtectedRoute component={Home} />} />
           <Route path="courses" element={<ProtectedRoute component={Courses} />} />
           <Route path="add-new-course" element={<ProtectedRoute component={AddNewCourse} />} />
+          <Route path="add-new-course/add-course-content" element={<AddCourseContent />} />
           <Route path="tutors" element={<ProtectedRoute component={Tutors} />} />
           <Route path="tutor-applications" element={<ProtectedRoute component={TutorApplications} />} />
           <Route path="subscribers" element={<ProtectedRoute component={Subscribers} />} />
