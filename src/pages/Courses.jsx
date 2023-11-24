@@ -59,7 +59,7 @@ function Courses() {
           </CategoryCard>
         </Box>
       </Box>
-      <br></br>
+      {/* <br></br>
       <Box>
         <CourseGrades />
       </Box>
@@ -68,7 +68,7 @@ function Courses() {
       </Box>
       <Box>
         <Subject />
-      </Box>
+      </Box> */}
     </Box>
   );
 }
