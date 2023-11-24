@@ -171,12 +171,16 @@ function AddCourseContent({ setOpenModal }) {
         }
     }
 
+    const closeModal = () => {
+        setOpenModal(false)
+    }
+
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", position: "fixed", zIndex: 100, top: 0, left: 0, backgroundColor: "#fff" }}>
             <Box sx={{ width: "100%", display: "flex", flexDirection: "row" }}>
                 <Box sx={{ width: "15%", height: "100vh", display: "flex", flexDirection: "column", backgroundColor: "primary.light" }}>
-                    <Button sx={{ marginRight: "auto", marginTop: "20px" }}>
+                    <Button sx={{ marginRight: "auto", marginTop: "20px" }} onClick={closeModal}>
                         <ArrowBackRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, }} />
                     </Button>
                     <Box sx={{ marginTop: "150px", marginBottom: "auto", }}>
