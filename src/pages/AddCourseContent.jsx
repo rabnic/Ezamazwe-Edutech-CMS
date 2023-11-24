@@ -18,7 +18,13 @@ function AddCourseContent({ setOpenModal }) {
     const [grade, setGrade] = useState("")
     const [subject, setSubject] = useState("")
     const [learningOutComes, setLearningOutComes] = useState("")
+    const [showBox, setShowBox] = useState(false);
+    const [HideBox, setHideBox] = useState(true)
 
+    const handleAddButtonClick = () => {
+        setShowBox(true);
+        setHideBox(false)
+    };
 
 
 
@@ -213,55 +219,86 @@ function AddCourseContent({ setOpenModal }) {
                         <Typography variant='h6' sx={{ color: "primary.main" }}>Course Content</Typography>
                         <Typography variant='h6' sx={{ fontSize: "16px" }}>Lorem ipsum dolor sit amet, consectetur </Typography>
                     </Box>
-                    <Box sx={{ width: "100%", height: "90vh", marginTop: "60px", padding: "30px", overflow: "scroll" }}>
-                        <Box sx={{ width: "100%", display: "flex", flexDirection: { lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center", marginLeft: "auto", marginRight: "auto", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
-                            <Box sx={{ width: { lg: "40%", md: "70%" }, height: "50vh" }}>
-                                <Box
-                                    sx={{
-                                        backgroundImage: `url(${backgroundImage})`,
-                                        backgroundRepeat: "no-repeat",
-                                        height: '100%',
-                                        width: '100%',
-                                        borderRadius: "20px",
-                                        display: "flex",
-                                        alignItems: "center",
-                                        justifyContent: "center",
-                                        backgroundSize: "cover"
+                    {HideBox && (
+                        <Box sx={{ padding: "30px" }}>
+                            <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
 
+                                <TextFields isOutComes={false} label={"Lesson Name:"} type='Number' errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
+                                <MediaFields type='file' label={"Select Lesson Content"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
 
-                                    }}
-                                >
-                                    <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, fontSize: "100px" }} />
-
-                                </Box>
                             </Box>
-                            <Box sx={{ maxWidth: "700px", width: { lg: "60%", md: "70%" }, marginRight: "30px", display: "flex", flexDirection: "column", gap: "20px" }}>
-                                <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
+                            <Button variant='contained' sx={{
+                                backgroundColor: "primary.light",
+                                color: "#fff",
+                                width: "10%",
+                                borderRadius: 20,
+                                height: "50px",
+                                fontSize: "18px",
+                                fontWeight: "500",
+                                marginTop: "30px",
+                                marginBottom: "40px",
 
-                                    <TextFields isOutComes={false} label={"Video Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
-                                    <SelectField label={"Lessons:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
 
-                                </Box>
-                                <TextFields isOutComes={false} label={"Lesson Number:"} errorStatus={validations.courseType.errorStatus} errorMessage={validations.courseType.errorMessage} setState={setCourseType} state={courseType} />
-                                <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutComes} state={learningOutComes} />
-                                <MediaFields type='file' label={"Add Supporting Documents:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
-                            </Box>
-
+                            }} onClick={handleAddButtonClick
+                            }>Add
+                            </Button>
                         </Box>
-                        <Button variant='contained' sx={{
-                            backgroundColor: "primary.light",
-                            color: "#fff",
-                            width: "30%",
-                            borderRadius: 20,
-                            height: "50px",
-                            fontSize: "18px",
-                            fontWeight: "500",
-                            marginTop: "30px",
+                    )}
+                    {showBox && (
+                        <Box sx={{ width: "100%", height: "90vh", marginTop: "30px", padding: "30px", overflow: "scroll" }}>
 
-                            marginLeft: { lg: "30px", md: "10px" }
-                        }}>Save
-                        </Button>
-                    </Box>
+                            <Box sx={{ width: "100%", display: "flex", flexDirection: { lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center", marginLeft: "auto", marginRight: "auto", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
+
+                                <Box sx={{ width: { lg: "40%", md: "70%" }, height: "50vh" }}>
+                                    <Box
+                                        sx={{
+                                            backgroundImage: `url(${backgroundImage})`,
+                                            backgroundRepeat: "no-repeat",
+                                            height: '100%',
+                                            width: '100%',
+                                            borderRadius: "20px",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            justifyContent: "center",
+                                            backgroundSize: "cover"
+
+
+                                        }}
+                                    >
+                                        <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, fontSize: "100px" }} />
+
+                                    </Box>
+                                </Box>
+                                <Box sx={{ maxWidth: "700px", width: { lg: "60%", md: "70%" }, marginRight: "30px", display: "flex", flexDirection: "column", gap: "20px" }}>
+                                    <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
+
+                                        <TextFields isOutComes={false} label={"Topic Number:"} type='Number' errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
+                                        <TextFields isOutComes={false} label={"Topic Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
+
+                                    </Box>
+                                    <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutComes} state={learningOutComes} />
+                                    <MediaFields type='file' label={"Add Supporting Documents:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
+                                </Box>
+
+                            </Box>
+
+
+
+                            <Button variant='contained' sx={{
+                                backgroundColor: "primary.light",
+                                color: "#fff",
+                                width: "30%",
+                                borderRadius: 20,
+                                height: "50px",
+                                fontSize: "18px",
+                                fontWeight: "500",
+                                marginTop: "30px",
+
+                                marginLeft: { lg: "30px", md: "10px" }
+                            }}>Save
+                            </Button>
+                        </Box>
+                    )}
                     {/* <Box sx={{ width: "100%",  display: "flex", flexDirection: "row", justifyContent: "center", gap: "50px", marginTop: "60px" }}>
                         <Box sx={{ width: "40%", height: "50vh", marginLeft: "30px", }}>
                             <Box
