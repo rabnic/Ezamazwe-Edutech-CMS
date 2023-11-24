@@ -4,9 +4,9 @@
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
-import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword } from 'firebase/auth';
+import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword, IdTokenResult } from 'firebase/auth';
 import { getStorage, ref } from "firebase/storage"
-import { addDoc, collection, getFirestore } from "firebase/firestore";
+import { addDoc, collection, doc, getDoc, getDocs, getFirestore } from "firebase/firestore";
 
 import { getAuth } from 'firebase/auth'
 // TODO: Add SDKs for Firebase products that you want to use
@@ -67,7 +67,7 @@ const value = collection(database, "admin")
 // }
 
 
-export const CreateNewUser = async (email, firstName, lastName, phoneNumber, role) => {
+export const CreateNewUser = async (email, fullName, phoneNumber) => {
   // e.preventDefault();
 
   try {
@@ -77,13 +77,13 @@ export const CreateNewUser = async (email, firstName, lastName, phoneNumber, rol
       headers: {
         'Content-Type': 'application/json',
       },
-      body: JSON.stringify({ email, firstName, lastName, phoneNumber, role }),
+      body: JSON.stringify({ email, fullName, phoneNumber }),
     });
 
     const responseData = await response.json();
     // setMessage(responseData.message);
 
-    console.log("Details: ", email, firstName, lastName, phoneNumber, role);
+    console.log("Details: ", email, fullName, phoneNumber);
     console.log("Creating user: ", responseData);
 
   } catch (error) {
@@ -261,3 +261,59 @@ export const ForgotPasswordFunction = async (email) => {
     console.log("Error resetting password", error);
   }
 }
+
+export const getCategoryData = async () =>{
+  //get data from database 
+  console.log("before try");
+
+  try {
+    const data = await getDocs(collection(database, "Content"));
+    console.log("after get docs", data);
+
+    const filtereddata = data.docs.map((doc) => ({
+
+        //this fucntion  returns the values in the collection
+        ...doc.data(),
+        id: doc.id
+    }));
+
+    const categoryData = {};
+    data.docs.forEach((doc) => (
+      
+      categoryData[doc.id] = {
+      ...doc.data(),
+      id: doc.id
+  }));
+
+    console.log("after Filtered data");
+
+    // setAdminList(filtereddata);
+    // setShoppingList(data);
+
+
+
+    // console.log(filtereddata[0].subjects['Grade_1']);
+    console.log(categoryData);
+    return categoryData
+
+} catch (error) {
+
+    console.error("Error fetching collection", error);
+}
+}
+
+export const getSingleDocument = async () => {
+  try {
+    const documentRef = doc(database, "Content", "caps");
+    const documentSnapshot = await getDoc(documentRef);
+    
+    if (documentSnapshot.exists()) {
+      const documentData = documentSnapshot.data();
+      console.log("Document data:", documentData.subjects['Grade_1']); 
+    } else {
+      console.log("Document does not exist");
+    }
+  } catch (error) {
+    console.error("Error getting document:", error);
+  }
+};

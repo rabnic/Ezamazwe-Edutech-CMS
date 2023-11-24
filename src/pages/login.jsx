@@ -2,12 +2,12 @@ import { doc, getDoc, setDoc } from 'firebase/firestore';
 import React, { useState } from 'react'
 import { AdminLogin, auth, database, logout } from '../services/firebase';
 import { Router, Routes, Route, useNavigate } from 'react-router-dom'
-import { signInWithCredential, signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithCredential, signInWithEmailAndPassword, getIdToken, onAuthStateChanged, getIdTokenResult } from 'firebase/auth';
 
 export default function Login() {
 
 
-    
+
 
 
     const [email, setEmail] = useState('');
@@ -57,7 +57,7 @@ export default function Login() {
 
     const login = async (e) => {
 
-        AdminLogin(auth, email, password, { message: message })
+        // AdminLogin(auth, email, password, { message: message })
 
 
         e.preventDefault();
@@ -75,17 +75,31 @@ export default function Login() {
 
 
         const response = await AdminLogin(auth, email, password, { message: message })
+        // signInWithEmailAndPassword(auth, email, password).then((data) => {
 
+        //     console.log(data);
+        // })
 
-        console.log(response);
+        // console.log(response);
 
         if (response.message === 'Authorized') {
-            // e.preventDefault();
+            e.preventDefault();
             // gotohomePage()
 
-            signInWithEmailAndPassword(auth, email, password).then((data) => {
+            signInWithEmailAndPassword(auth, email, password).then(async(data) => {
 
-                console.log(data);
+                console.log({data});
+
+
+                onAuthStateChanged(auth, async (user) => {
+                    if (user) {
+                        const idTokenResult = await getIdTokenResult(user, true);
+                        const customClaims = idTokenResult.claims;
+                        console.log("data 93",{ customClaims });
+                    }
+                  })
+     
+
 
                 if (password !== password) {
                     setMessage('The Password is Incorrect.');
@@ -96,16 +110,16 @@ export default function Login() {
 
                     //if statement to see if the user has reset ther password
 
-                    navigate("/Reset", { email: email, password: response.password })
+                    // navigate("/Reset", { email: email, password: password })
 
-                    // if (data.user.customClaims.forcePasswordChange === true) {
+                    if (customClaims.forcePasswordReset === true) { // response.forcePasswordChange
 
-                    //     navigate("/ResetPassword", { email: data.email, password: data.password })
+                        navigate("/ResetPassword", { email: data.email, password: data.password })
 
-                    // } else {
+                    } else {
 
-                    //     navigate("/CreateAdmin")
-                    // }
+                        navigate("/CreateAdmin")
+                    }
 
 
                     // navigate('/CreateAdmin')
@@ -133,11 +147,11 @@ export default function Login() {
 
         } else {
 
-            alert('Invalid credentials')
+            // alert('Invalid credentials')
 
         }
 
-        console.log(email, password, message);
+        // console.log(email, password, message);
 
 
     };

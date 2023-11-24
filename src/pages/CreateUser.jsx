@@ -11,7 +11,7 @@ export default function CreateUser() {
 
 
     const [email, setEmail] = useState('');
-    const [firstName, setFirstName] = useState('');
+    const [fullName, setFullName] = useState('');
     const [lastName, setLastName] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [role, setRole] = useState('');
@@ -33,7 +33,7 @@ export default function CreateUser() {
 
 
     const handleInputChange = (e) => {
-        setFirstName(e.target.value);
+        setFullName(e.target.value);
 
         if (!e.target.value) {
             setIsAlertVisible(true);
@@ -52,17 +52,17 @@ export default function CreateUser() {
 
 
     //creates new admin
-    const newUsers = async (e,) => {
+    const newAdmin = async (e,) => {
 
         e.preventDefault();
 
         alert("User has been registered successfully")
 
-        CreateNewUser(email, firstName, lastName, phoneNumber, role, image)
-        const newAdmin = { firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, image: uri, passwordChanged: passwordChanged }
+        CreateNewUser(email, fullName, phoneNumber)
+        const newAdmin = { fullName: fullName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, image: uri, passwordChanged: passwordChanged }
         // await addDoc(adminCollection, { firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, image: uri, passwordChanged: passwordChanged })
-        const docRef = await setDoc(doc(database, "admins", email), newAdmin)
-        console.log("Doc Reff ===== ",docRef);
+        // const docRef = await setDoc(doc(database, "admins", email), newAdmin)
+        // console.log("Doc Reff ===== ",docRef);
 
     };
 
@@ -79,7 +79,7 @@ export default function CreateUser() {
     //edit admin
     const editAdmin = async (id, email, firstName, lastName, phoneNumber, role) => {
         setEmail(email)
-        setFirstName(firstName)
+        setFullName(firstName)
         setLastName(lastName)
         setPhoneNumber(phoneNumber)
         setRole(role)
@@ -103,7 +103,7 @@ export default function CreateUser() {
 
         const shopItem = doc(database, "List", id);
         // await updateDoc(shopItem, { Item: updatedItem });
-        await updateDoc(shopItem, { firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, });
+        await updateDoc(shopItem, { firstName: fullName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, });
         alert("Item was updated")
         // setShow(false)
 
@@ -158,22 +158,22 @@ export default function CreateUser() {
 
                 <p>Create new user:</p>
 
-                <form onSubmit={newUsers} >
+                <form onSubmit={newAdmin} >
 
                     <label>First name:</label>
 
                     <input
-                        value={firstName}
-                        onChange={e => setFirstName(e.target.value)}
+                        value={fullName}
+                        onChange={e => setFullName(e.target.value)}
                     // type='email'
                     />
 
-                    <label>Last name:</label>
+                    {/* <label>Last name:</label>
                     <input
                         value={lastName}
                         onChange={e => setLastName(e.target.value)}
                     // type='email'
-                    />
+                    /> */}
 
                     <label>phone:</label>
                     <input
@@ -194,7 +194,7 @@ export default function CreateUser() {
                onChange={e => setEmail(e.target.value)}
                type='email'
            /> */}
-                    <label>Select role:</label>
+                    {/* <label>Select role:</label>
 
                     <select
                         value={role}
@@ -202,7 +202,7 @@ export default function CreateUser() {
                     >
                         <option value="admin"> Super admin</option>
                         <option value="Admin">Normal Admin</option>
-                    </select>
+                    </select> */}
                     <button type="submit" >Create User</button>
                     <button onClick={updateAdmin}>Update</button>
                 </form>
