@@ -99,7 +99,8 @@ export function SelectField({ label, type = "text", errorStatus, errorMessage, s
                         },
                         "&:hover > .MuiOutlinedInput-notchedOutline": {
                             borderColor: "primary.main"
-                        }
+                        },
+                        height: "50px"
                     }}
                     onChange={(e) => setState(e.target.value)}
                 // value={age}
@@ -120,7 +121,6 @@ export function SelectField({ label, type = "text", errorStatus, errorMessage, s
 
 
 export const TextFieldPassword = ({ label, errorStatus, errorMessage, setState, isForgot = true }) => {
-    const navigate = useNavigate()
 
 
 

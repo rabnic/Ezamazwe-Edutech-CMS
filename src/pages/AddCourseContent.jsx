@@ -3,13 +3,13 @@ import React, { useState } from 'react'
 import PageHeading from '../Components/PageHeading'
 import PageSubHeading from '../Components/PageSubHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
-import TextFields, { DocumentField, TextFieldPassword } from '../Components/TextFields'
+import TextFields, { DocumentField, SelectField, TextFieldPassword } from '../Components/TextFields'
 import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
 import backgroundImage from '../assets/placeholderImg.png'
 import MediaFields from '../Components/AddMedia'
 
 
-function AddCourseContent() {
+function AddCourseContent({ setOpenModal }) {
     const [courseName, setCourseName] = useState("")
     const [courseType, setCourseType] = useState("")
     const [courseShortDescription, setCourseShortDescription] = useState("")
@@ -19,7 +19,7 @@ function AddCourseContent() {
     const [subject, setSubject] = useState("")
     const [learningOutComes, setLearningOutComes] = useState("")
 
-    const [openModal, setOpenModal] = useState(false)
+
 
 
 
@@ -168,12 +168,13 @@ function AddCourseContent() {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", position: "fixed", zIndex: 100, top: 0, left: 0, backgroundColor: "#fff" }}>
-            <Box sx={{ width: "100%", height: "100vh", display: "flex", flexDirection: { xs: "column", sm: "column", lg: "row" } }}>
-                <Box sx={{ width: "15%", display: "flex", flexDirection: "column", backgroundColor: "primary.light" }}>
-                    <ArrowBackRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, margin: "20px 20px" }} />
-
+            <Box sx={{ width: "100%", display: "flex", flexDirection: "row" }}>
+                <Box sx={{ width: "15%", height: "100vh", display: "flex", flexDirection: "column", backgroundColor: "primary.light" }}>
+                    <Button sx={{ marginRight: "auto", marginTop: "20px" }}>
+                        <ArrowBackRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, }} />
+                    </Button>
                     <Box sx={{ marginTop: "150px", marginBottom: "auto", }}>
-                        <Box sx={{ display: "flex", flexDirection: "row", gap: "20px", justifyContent: "center", alignItems: "center", marginBottom: "50px" }}>
+                        <Box sx={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center", alignItems: "center", marginBottom: "50px" }}>
                             <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
                             <Typography sx={{ color: "#fff", fontWeight: "semi-bold", fontSize: "1.5rem" }}>Videos</Typography>
                         </Box>
@@ -207,89 +208,111 @@ function AddCourseContent() {
                         Add More
                     </Button>
                 </Box>
-                <Box sx={{ width: "85%", display: "flex", flexDirection: "column" }}>
-                    <Box sx={{ display: "flex", flexDirection: "column", marginLeft: "auto", textAlign: "right", paddingRight: "30px", marginTop: "50px" }}>
+                <Box sx={{ width: "85%", height: "100vh", display: "flex", flexDirection: "column", paddingTop: "50px" }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", marginLeft: "auto", textAlign: "right", paddingRight: "30px", }}>
                         <Typography variant='h6' sx={{ color: "primary.main" }}>Course Content</Typography>
                         <Typography variant='h6' sx={{ fontSize: "16px" }}>Lorem ipsum dolor sit amet, consectetur </Typography>
                     </Box>
+                    <Box sx={{ width: "100%", height: "90vh", marginTop: "60px", padding: "30px", overflow: "scroll" }}>
+                        <Box sx={{ width: "100%", display: "flex", flexDirection: { lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center", marginLeft: "auto", marginRight: "auto", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
+                            <Box sx={{ width: { lg: "40%", md: "70%" }, height: "50vh" }}>
+                                <Box
+                                    sx={{
+                                        backgroundImage: `url(${backgroundImage})`,
+                                        backgroundRepeat: "no-repeat",
+                                        height: '100%',
+                                        width: '100%',
+                                        borderRadius: "20px",
+                                        display: "flex",
+                                        alignItems: "center",
+                                        justifyContent: "center",
+                                        backgroundSize: "cover"
 
-                    <Box sx={{ width: "100%", display: "flex", flexDirection: "row", marginLeft: "auto", marginRight: "auto", marginTop: "100px" }}>
-                        <Box sx={{ width: "50%", marginLeft: "30px", display: "flex" }}>
+
+                                    }}
+                                >
+                                    <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, fontSize: "100px" }} />
+
+                                </Box>
+                            </Box>
+                            <Box sx={{ maxWidth: "700px", width: { lg: "60%", md: "70%" }, marginRight: "30px", display: "flex", flexDirection: "column", gap: "20px" }}>
+                                <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
+
+                                    <TextFields isOutComes={false} label={"Video Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
+                                    <SelectField label={"Lessons:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
+
+                                </Box>
+                                <TextFields isOutComes={false} label={"Lesson Number:"} errorStatus={validations.courseType.errorStatus} errorMessage={validations.courseType.errorMessage} setState={setCourseType} state={courseType} />
+                                <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutComes} state={learningOutComes} />
+                                <MediaFields type='file' label={"Add Supporting Documents:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
+                            </Box>
+
+                        </Box>
+                        <Button variant='contained' sx={{
+                            backgroundColor: "primary.light",
+                            color: "#fff",
+                            width: "30%",
+                            borderRadius: 20,
+                            height: "50px",
+                            fontSize: "18px",
+                            fontWeight: "500",
+                            marginTop: "30px",
+
+                            marginLeft: { lg: "30px", md: "10px" }
+                        }}>Save
+                        </Button>
+                    </Box>
+                    {/* <Box sx={{ width: "100%",  display: "flex", flexDirection: "row", justifyContent: "center", gap: "50px", marginTop: "60px" }}>
+                        <Box sx={{ width: "40%", height: "50vh", marginLeft: "30px", }}>
                             <Box
                                 sx={{
                                     backgroundImage: `url(${backgroundImage})`,
                                     backgroundRepeat: "no-repeat",
-                                    backgroundSize: "fit",
-                                    height: '40vh',
+                                    height: '100%',
                                     width: '100%',
                                     borderRadius: "20px",
                                     display: "flex",
                                     alignItems: "center",
-
                                     justifyContent: "center",
+                                    backgroundSize: "cover"
+
 
                                 }}
                             >
                                 <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, fontSize: "100px" }} />
 
                             </Box>
-                            <Box sx={{ display: "flex", flexDirection: "row", gap: "50px" }}>
-                                <Button variant='contained' sx={{
-                                    backgroundColor: "primary.light",
-                                    color: "#fff",
-                                    width: { sm: "150px", md: "200px", lg: "230px" },
-                                    borderRadius: 20, minWidth: "150px",
-                                    height: "36.5px",
-                                    marginTop: "80px",
-                                    marginLeft: "auto",
-                                    marginRight: "auto",
-
-                                    fontSize: "18px",
-                                    fontWeight: "500"
-                                }}>Save</Button>
-
-                            </Box>
                         </Box>
 
-                        <Box sx={{ width: "50%", marginRight: "30px" }}>
-                            <Box sx={{ display: "flex", flexDirection: "row", gap: "30px" }}>
+                        <Box sx={{ maxWidth: "700px", width: "60%", marginRight: "30px", display: "flex", flexDirection: "column", gap: "20px" }}>
+                            <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
 
                                 <TextFields isOutComes={false} label={"Video Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
-                                <TextFields isOutComes={false} label={"Lessons:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
+                                <SelectField label={"Lessons:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
 
                             </Box>
                             <TextFields isOutComes={false} label={"Lesson Number:"} errorStatus={validations.courseType.errorStatus} errorMessage={validations.courseType.errorMessage} setState={setCourseType} state={courseType} />
                             <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutComes} state={learningOutComes} />
-                            <MediaFields type='file' label={"Course Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
-                            {/* <ul>
-                                    <li>
-                                        <Typography>Document 1</Typography>
-                                    </li>
-                                    <li>
-                                        <Typography>Document 1</Typography>
-                                    </li>
-                                    <li>
-                                        <Typography>Document 1</Typography>
-                                    </li>
-                                </ul> */}
-                            {/* <Paper elevation={3} sx={{ width: "300px", height: "280px", marginBottom: "20px", display: "flex", flexDirection: "column", marginLeft: "auto" }}>
-                                    <DocumentField label={"Add document name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
-                                    <Button
-                                        sx={{
-                                            backgroundColor: "primary.light",
-                                            color: "#fff",
-                                            width: { sm: "150px", md: "200px", lg: "150px" },
-                                            borderRadius: 20,
-                                            minWidth: "150px",
-                                            height: "36.5px",
-                                            fontSize: "18px",
-                                            fontWeight: "500"
-                                        }}
-                                    >SAVE</Button>
-                                </Paper> */}
+                            <MediaFields type='file' label={"Add Supporting Documents:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
                         </Box>
 
                     </Box>
+
+                    <Button variant='contained' sx={{
+                        backgroundColor: "primary.light",
+                        color: "#fff",
+                        width: "30%",
+                        borderRadius: 20, minWidth: "150px",
+                        height: "50px",
+                        // marginTop: "50px",
+                        // marginLeft: "auto",
+                        // marginRight: "auto",
+                        left: "30px",
+                        marginBottom: "3000px",
+                        fontSize: "18px",
+                        fontWeight: "500"
+                    }}>Save</Button> */}
+
                     <Box sx={{ width: "100%", height: "10vh", display: "flex", backgroundColor: "primary.light", marginTop: "auto" }}>
                         <Button variant='contained' sx={{
                             backgroundColor: "#fff",
@@ -310,9 +333,6 @@ function AddCourseContent() {
                     </Box>
                 </Box>
             </Box>
-
-
-
         </Box>
     )
 }
