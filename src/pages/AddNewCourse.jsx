@@ -6,6 +6,7 @@ import PageHeadingContainer from '../Components/PageHeadingContainer'
 import TextFields, { SelectField, TextAreas } from '../Components/TextFields'
 import Button from '../Components/Buttons';
 import AddCourseContent from './AddCourseContent'
+import MediaFields from '../Components/AddMedia'
 
 
 function AddNewCourse() {
@@ -194,6 +195,7 @@ function AddNewCourse() {
           <Typography variant='h6' sx={{ color: "primary.light", fontSize: "18px", fontWeight: "500" }}>Outcomes</Typography>
         </Box>
         <TextAreas label={"Course Full Description:"} errorStatus={validations.courseFullDescription.errorStatus} errorMessage={validations.courseFullDescription.errorMessage} setState={setCourseFullDescription} state={courseFullDescription} />
+        <MediaFields type='file' label={"Add Video Content:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
         <Box sx={{ marginLeft: "auto", marginRight: "auto", marginTop: "30px" }}>
           <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} />
         </Box>
