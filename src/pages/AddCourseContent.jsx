@@ -7,10 +7,11 @@ import TextFields, { DocumentField, SelectField, TextFieldPassword } from '../Co
 import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
 import backgroundImage from '../assets/placeholderImg.png'
 import MediaFields from '../Components/AddMedia'
+import InputFileUpload from '../Components/InputFileUpload'
 
 
 function AddCourseContent({ setOpenModal }) {
-    const [courseName, setCourseName] = useState("")
+    const [lessonName, setLessonName] = useState("")
     const [courseType, setCourseType] = useState("")
     const [courseShortDescription, setCourseShortDescription] = useState("")
     const [courseFullDescription, setCourseFullDescription] = useState("")
@@ -20,15 +21,17 @@ function AddCourseContent({ setOpenModal }) {
     const [learningOutComes, setLearningOutComes] = useState("")
     const [showBox, setShowBox] = useState(false);
     const [HideBox, setHideBox] = useState(true)
-
+    const [videos, setVideos] = useState([]);
+    const [newLesson, setNewLesson] = useState({})
     const handleAddButtonClick = () => {
+        setNewLesson({
+            lessonName: lessonName,
+            topics: []
+        })
+
         setShowBox(true);
         setHideBox(false)
     };
-
-
-
-
 
     const [validations, setValidations] = useState({
         courseName: {
@@ -71,7 +74,7 @@ function AddCourseContent({ setOpenModal }) {
     const validateInput = () => {
         let allFieldsValid = true;
 
-        if (courseName === "") {
+        if (lessonName === "") {
             setValidations(prev => {
                 return { ...prev, courseName: { errorStatus: "yes", errorMessage: "Invalid input" } }
             })
@@ -175,6 +178,25 @@ function AddCourseContent({ setOpenModal }) {
         setOpenModal(false)
     }
 
+    const handleFileChange = (event) => {
+        const fileInput = event.target;
+        const files = fileInput.files;
+
+        if (files.length > 0) {
+            const newVideos = Array.from(files).map((file) => {
+                return {
+                    topicNumber: '', // Set your desired default values
+                    topicName: '',
+                    supportingLinks: [],
+                    videoName: file.name,
+                    video: URL.createObjectURL(file),
+                };
+            });
+
+            setVideos((prevVideos) => [...prevVideos, ...newVideos]);
+        }
+    };
+
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", position: "fixed", zIndex: 100, top: 0, left: 0, backgroundColor: "#fff" }}>
@@ -188,30 +210,19 @@ function AddCourseContent({ setOpenModal }) {
                             <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
                             <Typography sx={{ color: "#fff", fontWeight: "semi-bold", fontSize: "1.5rem" }}>Videos</Typography>
                         </Box>
-                        <Box variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
-                            <PlayArrow sx={{ color: "#fff", }} />
-                            <Typography>Video Name</Typography>
-                        </Box>
-                        <Box variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
-                            <PlayArrow sx={{ color: "#fff", }} />
-                            <Typography>Video Name</Typography>
-                        </Box>
-                        <Box variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
-                            <PlayArrow sx={{ color: "#fff", }} />
-                            <Typography>Video Name</Typography>
-                        </Box>
-                        <Box variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
-                            <PlayArrow sx={{ color: "#fff", }} />
-                            <Typography>Video Name</Typography>
-                        </Box>
-                        <Box variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
-                            <PlayArrow sx={{ color: "#fff", }} />
-                            <Typography>Video Name</Typography>
-                        </Box>
-                        <Box variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
-                            <PlayArrow sx={{ color: "#fff", }} />
-                            <Typography>Video Name</Typography>
-                        </Box>
+                        {
+                            videos &&
+                            videos.map(videoObj => {
+                                return (
+                                    <Box variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
+                                        <PlayArrow sx={{ color: "#fff", }} />
+                                        <Typography>{videoObj.videoName}</Typography>
+                                    </Box>
+                                )
+                            })
+                        }
+
+
                     </Box>
                     <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
                         <Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
@@ -227,14 +238,14 @@ function AddCourseContent({ setOpenModal }) {
                         <Box sx={{ padding: "30px" }}>
                             <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
 
-                                <TextFields isOutComes={false} label={"Lesson Name:"} type='Number' errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
-                                <MediaFields type='file' label={"Select Lesson Content"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
-
+                                <TextFields isOutComes={false} label={"Lesson Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
+                                {/* <MediaFields type='file' label={"Select Lesson Content"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} /> */}
+                                <InputFileUpload handleFileChange={handleFileChange} />
                             </Box>
                             <Button variant='contained' sx={{
                                 backgroundColor: "primary.light",
                                 color: "#fff",
-                                width: "10%",
+                                width: "fit-content",
                                 borderRadius: 20,
                                 height: "50px",
                                 fontSize: "18px",
@@ -244,13 +255,13 @@ function AddCourseContent({ setOpenModal }) {
 
 
                             }} onClick={handleAddButtonClick
-                            }>Add
+                            }>Add Topics
                             </Button>
                         </Box>
                     )}
                     {showBox && (
                         <Box sx={{ width: "100%", height: "90vh", marginTop: "30px", padding: "30px", overflow: "scroll" }}>
-                            <Box sx={{width: "100%", display: "flex", flexDirection: { lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center",  justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
+                            <Box sx={{ width: "100%", display: "flex", flexDirection: { lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
 
                                 <Box sx={{ width: { lg: "40%", md: "70%" }, height: "50vh" }}>
                                     <Box
@@ -275,16 +286,16 @@ function AddCourseContent({ setOpenModal }) {
                                 <Box sx={{ maxWidth: "700px", width: { lg: "60%", md: "70%" }, display: "flex", flexDirection: "column", gap: "20px" }}>
                                     <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
 
-                                        <TextFields isOutComes={false} label={"Topic Number:"} type='Number' errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
-                                        <TextFields isOutComes={false} label={"Topic Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
+                                        <TextFields isOutComes={false} label={"Topic Number:"} type='Number' errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
+                                        <TextFields isOutComes={false} label={"Topic Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
 
                                     </Box>
                                     <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutComes} state={learningOutComes} />
-                                    <MediaFields type='file' label={"Add Supporting Documents:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
+                                    <MediaFields type='file' label={"Add Supporting Documents:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
                                 </Box>
 
                             </Box>
-                            <Box sx={{width:"100%", display:"flex", alignItems:{lg:"start",md:"center"},justifyContent:{lg:"start",md:"center"}}}>
+                            <Box sx={{ width: "100%", display: "flex", alignItems: { lg: "start", md: "center" }, justifyContent: { lg: "start", md: "center" } }}>
                                 <Button variant='contained' sx={{
                                     backgroundColor: "primary.light",
                                     color: "#fff",
@@ -296,7 +307,8 @@ function AddCourseContent({ setOpenModal }) {
                                     marginTop: "30px",
 
                                     marginLeft: { lg: "30px", md: "0" }
-                                }}>Save
+                                }}
+                                    onClick={() => { console.log(videos) }}>Save
                                 </Button>
                             </Box>
                         </Box>

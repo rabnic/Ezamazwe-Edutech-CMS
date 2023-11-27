@@ -20,7 +20,16 @@ function AddNewCourse() {
   const [learningOutComes, setLearningOutComes] = useState("")
 
   const [openModal, setOpenModal] = useState(false)
-
+  const [newCourse, setNewCourse] = useState({
+    courseName: "",
+    courseType: "",
+    courseShortDescription: "",
+    courseFullDescription: "",
+    courseCategory: "",
+    grade: "",
+    subject: "",
+    learningOutcomes: []
+  })
 
 
 
@@ -166,7 +175,21 @@ function AddNewCourse() {
   }
 
   const handleAddNewCourse = () => {
-    // validateInput()
+    const isAllFieldsValid = validateInput()
+    if (!isAllFieldsValid) return
+    const courseObject = {
+      courseName: courseName,
+      courseType: courseType,
+      courseShortDescription: courseShortDescription,
+      courseFullDescription: courseFullDescription,
+      courseCategory: courseCategory,
+      grade: grade,
+      subject: subject,
+      learningOutcomes: learningOutComes,
+    }
+    setNewCourse(courseObject)
+    console.log(courseObject)
+
     setOpenModal(true)
   }
 
@@ -195,12 +218,12 @@ function AddNewCourse() {
           <Typography variant='h6' sx={{ color: "primary.light", fontSize: "18px", fontWeight: "500" }}>Outcomes</Typography>
         </Box>
         <TextAreas label={"Course Full Description:"} errorStatus={validations.courseFullDescription.errorStatus} errorMessage={validations.courseFullDescription.errorMessage} setState={setCourseFullDescription} state={courseFullDescription} />
-        <MediaFields type='file' label={"Add Video Content:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
+        {/* <MediaFields type='file' label={"Add Video Content:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} /> */}
         <Box sx={{ marginLeft: "auto", marginRight: "auto", marginTop: "30px" }}>
           <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} />
         </Box>
       </Box>
-      {openModal && <AddCourseContent setOpenModal={setOpenModal} />}
+      {openModal && <AddCourseContent setOpenModal={setOpenModal} setNewCourse={setNewCourse} />}
     </Box>
   )
 }
