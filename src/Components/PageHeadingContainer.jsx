@@ -7,7 +7,7 @@ function PageHeadingContainer({ heading, subHeading = "" }) {
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", alignItems: "center", gap: "10px" }}>
             <PageHeading>
-                <Typography variant='h3' component="h3" sx={{ fontWeight: "Bold", fontSize: { xs: "2rem", lg: "2.5rem" } }}>
+                <Typography variant='h3' component="h3" sx={{ fontWeight: "Bold", fontSize: { xs: "1.5rem", lg: "2.5rem" } }}>
                     {heading}
                 </Typography>
             </PageHeading>

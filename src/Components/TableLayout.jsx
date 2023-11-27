@@ -13,7 +13,7 @@ import EditIcon from '@mui/icons-material/Edit';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
-        backgroundColor: theme.palette.common.black,
+        backgroundColor: "#1C3F53",
         color: theme.palette.common.white,
     },
     [`&.${tableCellClasses.body}`]: {
@@ -46,7 +46,7 @@ const rows = [
 export default function TableLayout() {
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 700 }} aria-label="customized table">
+            <Table sx={{ minWidth: 600 }} aria-label="customized table">
                 <TableHead>
                     <TableRow>
                         <StyledTableCell >FullName</StyledTableCell>
@@ -63,11 +63,11 @@ export default function TableLayout() {
                             <StyledTableCell >{row.fat}</StyledTableCell>
                             <StyledTableCell >{row.carbs}</StyledTableCell>
                             <StyledTableCell >{row.protein}</StyledTableCell>
-                            <StyledTableCell sx={{display:"flex", flexDirection:"row", gap:3}}>
+                            <StyledTableCell sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
                                 <IconButton>
                                     <EditIcon />
                                 </IconButton>
-                                
+
                                 <IconButton>
                                     <DeleteForeverIcon />
                                 </IconButton>

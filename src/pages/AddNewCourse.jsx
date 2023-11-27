@@ -176,20 +176,20 @@ function AddNewCourse() {
   }
 
   const handleAddNewCourse = () => {
-    // const isAllFieldsValid = validateInput()
-    // if (!isAllFieldsValid) return
-    // const courseObject = {
-    //   courseName: courseName,
-    //   courseType: courseType,
-    //   courseShortDescription: courseShortDescription,
-    //   courseFullDescription: courseFullDescription,
-    //   courseCategory: courseCategory,
-    //   grade: grade,
-    //   subject: subject,
-    //   learningOutcomes: learningOutComes,
-    // }
-    // setNewCourse(courseObject)
-    // console.log(courseObject)
+    const isAllFieldsValid = validateInput()
+    if (!isAllFieldsValid) return
+    const courseObject = {
+      courseName: courseName,
+      courseType: courseType,
+      courseShortDescription: courseShortDescription,
+      courseFullDescription: courseFullDescription,
+      courseCategory: courseCategory,
+      grade: grade,
+      subject: subject,
+      learningOutcomes: learningOutComes,
+    }
+    setNewCourse(courseObject)
+    console.log(courseObject)
 
     setOpenModal(true)
   }
