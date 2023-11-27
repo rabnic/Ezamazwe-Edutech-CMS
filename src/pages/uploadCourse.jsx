@@ -27,7 +27,7 @@ export default function UploaCourse() {
 
 
   const [selectedCategory, setSelectedCategory] = useState()
-  const [selectedGrade, setSelectedGradee] = useState()
+  const [selectedGrade, setSelectedGrade] = useState()
   const [selectedSubject, setSelectedSubject] = useState()
 
 
@@ -65,18 +65,29 @@ export default function UploaCourse() {
     console.log(categoryNames())
   }
 
+  // const grades = (key) => {
+  //   return categories[key].grades
+  // }
+
   const grades = (key) => {
-    return categories[key].grades
-  }
+    return categories[key]?.grades || [];
+  };
 
   console.log('grades')
   if (categories) {
     console.log(grades("caps"))
   }
 
+  // const subjects = (key, grade) => {
+  //   return categories[key].subjects[grade]
+  // }
+
   const subjects = (key, grade) => {
-    return categories[key].subjects[grade]
-  }
+    if (categories[key] && categories[key].subjects && categories[key].subjects[grade]) {
+      return categories[key].subjects[grade];
+    }
+    return [];
+  };
 
   console.log('subjects')
   if (categories) {
@@ -328,9 +339,9 @@ export default function UploaCourse() {
         }
 
         {/* <option value="IBE">IBE</option>{`${key}: ${entries}`}{`${key}: ${entries}`} */}
-        {/* // <option value="Entrepreneur">Entrepreneur</option> 
+      {/* // <option value="Entrepreneur">Entrepreneur</option> 
 
-      </select> */} 
+      </select> */}
 
       <label>Category:</label>
       <select
@@ -364,30 +375,39 @@ export default function UploaCourse() {
       <br /><br />
       <label>grade:</label>
       <select
-        value={grade}
-        onChange={e => setGrade(e.target.value)}>
-        {categories &&
-          Object.entries(categories.grades).map(([key, value]) => {
-            const categoryField = value.value; // Replace 'field' with the specific field name you want to target
-            return (
-              <option key={key} value={categoryField}>
-                {key}
-              </option>
-            );
-          })}
+        value={selectedGrade}
+        onChange={(e) => setSelectedGrade(e.target.value)}
+      >
+        <option value="">Select Category</option>
+        {selectedCategory && grades(selectedCategory).map((value, index) => {
+          console.log("line 376 grades", value);
+          // const categoryField = value.value;
+          return (
+            <option key={index} value={value}>
+              {value}
+            </option>
+          );
+        })}
       </select>
 
       <br /><br />
-      <label>Topic:</label>
-      <select
-        value={topic}
-        onChange={e => setTopic(e.target.value)}>
-        <option value="Maths"> Maths</option>
-        <option value="Sciences">sciences</option>
-        <option value="English">English</option>
-        <option value="Life Orientation">Life Orientation</option>
-        <option value="Technology">Technology</option>
-      </select>
+        <label>Topic:</label>
+        <select
+          value={selectedSubject}
+          onChange={(e) => setSelectedSubject(e.target.value)}
+        >
+          {selectedCategory &&
+            selectedGrade &&
+            subjects(selectedCategory, selectedGrade).map((value, index) => {
+              console.log("line 376 subjects", value);
+              return (
+                <option key={index} value={value}>
+                  {value}
+                </option>
+              );
+            })}
+        </select>
+     
 
       <br /><br />
       <label>Full Description:</label>
