@@ -236,11 +236,11 @@ function AddCourseContent({ setOpenModal }) {
                     </Box>
                     {HideBox && (
                         <Box sx={{ padding: "30px" }}>
-                            <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
+                            <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px", alignItems: "center" }}>
 
                                 <TextFields isOutComes={false} label={"Lesson Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
                                 {/* <MediaFields type='file' label={"Select Lesson Content"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} /> */}
-                                <InputFileUpload handleFileChange={handleFileChange} />
+                                <InputFileUpload handleFileChange={handleFileChange} label={"Select Lesson Content"} />
                             </Box>
                             <Button variant='contained' sx={{
                                 backgroundColor: "primary.light",
@@ -255,7 +255,7 @@ function AddCourseContent({ setOpenModal }) {
 
 
                             }} onClick={handleAddButtonClick
-                            }>Add Topics
+                            }>Add
                             </Button>
                         </Box>
                     )}
@@ -291,7 +291,8 @@ function AddCourseContent({ setOpenModal }) {
 
                                     </Box>
                                     <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutComes} state={learningOutComes} />
-                                    <MediaFields type='file' label={"Add Supporting Documents:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
+                                    <InputFileUpload handleFileChange={handleFileChange} label={"Add Supporting Documents"} />
+
                                 </Box>
 
                             </Box>

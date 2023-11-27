@@ -117,7 +117,7 @@ function AdminProfile() {
             setValidations(prev => {
                 return { ...prev, confirmPassword: { errorStatus: "yes", errorMessage: warningMessages[0] } }
             })
-        } else if (confirmPassword !== oldPassword) {
+        } else if (confirmPassword !== newPassword) {
             setValidations(prev => {
                 return { ...prev, confirmPassword: { errorStatus: "yes", errorMessage: warningMessages[2] } };
             });
