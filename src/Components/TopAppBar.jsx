@@ -19,7 +19,7 @@ function TopAppBar() {
             <AppBarSubHeading>Wednesday, 25 October</AppBarSubHeading>
           </Box>
 
-          <Box sx={{ flexGrow: 0 }}>
+          <Box sx={{ flexGrow: 0, marginRight: { xs: "20px", sm: "0px", md: "0px", lg: "0px" } }}>
             <IconButton onClick={() => { }} sx={{ p: 0 }}>
               <Avatar sx={{ bgcolor: "primary.light" }}>ET</Avatar>
             </IconButton>

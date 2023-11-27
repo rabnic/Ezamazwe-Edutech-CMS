@@ -46,7 +46,7 @@ const rows = [
 export default function TableLayout() {
     return (
         <TableContainer component={Paper}>
-            <Table sx={{ minWidth: 600 }} aria-label="customized table">
+            <Table sx={{ width: "100%" }} aria-label="customized table">
                 <TableHead>
                     <TableRow>
                         <StyledTableCell >FullName</StyledTableCell>
