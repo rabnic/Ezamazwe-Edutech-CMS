@@ -23,6 +23,8 @@ function AddCourseContent({ setOpenModal }) {
     const [HideBox, setHideBox] = useState(true)
     const [videos, setVideos] = useState([]);
     const [newLesson, setNewLesson] = useState({})
+    const [selectedVideoIndex, setSelectedVideoIndex] = useState()
+    
     const handleAddButtonClick = () => {
         setNewLesson({
             lessonName: lessonName,
@@ -178,6 +180,10 @@ function AddCourseContent({ setOpenModal }) {
         setOpenModal(false)
     }
 
+    const handleCurrentSelectedVideo = (index) => {
+        setSelectedVideoIndex(index)
+    }
+
     const handleFileChange = (event) => {
         const fileInput = event.target;
         const files = fileInput.files;
@@ -185,7 +191,7 @@ function AddCourseContent({ setOpenModal }) {
         if (files.length > 0) {
             const newVideos = Array.from(files).map((file) => {
                 return {
-                    topicNumber: '', // Set your desired default values
+                    topicNumber: '', 
                     topicName: '',
                     supportingLinks: [],
                     videoName: file.name,
@@ -196,7 +202,6 @@ function AddCourseContent({ setOpenModal }) {
             setVideos((prevVideos) => [...prevVideos, ...newVideos]);
         }
     };
-
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", position: "fixed", zIndex: 100, top: 0, left: 0, backgroundColor: "#fff" }}>
@@ -212,16 +217,15 @@ function AddCourseContent({ setOpenModal }) {
                         </Box>
                         {
                             videos &&
-                            videos.map(videoObj => {
+                            videos.map((videoObj,index) => {
                                 return (
-                                    <Box variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
+                                    <Box key={index} onClick={() => handleCurrentSelectedVideo(index)} variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", justifyContent: "center", color: videoObj.lessonName !== "" ? "#0f0":"#fff", textTransform: 'none', }} >
                                         <PlayArrow sx={{ color: "#fff", }} />
                                         <Typography>{videoObj.videoName}</Typography>
                                     </Box>
                                 )
                             })
                         }
-
 
                     </Box>
                     <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
@@ -252,8 +256,6 @@ function AddCourseContent({ setOpenModal }) {
                                 fontWeight: "500",
                                 marginTop: "30px",
                                 marginBottom: "40px",
-
-
                             }} onClick={handleAddButtonClick
                             }>Add Topics
                             </Button>
@@ -275,8 +277,6 @@ function AddCourseContent({ setOpenModal }) {
                                             alignItems: "center",
                                             justifyContent: "center",
                                             backgroundSize: "cover"
-
-
                                         }}
                                     >
                                         <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, fontSize: "100px" }} />

@@ -6,7 +6,7 @@ import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
-    height: 1,
+    height: "auto",
     overflow: 'hidden',
     position: 'absolute',
     bottom: 0,
@@ -30,7 +30,7 @@ export default function InputFileUpload({ handleFileChange }) {
         //     <VisuallyHiddenInput type="file" multiple={true}
         //         onChange={handleFileChange} />
         // </Button>
-        <Button component="label" variant="contained" startIcon={<CloudUploadIcon />}>
+        <Button component="label" variant="contained" style={{minWidth: "fit-content"}} startIcon={<CloudUploadIcon />}>
             Upload file
             <VisuallyHiddenInput type="file" multiple={true} onChange={handleFileChange} />
         </Button>
