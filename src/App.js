@@ -8,6 +8,7 @@ import ResetPassword from './pages/ResetPassword';
 import UploaCourse from './pages/uploadCourse';
 import VideoEditor from './pages/videoEditor';
 import VideoUploader from './pages/videoEditor';
+import LearningOutcomes from './pages/learningOutcomes';
 import { getCategoryData, getSingleDocument } from './services/firebase';
 
 
@@ -26,6 +27,7 @@ function App() {
           <Route path='/Reset' element={ <ResetPassword />} />
           <Route path='/upload' element={ <UploaCourse />} />
           <Route path='/Edit' element={ <VideoUploader />} />
+          <Route path='/LearningOutcomes' element={ <LearningOutcomes />} />
         </Routes>
       </BrowserRouter>
 
