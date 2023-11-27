@@ -132,7 +132,7 @@ export const TextFieldPassword = ({ label, errorStatus, errorMessage, setState, 
 
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start", height: "auto", position: "relative", width: "100%", minWidth: { xs: "250px", md: "300px", lg: "300px" } }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "flex-start", height: "auto", position: "relative", width: "100%", minWidth: "300px" }}>
             <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: 18, textAlign: "left" }}>{label}</InputLabel>
             <OutlinedInput type={showPassword ? 'text' : 'password'}
                 required

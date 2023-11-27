@@ -250,9 +250,9 @@ function AddCourseContent({ setOpenModal }) {
                     )}
                     {showBox && (
                         <Box sx={{ width: "100%", height: "90vh", marginTop: "30px", padding: "30px", overflow: "scroll" }}>
-                            <Box sx={{width: "100%", display: "flex", flexDirection: { lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center",  justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
+                            <Box sx={{ width: "100%", display: "flex", flexDirection: { sm: "column", lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
 
-                                <Box sx={{ width: { lg: "40%", md: "70%" }, height: "50vh" }}>
+                                <Box sx={{ width: { sm: "90%", lg: "40%", md: "70%" }, height: "50vh" }}>
                                     <Box
                                         sx={{
                                             backgroundImage: `url(${backgroundImage})`,
@@ -284,7 +284,7 @@ function AddCourseContent({ setOpenModal }) {
                                 </Box>
 
                             </Box>
-                            <Box sx={{width:"100%", display:"flex", alignItems:{lg:"start",md:"center"},justifyContent:{lg:"start",md:"center"}}}>
+                            <Box sx={{ width: "100%", display: "flex", alignItems: { lg: "start", md: "center" }, justifyContent: { lg: "start", md: "center" } }}>
                                 <Button variant='contained' sx={{
                                     backgroundColor: "primary.light",
                                     color: "#fff",

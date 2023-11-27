@@ -69,7 +69,8 @@ const ResetPassword = () => {
       )}
 
       <Box bgcolor={"#1C3F53"} sx={{ width: { sm: "100%", lg: "65%" }, height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Paper sx={{ maxWidth: "500px", width: "60%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
+        <Paper sx={{ maxWidth: "500px", width: { xs: "85%", md: "60%", lg: "60%" }, height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
+
           <Box sx={{ width: "100%", height: "fit-content", display: "flex", flexDirection: "column", gap: "30px", justifyContent: "center", alignItems: "center" }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               <SectionHeading>
