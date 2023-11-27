@@ -7,6 +7,7 @@ import TextFields, { SelectField, TextAreas } from '../Components/TextFields'
 import Button from '../Components/Buttons';
 import AddCourseContent from './AddCourseContent'
 import MediaFields from '../Components/AddMedia'
+import { saveCourseToFirestore } from '../services/firebase'
 
 
 function AddNewCourse() {
@@ -18,18 +19,19 @@ function AddNewCourse() {
   const [grade, setGrade] = useState("")
   const [subject, setSubject] = useState("")
   const [learningOutComes, setLearningOutComes] = useState("")
-
+  const [courseDocumentId, setCourseDocumentId] = useState("")
   const [openModal, setOpenModal] = useState(false)
-  const [newCourse, setNewCourse] = useState({
-    courseName: "",
-    courseType: "",
-    courseShortDescription: "",
-    courseFullDescription: "",
-    courseCategory: "",
-    grade: "",
-    subject: "",
-    learningOutcomes: []
-  })
+
+  // const [newCourse, setNewCourse] = useState({
+  //   courseName: "",
+  //   courseType: "",
+  //   courseShortDescription: "",
+  //   courseFullDescription: "",
+  //   courseCategory: "",
+  //   grade: "",
+  //   subject: "",
+  //   learningOutcomes: []
+  // })
 
 
 
@@ -174,7 +176,7 @@ function AddNewCourse() {
     }
   }
 
-  const handleAddNewCourse = () => {
+  const handleAddNewCourse = async() => {
     const isAllFieldsValid = validateInput()
     if (!isAllFieldsValid) return
     const courseObject = {
@@ -187,9 +189,10 @@ function AddNewCourse() {
       subject: subject,
       learningOutcomes: learningOutComes,
     }
-    setNewCourse(courseObject)
-    console.log(courseObject)
 
+    const courseId = await saveCourseToFirestore(courseObject);
+
+    setCourseDocumentId(courseId);
     setOpenModal(true)
   }
 
@@ -223,7 +226,7 @@ function AddNewCourse() {
           <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} />
         </Box>
       </Box>
-      {openModal && <AddCourseContent newCourse={newCourse} setOpenModal={setOpenModal} setNewCourse={setNewCourse} />}
+      {openModal && <AddCourseContent setOpenModal={setOpenModal}  courseDocumentId={courseDocumentId}/>}
     </Box>
   )
 }

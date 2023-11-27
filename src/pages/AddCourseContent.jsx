@@ -8,10 +8,10 @@ import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, PlayArrow, Pl
 import backgroundImage from '../assets/placeholderImg.png'
 import MediaFields from '../Components/AddMedia'
 import InputFileUpload from '../Components/InputFileUpload'
-import { saveCourseToFirestore } from '../services/firebase'
+import { saveCourseToFirestore, uploadAllVideos } from '../services/firebase'
 
 
-function AddCourseContent({ setOpenModal, newCourse, setNewCourse }) {
+function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [lessonName, setLessonName] = useState("")
     const [courseType, setCourseType] = useState("")
     const [courseShortDescription, setCourseShortDescription] = useState("")
@@ -27,7 +27,8 @@ function AddCourseContent({ setOpenModal, newCourse, setNewCourse }) {
     const [topicNumber, setTopicNumber] = useState("")
     const [newLesson, setNewLesson] = useState({})
     const [selectedVideoIndex, setSelectedVideoIndex] = useState()
-    
+
+    console.log("DOC ID", courseDocumentId)
     const handleAddButtonClick = () => {
         setNewLesson({
             lessonName: lessonName,
@@ -194,7 +195,7 @@ function AddCourseContent({ setOpenModal, newCourse, setNewCourse }) {
         if (files.length > 0) {
             const newVideos = Array.from(files).map((file) => {
                 return {
-                    topicNumber: '', 
+                    topicNumber: '',
                     topicName: '',
                     supportingLinks: [],
                     videoName: file.name,
@@ -209,24 +210,28 @@ function AddCourseContent({ setOpenModal, newCourse, setNewCourse }) {
     const handleSaveTopic = () => {
         console.log(videos);
         let tempVideos = [...videos];
-        tempVideos[selectedVideoIndex].topicName = topicName; 
+        tempVideos[selectedVideoIndex].topicName = topicName;
         tempVideos[selectedVideoIndex].topicNumber = topicNumber;
-        setVideos(tempVideos) 
+        tempVideos[selectedVideoIndex].videoName = `${topicNumber}: ${topicName}`;
+        setVideos(tempVideos)
     }
 
     const handleSaveAllToCourse = () => {
-        let tempLesson =  {...newLesson}
-        console.log("tempLesson",tempLesson);
-        tempLesson.topics = [...videos]
-        let newCourseWithLessons = null
-        setNewCourse(prev => {
-            newCourseWithLessons = {...prev, lessons: [{...tempLesson}]}
-            console.log("newCourseWithLessons",newCourseWithLessons)
-            
-            return newCourseWithLessons;
-        })
-        saveCourseToFirestore(newCourseWithLessons)
+        // let tempLesson = { ...newLesson }
+        // console.log("tempLesson", tempLesson);
+        // tempLesson.topics = [...videos]
+        // let newCourseWithLessons = null
+        uploadAllVideos(videos)
+            .then((updatedVideos) => {
+                console.log('Videos uploaded successfully:', updatedVideos);
+            })
+            .catch((error) => {
+                console.error('Error uploading videos:', error);
+            });
+        // saveCourseToFirestore(newCourseWithLessons)
     }
+
+
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", position: "fixed", zIndex: 100, top: 0, left: 0, backgroundColor: "#fff" }}>
@@ -242,9 +247,9 @@ function AddCourseContent({ setOpenModal, newCourse, setNewCourse }) {
                         </Box>
                         {
                             videos &&
-                            videos.map((videoObj,index) => {
+                            videos.map((videoObj, index) => {
                                 return (
-                                    <Box key={index} onClick={() => handleCurrentSelectedVideo(index)} variant="text" sx={{cursor:"pointer", display: "flex", flexDirection: "row", border: selectedVideoIndex === index ? "1px dashed orange" : "none" ,alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", justifyContent: "center", color: videoObj.topicName !== "" ? "#0f0":"#fff", textTransform: 'none', }} >
+                                    <Box key={index} onClick={() => handleCurrentSelectedVideo(index)} variant="text" sx={{ cursor: "pointer", display: "flex", flexDirection: "row", border: selectedVideoIndex === index ? "1px dashed orange" : "none", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", color: videoObj.topicName !== "" ? "#0f0" : "#fff", textTransform: 'none', }} >
                                         <PlayArrow sx={{ color: "#fff", }} />
                                         <Typography>{videoObj.videoName}</Typography>
                                     </Box>
@@ -268,7 +273,7 @@ function AddCourseContent({ setOpenModal, newCourse, setNewCourse }) {
                             <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
 
                                 <TextFields isOutComes={false} label={"Lesson Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
-                                {/* <MediaFields type='file' label={"Select Lesson Content"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} /> */}
+                                {/* <MediaFields type='file' label={"Select Lesson Content"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} /> */}
                                 <InputFileUpload handleFileChange={handleFileChange} />
                             </Box>
                             <Button variant='contained' sx={{
@@ -311,7 +316,7 @@ function AddCourseContent({ setOpenModal, newCourse, setNewCourse }) {
                                 <Box sx={{ maxWidth: "700px", width: { lg: "60%", md: "70%" }, display: "flex", flexDirection: "column", gap: "20px" }}>
                                     <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
 
-                                        <TextFields isOutComes={false} label={"Topic Number:"}  errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicNumber} state={topicNumber} />
+                                        <TextFields isOutComes={false} label={"Topic Number:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicNumber} state={topicNumber} />
                                         <TextFields isOutComes={false} label={"Topic Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicName} state={topicName} />
 
                                     </Box>
@@ -352,7 +357,7 @@ function AddCourseContent({ setOpenModal, newCourse, setNewCourse }) {
                             fontSize: "18px",
                             fontWeight: "500"
                         }}
-                        onClick={handleSaveAllToCourse}
+                            onClick={handleSaveAllToCourse}
                         >
                             Save All
                         </Button>
