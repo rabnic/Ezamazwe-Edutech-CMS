@@ -8,9 +8,10 @@ import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, PlayArrow, Pl
 import backgroundImage from '../assets/placeholderImg.png'
 import MediaFields from '../Components/AddMedia'
 import InputFileUpload from '../Components/InputFileUpload'
+import { saveCourseToFirestore } from '../services/firebase'
 
 
-function AddCourseContent({ setOpenModal }) {
+function AddCourseContent({ setOpenModal, newCourse, setNewCourse }) {
     const [lessonName, setLessonName] = useState("")
     const [courseType, setCourseType] = useState("")
     const [courseShortDescription, setCourseShortDescription] = useState("")
@@ -22,6 +23,8 @@ function AddCourseContent({ setOpenModal }) {
     const [showBox, setShowBox] = useState(false);
     const [HideBox, setHideBox] = useState(true)
     const [videos, setVideos] = useState([]);
+    const [topicName, setTopicName] = useState("")
+    const [topicNumber, setTopicNumber] = useState("")
     const [newLesson, setNewLesson] = useState({})
     const [selectedVideoIndex, setSelectedVideoIndex] = useState()
     
@@ -203,6 +206,28 @@ function AddCourseContent({ setOpenModal }) {
         }
     };
 
+    const handleSaveTopic = () => {
+        console.log(videos);
+        let tempVideos = [...videos];
+        tempVideos[selectedVideoIndex].topicName = topicName; 
+        tempVideos[selectedVideoIndex].topicNumber = topicNumber;
+        setVideos(tempVideos) 
+    }
+
+    const handleSaveAllToCourse = () => {
+        let tempLesson =  {...newLesson}
+        console.log("tempLesson",tempLesson);
+        tempLesson.topics = [...videos]
+        let newCourseWithLessons = null
+        setNewCourse(prev => {
+            newCourseWithLessons = {...prev, lessons: [{...tempLesson}]}
+            console.log("newCourseWithLessons",newCourseWithLessons)
+            
+            return newCourseWithLessons;
+        })
+        saveCourseToFirestore(newCourseWithLessons)
+    }
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", position: "fixed", zIndex: 100, top: 0, left: 0, backgroundColor: "#fff" }}>
             <Box sx={{ width: "100%", display: "flex", flexDirection: "row" }}>
@@ -219,7 +244,7 @@ function AddCourseContent({ setOpenModal }) {
                             videos &&
                             videos.map((videoObj,index) => {
                                 return (
-                                    <Box key={index} onClick={() => handleCurrentSelectedVideo(index)} variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", justifyContent: "center", color: videoObj.lessonName !== "" ? "#0f0":"#fff", textTransform: 'none', }} >
+                                    <Box key={index} onClick={() => handleCurrentSelectedVideo(index)} variant="text" sx={{cursor:"pointer", display: "flex", flexDirection: "row", border: selectedVideoIndex === index ? "1px dashed orange" : "none" ,alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", justifyContent: "center", color: videoObj.topicName !== "" ? "#0f0":"#fff", textTransform: 'none', }} >
                                         <PlayArrow sx={{ color: "#fff", }} />
                                         <Typography>{videoObj.videoName}</Typography>
                                     </Box>
@@ -286,12 +311,12 @@ function AddCourseContent({ setOpenModal }) {
                                 <Box sx={{ maxWidth: "700px", width: { lg: "60%", md: "70%" }, display: "flex", flexDirection: "column", gap: "20px" }}>
                                     <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
 
-                                        <TextFields isOutComes={false} label={"Topic Number:"} type='Number' errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
-                                        <TextFields isOutComes={false} label={"Topic Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
+                                        <TextFields isOutComes={false} label={"Topic Number:"}  errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicNumber} state={topicNumber} />
+                                        <TextFields isOutComes={false} label={"Topic Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicName} state={topicName} />
 
                                     </Box>
                                     <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutComes} state={learningOutComes} />
-                                    <MediaFields type='file' label={"Add Supporting Documents:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
+                                    {/* <MediaFields type='file' label={"Add Supporting Documents:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} /> */}
                                 </Box>
 
                             </Box>
@@ -308,7 +333,7 @@ function AddCourseContent({ setOpenModal }) {
 
                                     marginLeft: { lg: "30px", md: "0" }
                                 }}
-                                    onClick={() => { console.log(videos) }}>Save
+                                    onClick={handleSaveTopic}>Save
                                 </Button>
                             </Box>
                         </Box>
@@ -327,6 +352,7 @@ function AddCourseContent({ setOpenModal }) {
                             fontSize: "18px",
                             fontWeight: "500"
                         }}
+                        onClick={handleSaveAllToCourse}
                         >
                             Save All
                         </Button>

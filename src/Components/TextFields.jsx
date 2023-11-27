@@ -80,7 +80,7 @@ export function DocumentField({ label, type = "text", errorStatus, errorMessage,
     )
 }
 
-export function SelectField({ label, type = "text", errorStatus, errorMessage, state, setState, inputLabel }) {
+export function SelectField({ label, type = "text", errorStatus, errorMessage, state="", setState, inputLabel }) {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
@@ -107,6 +107,7 @@ export function SelectField({ label, type = "text", errorStatus, errorMessage, s
                     onChange={(e) => setState(e.target.value)}
                 // value={age}
                 >
+                    <MenuItem value={""}>Ten</MenuItem>
                     <MenuItem value={10}>Ten</MenuItem>
                     <MenuItem value={20}>Twenty</MenuItem>
                     <MenuItem value={30}>Thirty</MenuItem>

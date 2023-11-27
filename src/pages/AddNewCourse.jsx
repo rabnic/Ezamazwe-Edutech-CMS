@@ -223,7 +223,7 @@ function AddNewCourse() {
           <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} />
         </Box>
       </Box>
-      {openModal && <AddCourseContent setOpenModal={setOpenModal} setNewCourse={setNewCourse} />}
+      {openModal && <AddCourseContent newCourse={newCourse} setOpenModal={setOpenModal} setNewCourse={setNewCourse} />}
     </Box>
   )
 }

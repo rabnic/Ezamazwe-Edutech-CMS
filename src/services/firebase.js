@@ -349,6 +349,16 @@ const createAdminToFirestore = async (admin) => {
   console.log("Doc Reff ===== ", docRef);
 };
 
+export const saveCourseToFirestore = async (courseData) => {
+  try {
+    // const docRef = await collection(database, "courses").add(courseData);
+    const docRef = await addDoc(collection(database, "courses"), courseData)
+    console.log('Document written with ID: ', docRef.id);
+  } catch (error) {
+    console.error('Error adding document: ', error);
+  }
+};
+
 
 // //deletes admin
 // const deleteAdmin = async (id) => {
