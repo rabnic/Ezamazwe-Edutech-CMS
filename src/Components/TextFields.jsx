@@ -103,6 +103,7 @@ export function SelectField({ label, type = "text", errorStatus, errorMessage, s
                         },
                         height: "50px"
                     }}
+                    value={state}
                     onChange={(e) => setState(e.target.value)}
                 // value={age}
                 >

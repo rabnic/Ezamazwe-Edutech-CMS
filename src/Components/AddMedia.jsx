@@ -6,7 +6,7 @@ export default function MediaFields({ label, type = "text", errorStatus, errorMe
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
             <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
-            <OutlinedInput value={state} type={type} required placeholder="Enter" variant="outlined" sx={{
+            <OutlinedInput multiple={true} value={state} type={type} required placeholder="Enter" variant="outlined" sx={{
                 width: "100%", height: "50px", fontSize: "16px", borderRadius: "10px",
                 "& .MuiOutlinedInput-notchedOutline": {
                     borderColor: "primary.light",
