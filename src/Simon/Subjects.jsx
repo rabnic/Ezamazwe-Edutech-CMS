@@ -40,7 +40,7 @@ function Subjects() {
       <h1>Subjects for {grade}</h1>
       <ul style={{ display: 'flex', flexDirection: 'column' }}>
         {subjectsData.map((subject, index) => (
-          <Link key={index}>{subject}</Link>
+          <Link key={index} to={{pathname: `/viewsubjects/${id}/${grade}`}}>{subject}</Link>
         ))}
       </ul>
     </div>
