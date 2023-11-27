@@ -17,7 +17,7 @@ function Courses() {
         subHeading="Some sub heading for this page"
       />
       <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: "100%", height: "100%", marginLeft: "auto", marginRight: "auto" }}>
-
+        
       </Box>
 
     </Box>

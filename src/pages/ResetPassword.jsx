@@ -10,6 +10,7 @@ import { ForgotPasswordFunction } from '../services/firebase'
 const ResetPassword = () => {
   const [email, setEmail] = useState("");
   const [isEmailSent, setIsEmailSent] = useState(false);
+  const [isLoading, setIsloading] = useState(false);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const [validations, setValidations] = useState({
@@ -27,13 +28,17 @@ const ResetPassword = () => {
     if (!isFieldValid) return;
 
     try {
+      setIsloading(true);
       const response = await ForgotPasswordFunction(email);
+      console.log("reset password email response", response);
       setIsEmailSent(true)
     } catch (error) {
       console.log("Unable to update password:", error);
+    } finally {
+      setIsloading(false)
+
     }
   }
-
 
   const validateInput = () => {
     let isFieldValid = true;
@@ -88,7 +93,7 @@ const ResetPassword = () => {
               </Typography>
             }
             <Box sx={{ marginTop: "30px" }}>
-              <Button text={"Reset"} buttonFunction={() => { handleReset() }} />
+              <Button text={"Reset"} buttonFunction={() => { handleReset() }}   isIconButton={isLoading} iconType='loader'/>
             </Box>
           </Box>
         </Paper>
