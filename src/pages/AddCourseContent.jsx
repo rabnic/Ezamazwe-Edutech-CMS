@@ -34,12 +34,12 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
 
     const handleAddButtonClick = async () => {
-        if(lessonName === "") {
+        if (lessonName === "") {
             alert("Lesson name required!");
             return;
         }
 
-        if(videos.length === 0) {
+        if (videos.length === 0) {
             alert("Please select videos for this lesson");
             return;
         }
