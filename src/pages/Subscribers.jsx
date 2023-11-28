@@ -20,7 +20,7 @@ function CustomTabPanel(props) {
       {...other}
     >
       {value === index && (
-        <Box sx={{ p: 3 }}>
+        <Box >
           <Typography>{children}</Typography>
         </Box>
       )}
@@ -61,14 +61,14 @@ const columns = [
   {
     id: 'density',
     label: 'Subscription Date',
-    minWidth: 170,
+    minWidth: 100,
     align: 'right',
     format: (value) => value.toFixed(2),
   },
   {
     id: 'density',
     label: 'Expiry Date',
-    minWidth: 170,
+    minWidth: 100,
     align: 'right',
     format: (value) => value.toFixed(2),
   },
@@ -120,13 +120,13 @@ function Subscribers() {
 
   }
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px", maxWidth: "1300px", marginLeft: "auto", marginRight: "auto" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px", maxWidth: "1500px", marginLeft: "auto", marginRight: "auto" }}>
 
       <PageHeadingContainer
         heading="Subscribers"
         subHeading="Some sub heading for this page"
       />
-      <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: { xs: "90%", sm: "100%", md: "100%", lg: "100%" }, height: "100%", marginLeft: "auto", marginRight: "auto" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: { xs: "85%", sm: "100%", md: "100%", lg: "100%" }, height: "100%", marginLeft: "auto", marginRight: "auto" }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered variant='fullWidth'
           sx={{
             "& button:focus": { backgroundColor: "primary.main", color: "#fff" },
@@ -138,7 +138,7 @@ function Subscribers() {
           <Tab label="Expired Subscription" {...a11yProps(1)} sx={{ border: "1px solid #1C3F53", color: "primary.light" }} />
         </Tabs>
 
-        <CustomTabPanel value={value} index={0}>
+        <CustomTabPanel value={value} index={0} sx={{ p: 0 }} >
           <Paper sx={{ width: "100%" }}>
             <TableContainer sx={{ width: "fullWidth", maxHeight: 440 }}>
               <Table stickyHeader aria-label="sticky table">
