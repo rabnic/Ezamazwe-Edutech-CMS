@@ -1,13 +1,14 @@
-import { Box, Typography } from '@mui/material'
-import React, { useState } from 'react'
+import { Box, MenuItem, Typography } from '@mui/material'
+import React, { useEffect, useState } from 'react'
 import PageSubHeading from '../Components/PageSubHeading'
 import PageHeading from '../Components/PageHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
-import TextFields, { SelectField, TextAreas } from '../Components/TextFields'
+import TextFields, { SelectFieldGrade, TextAreas } from '../Components/TextFields'
 import Button from '../Components/Buttons';
 import AddCourseContent from './AddCourseContent'
 import MediaFields from '../Components/AddMedia'
-import { saveCourseToFirestore } from '../services/firebase'
+import { getCategoryData, saveCourseToFirestore } from '../services/firebase'
+import SelectField from '../Components/SelectField'
 
 
 function AddNewCourse() {
@@ -21,6 +22,99 @@ function AddNewCourse() {
   const [learningOutComes, setLearningOutComes] = useState("")
   const [courseDocumentId, setCourseDocumentId] = useState("")
   const [openModal, setOpenModal] = useState(false)
+
+  const [categories, setCategories] = useState()
+
+  const [selectedCategory, setSelectedCategory] = useState("")
+  const [selectedGrade, setSelectedGrade] = useState("")
+  const [selectedSubject, setSelectedSubject] = useState("")
+
+  const [savedLearningOutcomes, setSavedLearningOutcomes] = useState([])
+  const [id, setID] = useState('')
+
+  useEffect(() => {
+    const category = async () => {
+      await getCategoryData().then(data => {
+        setCategories(data)
+      })
+    }
+    category()
+  }, [])
+
+  const categoryNames = () => {
+    return Object.keys(categories).map(key => {
+      return { [key]: categories[key].name }
+
+    })
+  }
+
+  const grades = (key) => {
+    return categories[key]?.grades || [];
+  };
+
+  const subjects = (key, grade) => {
+    if (categories[key] && categories[key].subjects && categories[key].subjects[grade]) {
+      return categories[key].subjects[grade];
+    }
+    return [];
+  };
+
+
+  const learningOutcomesSaved = (learningOutComes) => {
+
+    const newlearningOutcome = {
+      id: savedLearningOutcomes.length,
+      learningOutcome: learningOutComes,
+    };
+
+    console.log(newlearningOutcome);
+    setSavedLearningOutcomes([...savedLearningOutcomes, newlearningOutcome]);
+  };
+
+
+  const learningOutcomesDelete = (index) => {
+
+    console.log(index);
+
+    if (index >= 0 && index < savedLearningOutcomes.length) {
+      let updatedOutcomes = [...savedLearningOutcomes];
+      updatedOutcomes.splice(index, 1);
+      console.log('Outcome deleted successfully!');
+      setSavedLearningOutcomes(updatedOutcomes);
+    } else {
+      console.log('Invalid index!');
+    }
+  };
+
+
+
+  const editOutcome = (index, learningOutcome) => {
+    console.log(index, learningOutcome);
+
+
+    setLearningOutComes(learningOutcome)
+    setID(index)
+
+    // setShow(true)
+  };
+
+  const learningOutcomesUpdate = (newlearningOutcome) => {
+    console.log(id, newlearningOutcome);
+    let updatedOutcomes = [...savedLearningOutcomes];
+
+    if (id >= 0 && id < savedLearningOutcomes.length) {
+
+
+      updatedOutcomes[id] = newlearningOutcome;
+      console.log('Outcome edited successfully!');
+
+      setSavedLearningOutcomes(updatedOutcomes);
+
+    } else {
+      console.log('Invalid index!');
+    }
+  };
+
 
   // const [newCourse, setNewCourse] = useState({
   //   courseName: "",
@@ -176,23 +270,28 @@ function AddNewCourse() {
     }
   }
 
-  const handleAddNewCourse = async() => {
+  const handleAddNewCourse = async () => {
     const isAllFieldsValid = validateInput()
     if (!isAllFieldsValid) return
+
     const courseObject = {
       courseName: courseName,
       courseType: courseType,
       courseShortDescription: courseShortDescription,
       courseFullDescription: courseFullDescription,
-      courseCategory: courseCategory,
-      grade: grade,
-      subject: subject,
-      learningOutcomes: learningOutComes,
+      courseCategory: selectedCategory,
+      grade: selectedGrade,
+      subject: selectedSubject,
+      learningOutcomes: savedLearningOutcomes,
+      createDate: new Date()
     }
 
-    const courseId = await saveCourseToFirestore(courseObject);
+    if (courseDocumentId === "") {
+      const courseId = await saveCourseToFirestore(courseObject);
+      setCourseDocumentId(courseId);
+    }
 
-    setCourseDocumentId(courseId);
+
     setOpenModal(true)
   }
 
@@ -212,9 +311,39 @@ function AddNewCourse() {
         </Box>
         <TextAreas isOutComes={false} label={"Course Short Description:"} errorStatus={validations.courseShortDescription.errorStatus} errorMessage={validations.courseShortDescription.errorMessage} setState={setCourseShortDescription} state={courseShortDescription} />
         <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "column", lg: "row" }, gap: "10px" }}>
-          <SelectField inputLabel={"Select Category"} label={"Course Category:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setCourseCategory} state={courseCategory} />
-          <SelectField inputLabel={"Select Grade"} label={"Grade:"} errorStatus={validations.grade.errorStatus} errorMessage={validations.grade.errorMessage} setState={setGrade} state={grade} />
-          <SelectField inputLabel={"Select Subject"} label={"Subject:"} errorStatus={validations.subject.errorStatus} errorMessage={validations.subject.errorMessage} setState={setSubject} state={setSubject} />
+          <SelectField inputLabel={"Select Category"} label={"Course Category:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedCategory} state={selectedCategory}>
+            {categories &&
+              Object.entries(categories).map(([key, object]) => {
+                return (
+                  <MenuItem key={key} value={object.id}>
+                    {object.name}
+                  </MenuItem>
+                );
+              })}
+          </SelectField>
+          <SelectField inputLabel={"Select Grade"} label={"Course Grade:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedGrade} state={selectedGrade} isDisabled={selectedCategory === ""}>
+            {selectedCategory && grades(selectedCategory).map((value, index) => {
+              return (
+                <MenuItem key={index} value={value}>
+                  {value}
+                </MenuItem>
+              );
+            })}
+          </SelectField>
+          <SelectField inputLabel={"Select Subject"} label={"Course Subject:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedSubject} state={selectedSubject} isDisabled={selectedCategory === "" || selectedGrade === ""}>
+            {selectedCategory &&
+              selectedGrade &&
+              subjects(selectedCategory, selectedGrade).map((value, index) => {
+                return (
+                  <MenuItem key={index} value={value}>
+                    {value}
+                  </MenuItem>
+                );
+              })}
+          </SelectField>
+          {/* <SelectField inputLabel={"Select Category"} label={"Course Category:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedCategory} state={selectedCategory} options={categories} /> */}
+          {/* <SelectFieldGrade inputLabel={"Select Grade"} label={"Grade:"} errorStatus={validations.grade.errorStatus} errorMessage={validations.grade.errorMessage} setState={setSelectedGrade} state={selectedGrade} options={() => grades()}/>
+          <SelectField inputLabel={"Select Subject"} label={"Subject:"} errorStatus={validations.subject.errorStatus} errorMessage={validations.subject.errorMessage} setState={setSelectedSubject} state={selectedSubject} options={categories} /> */}
         </Box>
         <Box>
           <TextFields label={"Learning Outcomes:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutComes} state={learningOutComes} />
@@ -226,7 +355,7 @@ function AddNewCourse() {
           <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} />
         </Box>
       </Box>
-      {openModal && <AddCourseContent setOpenModal={setOpenModal}  courseDocumentId={courseDocumentId}/>}
+      {openModal && <AddCourseContent setOpenModal={setOpenModal} courseDocumentId={courseDocumentId} />}
     </Box>
   )
 }

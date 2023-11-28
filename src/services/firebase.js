@@ -6,7 +6,7 @@ import { initializeApp } from "firebase/app";
 
 import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword, onAuthStateChanged, getIdTokenResult, signOut as signOutFirebase } from 'firebase/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"
-import { addDoc, collection, doc, documentId, getFirestore, setDoc } from "firebase/firestore";
+import { addDoc, collection, doc, documentId, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
 
 import { getAuth } from 'firebase/auth'
 // TODO: Add SDKs for Firebase products that you want to use
@@ -388,18 +388,92 @@ export const saveLessonToFirestore = async (courseId, lessonData) => {
 export const saveTopicToFirestore = async (courseId, lessonId, topicData) => {
   let documentId;
   try {
-    const courseDocRef = doc(database, "courses", courseId);
-    const lessonsCollectionRef = collection(courseDocRef, "lessons");
-    const lessonDocRef = doc(database, "courses", courseId);
+    const lessondDocRef = doc(database, `courses/${courseId}/lessons/${lessonId}`);
+    const lessonsCollectionRef = collection(lessondDocRef, "topics");
+    
+    // const lessonDocRef = doc(database, "courses", lessonId);
+    // const lessonDocRef = doc(database, "courses", lessonId);
 
-    // const docRef = await addDoc(courseCollectionRef, lessonData);
-    // documentId = docRef.id;
-    // console.log('Document lessonTopic write success', documentId);
+    // const lessonsCollectionRef = collection(lessonDocRef, "topics");
+   
+
+    const docRef = await addDoc(lessonsCollectionRef, topicData);
+    documentId = docRef.id;
+    console.log('Document lessonTopic write success', documentId);
   } catch (error) {
     console.error('Error adding document: ', error);
   }
   return documentId;
 };
+
+export const getCategoryData = async () =>{
+  //get data from database 
+  console.log("before try");
+
+  try {
+    const data = await getDocs(collection(database, "Content"));
+    console.log("after get docs", data);
+
+    // const filtereddata = data.docs.map((doc) => ({
+
+    //     //this fucntion  returns the values in the collection
+    //     ...doc.data(),
+    //     id: doc.id
+    // }));
+
+    const categoryData = {};
+    data.docs.forEach((doc) => (
+      
+      categoryData[doc.id] = {
+      ...doc.data(),
+      id: doc.id
+  }));
+
+    console.log("after Filtered data");
+
+    console.log(categoryData);
+    return categoryData
+
+} catch (error) {
+
+    console.error("Error fetching collection", error);
+}
+}
+
+// Function to add a document to Firestore
+// const addDocumentToFirestore = async () => {
+//   try {
+//     const coursesCollection = firebase.firestore().collection('courses');
+//     const courseDocRef = coursesCollection.doc('your_course_id'); // Replace with the actual course ID
+//     const lessonsCollection = courseDocRef.collection('lessons');
+//     const lessonDocRef = lessonsCollection.doc('your_lesson_id'); // Replace with the actual lesson ID
+//     const topicsCollection = lessonDocRef.collection('topics');
+
+//     // Add the new document to the topics collection
+//     await topicsCollection.add(newDocumentData);
+
+//     console.log('Document added to Firestore successfully');
+//   } catch (error) {
+//     console.error('Error adding document to Firestore:', error);
+//   }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

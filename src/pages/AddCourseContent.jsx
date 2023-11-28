@@ -1,4 +1,4 @@
-import { Box, Button, Paper, TextField, Typography } from '@mui/material'
+import { Box, Button as ButtonMUI, Paper, TextField, Typography } from '@mui/material'
 import React, { useState } from 'react'
 import PageHeading from '../Components/PageHeading'
 import PageSubHeading from '../Components/PageSubHeading'
@@ -8,7 +8,9 @@ import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, PlayArrow, Pl
 import backgroundImage from '../assets/placeholderImg.png'
 import MediaFields from '../Components/AddMedia'
 import InputFileUpload from '../Components/InputFileUpload'
-import { saveCourseToFirestore, saveLessonToFirestore, updateVideosWithFirebaseURLs, uploadAllVideos, uploadCourseVideos } from '../services/firebase'
+import Button from '../Components/Buttons';
+
+import { saveCourseToFirestore, saveLessonToFirestore, saveTopicToFirestore, updateVideosWithFirebaseURLs, uploadAllVideos, uploadCourseVideos } from '../services/firebase'
 
 
 function AddCourseContent({ setOpenModal, courseDocumentId }) {
@@ -28,12 +30,14 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [newLesson, setNewLesson] = useState({})
     const [selectedVideoIndex, setSelectedVideoIndex] = useState()
     const [lessonDocumentID, setLessonDocumentID] = useState("")
+    const [isLoading, setIsloading] = useState(false);
+
 
     const handleAddButtonClick = async () => {
         setNewLesson({
             lessonName: lessonName,
         })
-        const lessonDocumentID = await saveLessonToFirestore(courseDocumentId, { lessonName: lessonName })
+        const lessonDocumentID = await saveLessonToFirestore(courseDocumentId, { lessonName: lessonName, createDate: new Date(), })
         console.log("DOC ID", lessonDocumentID)
         setLessonDocumentID(lessonDocumentID)
         setShowBox(true);
@@ -200,7 +204,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                     topicName: '',
                     supportingLinks: [],
                     videoName: file.name,
-                    // video: URL.createObjectURL(file),
+                    createDate: new Date(),
                     video: file,
                 };
             });
@@ -210,41 +214,47 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     };
 
     const handleSaveTopic = () => {
+        if (selectedVideoIndex === undefined) {
+            alert('Please select a video to be linked to this topic');
+            return;
+        }
         console.log(videos);
         let tempVideos = [...videos];
         tempVideos[selectedVideoIndex].topicName = topicName;
         tempVideos[selectedVideoIndex].topicNumber = topicNumber;
         const fileExt = tempVideos[selectedVideoIndex].videoName.substr(tempVideos[selectedVideoIndex].videoName.lastIndexOf("."))
-        tempVideos[selectedVideoIndex].videoName = `${topicNumber}: ${topicName}${fileExt}`;
+        tempVideos[selectedVideoIndex].videoName = `${topicName}${fileExt}`;
         setVideos(tempVideos)
     }
 
     const handleSaveAllToCourse = async () => {
-        // let tempLesson = { ...newLesson }
-        // console.log("tempLesson", tempLesson);
-        // tempLesson.topics = [...videos]
-        // let newCourseWithLessons = null
-        // uploadAllVideos(videos)
-        //     .then((updatedVideos) => {
-        //         console.log('Videos uploaded successfully:', updatedVideos);
-        //     })
-        //     .catch((error) => {
-        //         console.error('Error uploading videos:', error);
-        //     });
-        // saveCourseToFirestore(newCourseWithLessons)
-        const updatedVideos = await uploadCourseVideos(courseDocumentId, videos);
-        console.log(updatedVideos)
+        try {
+            setIsloading(true);
+            const updatedVideos = await uploadCourseVideos(courseDocumentId, videos);
+            for (let topicObject of updatedVideos) {
+
+                await saveTopicToFirestore(courseDocumentId, lessonDocumentID, topicObject)
+            }
+            console.log(updatedVideos)
+            setSelectedVideoIndex("")
+            setVideos([])
+            setTopicName("")
+            setTopicNumber("")
+            setLessonName("")
+        } catch (error) {
+            console.log(error)
+        } finally {
+            setIsloading(false);
+        }
     }
-
-
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", position: "fixed", zIndex: 100, top: 0, left: 0, backgroundColor: "#fff" }}>
             <Box sx={{ width: "100%", display: "flex", flexDirection: "row" }}>
                 <Box sx={{ width: "15%", height: "100vh", display: "flex", flexDirection: "column", backgroundColor: "primary.light" }}>
-                    <Button sx={{ marginRight: "auto", marginTop: "20px" }} onClick={closeModal}>
+                    <ButtonMUI sx={{ marginRight: "auto", marginTop: "20px" }} onClick={closeModal}>
                         <ArrowBackRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, }} />
-                    </Button>
+                    </ButtonMUI>
                     <Box sx={{ marginTop: "150px", marginBottom: "auto", }}>
                         <Box sx={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center", alignItems: "center", marginBottom: "50px" }}>
                             <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
@@ -263,10 +273,10 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                         }
 
                     </Box>
-                    <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
+                    <ButtonMUI variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
                         <Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
                         Add More
-                    </Button>
+                    </ButtonMUI>
                 </Box>
                 <Box sx={{ width: "85%", height: "100vh", display: "flex", flexDirection: "column", paddingTop: "50px" }}>
                     <Box sx={{ display: "flex", flexDirection: "column", marginLeft: "auto", textAlign: "right", paddingRight: "30px", }}>
@@ -281,7 +291,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                 {/* <MediaFields type='file' label={"Select Lesson Content"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} /> */}
                                 <InputFileUpload handleFileChange={handleFileChange} />
                             </Box>
-                            <Button variant='contained' sx={{
+                            <ButtonMUI variant='contained' sx={{
                                 backgroundColor: "primary.light",
                                 color: "#fff",
                                 width: "fit-content",
@@ -293,7 +303,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                 marginBottom: "40px",
                             }} onClick={handleAddButtonClick
                             }>Add Topics
-                            </Button>
+                            </ButtonMUI>
                         </Box>
                     )}
                     {showBox && (
@@ -301,7 +311,8 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                             <Box sx={{ width: "100%", display: "flex", flexDirection: { lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
 
                                 <Box sx={{ width: { lg: "40%", md: "70%" }, height: "50vh" }}>
-                                    <Box
+                                    <video controls src={videos[selectedVideoIndex].video}/>
+                                    {/* <Box
                                         sx={{
                                             backgroundImage: `url(${backgroundImage})`,
                                             backgroundRepeat: "no-repeat",
@@ -316,7 +327,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                     >
                                         <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, fontSize: "100px" }} />
 
-                                    </Box>
+                                    </Box> */}
                                 </Box>
                                 <Box sx={{ maxWidth: "700px", width: { lg: "60%", md: "70%" }, display: "flex", flexDirection: "column", gap: "20px" }}>
                                     <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
@@ -331,7 +342,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
                             </Box>
                             <Box sx={{ width: "100%", display: "flex", alignItems: { lg: "start", md: "center" }, justifyContent: { lg: "start", md: "center" } }}>
-                                <Button variant='contained' sx={{
+                                <ButtonMUI variant='contained' sx={{
                                     backgroundColor: "primary.light",
                                     color: "#fff",
                                     width: "30%",
@@ -344,12 +355,12 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                     marginLeft: { lg: "30px", md: "0" }
                                 }}
                                     onClick={handleSaveTopic}>Save
-                                </Button>
+                                </ButtonMUI>
                             </Box>
                         </Box>
                     )}
                     <Box sx={{ width: "100%", height: "10vh", display: "flex", backgroundColor: "primary.light", marginTop: "auto" }}>
-                        <Button variant='contained' sx={{
+                        {/* <Button variant='contained' sx={{
                             backgroundColor: "#fff",
                             color: "primary.main",
                             width: { sm: "150px", md: "200px", lg: "230px" },
@@ -365,7 +376,10 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                             onClick={handleSaveAllToCourse}
                         >
                             Save All
-                        </Button>
+                        </Button> */}
+                        <Box sx={{ marginTop: "30px", marginLeft: "auto", marginRight: "20px", }}>
+                            <Button text={"Save All"} buttonFunction={() => { handleSaveAllToCourse() }} isIconButton={isLoading} iconType='loader' />
+                        </Box>
                     </Box>
                 </Box>
             </Box>
