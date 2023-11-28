@@ -21,7 +21,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [courseCategory, setCourseCategory] = useState("")
     const [grade, setGrade] = useState("")
     const [subject, setSubject] = useState("")
-    const [learningOutComes, setLearningOutComes] = useState("")
+    const [supportingLinks, setSupportingLinks] = useState("")
     const [showBox, setShowBox] = useState(false);
     const [HideBox, setHideBox] = useState(true)
     const [videos, setVideos] = useState([]);
@@ -34,6 +34,15 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
 
     const handleAddButtonClick = async () => {
+        if(lessonName === "") {
+            alert("Lesson name required!");
+            return;
+        }
+
+        if(videos.length === 0) {
+            alert("Please select videos for this lesson");
+            return;
+        }
         setNewLesson({
             lessonName: lessonName,
         })
@@ -171,7 +180,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
             })
             return allFieldsValid;
         }
-        if (learningOutComes === "") {
+        if (supportingLinks === "") {
             setValidations(prev => {
                 return { ...prev, learningOutComes: { errorStatus: "yes", errorMessage: "Invalid input" } }
             })
@@ -222,6 +231,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         let tempVideos = [...videos];
         tempVideos[selectedVideoIndex].topicName = topicName;
         tempVideos[selectedVideoIndex].topicNumber = topicNumber;
+        tempVideos[selectedVideoIndex].supportingLinks = supportingLinks;
         const fileExt = tempVideos[selectedVideoIndex].videoName.substr(tempVideos[selectedVideoIndex].videoName.lastIndexOf("."))
         tempVideos[selectedVideoIndex].videoName = `${topicName}${fileExt}`;
         setVideos(tempVideos)
@@ -241,6 +251,8 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
             setTopicName("")
             setTopicNumber("")
             setLessonName("")
+            setSupportingLinks("")
+            alert("Successfully saved lesson and its topics")
         } catch (error) {
             console.log(error)
         } finally {
@@ -311,8 +323,8 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                             <Box sx={{ width: "100%", display: "flex", flexDirection: { sm: "column", lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
 
                                 <Box sx={{ width: { lg: "40%", md: "70%" }, height: "50vh" }}>
-                                    <video controls src={videos[selectedVideoIndex].video}/>
-                                    {/* <Box
+                                    {/* <video controls src={videos[selectedVideoIndex].video}/> */}
+                                    <Box
                                         sx={{
                                             backgroundImage: `url(${backgroundImage})`,
                                             backgroundRepeat: "no-repeat",
@@ -327,7 +339,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                     >
                                         <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, fontSize: "100px" }} />
 
-                                    </Box> */}
+                                    </Box>
                                 </Box>
                                 <Box sx={{ maxWidth: "700px", width: { lg: "60%", md: "70%" }, display: "flex", flexDirection: "column", gap: "20px" }}>
                                     <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
@@ -336,7 +348,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                         <TextFields isOutComes={false} label={"Topic Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicName} state={topicName} />
 
                                     </Box>
-                                    <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutComes} state={learningOutComes} />
+                                    <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLinks} state={supportingLinks} />
                                     <InputFileUpload handleFileChange={handleFileChange} label={"Add Supporting Documents"} />
 
                                 </Box>
