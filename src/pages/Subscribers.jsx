@@ -1,5 +1,5 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PageHeading from '../Components/PageHeading'
 import PageSubHeading from '../Components/PageSubHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
@@ -7,9 +7,13 @@ import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
 import Tab from '@mui/material/Tab';
 import Typography from '@mui/material/Typography';
+import { database } from '../services/firebase'
+import { collection, getDocs } from 'firebase/firestore'
 
 function CustomTabPanel(props) {
   const { children, value, index, ...other } = props;
+
+
 
   return (
     <div
@@ -42,36 +46,36 @@ function a11yProps(index) {
 }
 
 const columns = [
-  { id: 'name', label: 'First Name', minWidth: 100 },
-  { id: 'code', label: 'Last Name', minWidth: 100 },
+  { label: 'First Name', minWidth: 80 },
+  { label: 'Last Name', minWidth: 80 },
   {
-    id: 'population',
+    
     label: 'Phone Number',
     minWidth: 100,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
+    // align: 'right',
+    
   },
   {
-    id: 'size',
+    
     label: 'Email Address',
     minWidth: 100,
-    align: 'right',
-    format: (value) => value.toLocaleString('en-US'),
+    // align: 'right',
+    
   },
-  {
-    id: 'density',
-    label: 'Subscription Date',
-    minWidth: 100,
-    align: 'right',
-    format: (value) => value.toFixed(2),
-  },
-  {
-    id: 'density',
-    label: 'Expiry Date',
-    minWidth: 100,
-    align: 'right',
-    format: (value) => value.toFixed(2),
-  },
+  // {
+  //   id: 'density',
+  //   label: 'Subscription',
+  //   minWidth: 100,
+  //   align: 'right',
+  //   format: (value) => value.toFixed(2),
+  // },
+  // {
+  //   id: 'density',
+  //   label: 'Expiry Date',
+  //   minWidth: 100,
+  //   align: 'right',
+  //   format: (value) => value.toFixed(2),
+  // },
 ];
 
 function createData(name, code, population, size) {
@@ -105,6 +109,57 @@ function Subscribers() {
 
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
+
+  const [subscribedUserList, setSubscribedUserList] = useState([]);
+  const [unsubscribedUserList, setUnsubscribedUserList] = useState([]);
+
+  const userCollection = collection(database, "users")
+
+
+  useEffect(() => {
+    // getUsersList()
+    getSubscribedUsersList()
+    getUnsubscribedUsersList()
+  }, [])
+
+
+  const getSubscribedUsersList = async () => {
+    try {
+      const data = await getDocs(userCollection);
+
+      const filteredData = data.docs
+        .map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+        .filter((user) => user.subscription === 'subscribed'); // Modify this line to match your subscription field condition
+
+      setSubscribedUserList(filteredData);
+
+      console.log(filteredData);
+    } catch (error) {
+      console.error('Error fetching collection', error);
+    }
+  };
+
+  const getUnsubscribedUsersList = async () => {
+    try {
+      const data = await getDocs(userCollection);
+
+      const filteredData = data.docs
+        .map((doc) => ({
+          ...doc.data(),
+          id: doc.id,
+        }))
+        .filter((user) => user.subscription === 'unsubscribed'); // Modify this line to match your subscription field condition
+
+      setUnsubscribedUserList(filteredData);
+
+      console.log(filteredData);
+    } catch (error) {
+      console.error('Error fetching collection', error);
+    }
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -155,21 +210,16 @@ function Subscribers() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
+                  {
+                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    subscribedUserList.map((data, index) => {
                       return (
-                        <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                          {columns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.format && typeof value === 'number'
-                                  ? column.format(value)
-                                  : value}
-                              </TableCell>
-                            );
-                          })}
+                        <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                        <TableCell  align='left'>{data.firstName}</TableCell>
+                        <TableCell>{data.lastName}</TableCell>
+                        <TableCell>{data.phoneNum}</TableCell>
+                        <TableCell>{data.email}</TableCell>
+                        {/* <TableCell>{data.subscription}</TableCell> */}
                         </TableRow>
                       );
                     })}
@@ -204,21 +254,16 @@ function Subscribers() {
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {rows
-                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                    .map((row) => {
+                  {
+                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    unsubscribedUserList.map((data, index) => {
                       return (
-                        <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
-                          {columns.map((column) => {
-                            const value = row[column.id];
-                            return (
-                              <TableCell key={column.id} align={column.align}>
-                                {column.format && typeof value === 'number'
-                                  ? column.format(value)
-                                  : value}
-                              </TableCell>
-                            );
-                          })}
+                        <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                        <TableCell  align='left'>{data.firstName}</TableCell>
+                        <TableCell>{data.lastName}</TableCell>
+                        <TableCell>{data.phoneNum}</TableCell>
+                        <TableCell>{data.email}</TableCell>
+                        {/* <TableCell>{data.subscription}</TableCell> */}
                         </TableRow>
                       );
                     })}
