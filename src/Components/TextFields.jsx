@@ -80,7 +80,7 @@ export function DocumentField({ label, type = "text", errorStatus, errorMessage,
     )
 }
 
-export function SelectField({ label, type = "text", errorStatus, errorMessage, state, setState, inputLabel }) {
+export function SelectField({ label, type = "text", errorStatus, errorMessage, state, setState, options }) {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
@@ -107,9 +107,73 @@ export function SelectField({ label, type = "text", errorStatus, errorMessage, s
                     onChange={(e) => setState(e.target.value)}
                 // value={age}
                 >
-                    <MenuItem value={10}>Ten</MenuItem>
-                    <MenuItem value={20}>Twenty</MenuItem>
-                    <MenuItem value={30}>Thirty</MenuItem>
+                    <MenuItem value="">Select Category</MenuItem>
+                    {options &&
+                        Object.entries(options).map(([key, value]) => {
+                            const categoryField = value.value; // Replace 'field' with the specific field name you want to target
+                            return (
+                                <MenuItem key={key} value={categoryField}>
+                                    {key}
+                                </MenuItem>
+                            );
+                        })}
+                </Select>
+
+
+            </FormControl>
+            {errorStatus ?
+                <InputLabel sx={{ color: "warning.main", fontSize: "12px", marginTop: "10px", marginLeft: "5px" }}>{errorMessage}</InputLabel>
+                : null}
+        </Box>
+    )
+}
+export function SelectFieldGrade({ label, type = "text", errorStatus, errorMessage, state, setState, options }) {
+
+    return (
+        <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
+            <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
+            <FormControl fullWidth>
+                {/* <InputLabel id="demo-simple-select-label">{inputLabel}</InputLabel> */}
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+
+                    sx={{
+                        // height: "50px",
+                        borderRadius: "10px",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "primary.light",
+                            borderWidth: 2
+                        },
+                        "&:hover > .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "primary.main"
+                        },
+                        height: "50px"
+                    }}
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                // value={age}
+                >
+                    {/* {options &&
+                        Object.entries(options).map(([key, value]) => {
+                            const categoryField = value.value; // Replace 'field' with the specific field name you want to target
+                            return (
+                                <MenuItem key={key} value={categoryField}>
+                                    {key}
+                                </MenuItem>
+                            );
+                        })} */}
+
+                    <MenuItem value="">Select Grade</MenuItem>
+                    {state && options(state).map((value, index) => {
+                        console.log("line 376 grades", value);
+                        // const categoryField = value.value;
+                        return (
+                            <MenuItem key={index} value={value}>
+                                {value}
+                            </MenuItem>
+                        );
+                    })}
                 </Select>
 
 

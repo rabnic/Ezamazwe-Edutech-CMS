@@ -7,7 +7,7 @@ import { Box, InputLabel } from '@mui/material';
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
     clipPath: 'inset(50%)',
-    height: 1,
+    height: "auto",
     overflow: 'hidden',
     position: 'absolute',
     bottom: 0,

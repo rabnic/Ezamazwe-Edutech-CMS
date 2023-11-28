@@ -2,11 +2,11 @@
 
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
+// import { getAnalytics } from "firebase/analytics";
 
 import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword, onAuthStateChanged, getIdTokenResult, signOut as signOutFirebase } from 'firebase/auth';
-import { getStorage, ref } from "firebase/storage"
-import { addDoc, collection, doc, getFirestore, setDoc } from "firebase/firestore";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"
+import { addDoc, collection, doc, documentId, getDoc, getDocs, getFirestore, setDoc } from "firebase/firestore";
 
 import { getAuth } from 'firebase/auth'
 // TODO: Add SDKs for Firebase products that you want to use
@@ -24,6 +24,15 @@ const firebaseConfig = {
   appId: "1:904449562777:web:27e8ad9dd1a27d5054c008",
   measurementId: "G-7CCCTV9REH"
 };
+// const firebaseConfig = {
+//   apiKey: "AIzaSyC4jjc8DNsYsxTaxAdhY98kCiitok-58k0",
+//   authDomain: "hotel-app-f6ef9.firebaseapp.com",
+//   projectId: "hotel-app-f6ef9",
+//   storageBucket: "hotel-app-f6ef9.appspot.com",
+//   messagingSenderId: "668661025183",
+//   appId: "1:668661025183:web:33f4702258caf90dbb95aa",
+//   measurementId: "G-GYBK5P9EKQ"
+// };
 
 // // Initialize Firebase
 // const app = initializeApp(firebaseConfig);
@@ -348,6 +357,246 @@ const createAdminToFirestore = async (admin) => {
   const docRef = await setDoc(doc(database, "admins", admin.uid), admin)
   console.log("Doc Reff ===== ", docRef);
 };
+
+export const saveCourseToFirestore = async (courseData) => {
+  let documentId;
+  try {
+    const docRef = await addDoc(collection(database, "courses"), courseData)
+    documentId = docRef.id;
+    console.log('Document course write success', documentId);
+  } catch (error) {
+    console.error('Error adding document: ', error);
+  }
+  return documentId;
+};
+
+export const saveLessonToFirestore = async (courseId, lessonData) => {
+  let documentId;
+  try {
+    const courseDocRef = doc(database, "courses", courseId);
+    const collectionRef = collection(courseDocRef, "lessons");
+    const docRef = await addDoc(collectionRef, lessonData);
+    documentId = docRef.id;
+    console.log('Document lesson write success', documentId);
+  } catch (error) {
+    console.error('Error adding document: ', error);
+  }
+  return documentId;
+};
+
+
+export const saveTopicToFirestore = async (courseId, lessonId, topicData) => {
+  let documentId;
+  try {
+    const lessondDocRef = doc(database, `courses/${courseId}/lessons/${lessonId}`);
+    const lessonsCollectionRef = collection(lessondDocRef, "topics");
+    
+    // const lessonDocRef = doc(database, "courses", lessonId);
+    // const lessonDocRef = doc(database, "courses", lessonId);
+
+    // const lessonsCollectionRef = collection(lessonDocRef, "topics");
+   
+
+    const docRef = await addDoc(lessonsCollectionRef, topicData);
+    documentId = docRef.id;
+    console.log('Document lessonTopic write success', documentId);
+  } catch (error) {
+    console.error('Error adding document: ', error);
+  }
+  return documentId;
+};
+
+export const getCategoryData = async () =>{
+  //get data from database 
+  console.log("before try");
+
+  try {
+    const data = await getDocs(collection(database, "Content"));
+    console.log("after get docs", data);
+
+    // const filtereddata = data.docs.map((doc) => ({
+
+    //     //this fucntion  returns the values in the collection
+    //     ...doc.data(),
+    //     id: doc.id
+    // }));
+
+    const categoryData = {};
+    data.docs.forEach((doc) => (
+      
+      categoryData[doc.id] = {
+      ...doc.data(),
+      id: doc.id
+  }));
+
+    console.log("after Filtered data");
+
+    console.log(categoryData);
+    return categoryData
+
+} catch (error) {
+
+    console.error("Error fetching collection", error);
+}
+}
+
+// Function to add a document to Firestore
+// const addDocumentToFirestore = async () => {
+//   try {
+//     const coursesCollection = firebase.firestore().collection('courses');
+//     const courseDocRef = coursesCollection.doc('your_course_id'); // Replace with the actual course ID
+//     const lessonsCollection = courseDocRef.collection('lessons');
+//     const lessonDocRef = lessonsCollection.doc('your_lesson_id'); // Replace with the actual lesson ID
+//     const topicsCollection = lessonDocRef.collection('topics');
+
+//     // Add the new document to the topics collection
+//     await topicsCollection.add(newDocumentData);
+
+//     console.log('Document added to Firestore successfully');
+//   } catch (error) {
+//     console.error('Error adding document to Firestore:', error);
+//   }
+// };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Function to upload video to Firebase Storage
+export const uploadVideoToFirebase = async (courseId, videoObject) => {
+  const { video, videoName } = videoObject;
+
+  // Create a reference to the storage location
+  // const storageRef = storage.ref().child(`videos/${videoName}`);
+  const storageRef = ref(storage, `/videos/${courseId}/${videoName}`);
+  // Convert the blob URL to a Blob object
+  const response = await fetch(video);
+  const blob = await response.blob();
+
+  // Upload the video to Firebase Storage
+  await storageRef.put(blob);
+
+  // Get the download URL
+  const downloadURL = await storageRef.getDownloadURL();
+
+  return downloadURL;
+};
+
+// Update each video object with the Firebase download URL
+export const updateVideosWithFirebaseURLs = async (videos) => {
+  const uploadPromises = videos.map(uploadVideoToFirebase);
+
+  // Wait for all uploads to complete
+  const downloadURLs = await Promise.all(uploadPromises);
+
+  // Update the original videos array with the Firebase download URLs
+  videos.forEach((video, index) => {
+    video.video = downloadURLs[index];
+  });
+
+  return videos;
+};
+
+////////////////////////////////////////////////////////////////
+
+
+// Create a function to upload a video and replace the URL
+export const uploadVideo = async (video) => {
+  try {
+    // Initialize Firebase Storage
+    const storage = getStorage();
+
+    // Create a reference to the video in Firebase Storage
+    const storageRef = ref(storage, video.videoName);
+
+    // Upload the video bytes to Firebase Storage
+    const snapshot = await uploadBytes(storageRef, video.video);
+
+    // Get the download URL of the uploaded video
+    const downloadURL = await getDownloadURL(snapshot.ref);
+
+    // Replace the blob URL with the Firebase download URL
+    video.video = downloadURL;
+
+    // Return the updated video object
+    return video;
+  } catch (error) {
+    console.error('Error uploading video:', error);
+    throw error;
+  }
+};
+
+// Use Promise.all to upload all videos and replace the URLs
+export const uploadAllVideos = async (videos) => {
+  try {
+    // Map each video to an upload promise
+    const uploadPromises = videos.map(uploadVideo);
+
+    // Wait for all upload promises to resolve
+    const updatedVideos = await Promise.all(uploadPromises);
+
+    // Return the array of updated videos
+    return updatedVideos;
+  } catch (error) {
+    console.error('Error uploading videos:', error);
+    throw error;
+  }
+};
+
+// Call the uploadAllVideos function with the videos array
+
+
+export const uploadCourseVideos = async (courseId, videos) => {
+  // const storage = getStorage();
+  const updatedVideos = [...videos];
+
+  // Upload 1 image at a time
+  for (let [index, video] of videos.entries()) {
+    // console.log(index)
+    const imageRef = ref(storage, `/videos/${courseId}/${video.videoName}`);
+    await uploadBytes(imageRef, video.video)
+      .then(async (snapshot) => {
+        // console.log(image.name, "upload success");
+        await getDownloadURL(snapshot.ref).then((url) => {
+          //   console.log(url);
+          updatedVideos[index].video = url;
+        });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
+  return updatedVideos;
+};
+
+
+
+/////////////////////////////////////////////////////////////////
+
+// Call the function to update videos with Firebase URLs
+// updateVideosWithFirebaseURLs(videos)
+//   .then(() => {
+//     console.log("Videos updated with Firebase download URLs:", videos);
+//   })
+//   .catch((error) => {
+//     console.error("Error updating videos:", error);
+//   });
+
 
 
 // //deletes admin
