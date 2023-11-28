@@ -8,7 +8,7 @@ import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, PlayArrow, Pl
 import backgroundImage from '../assets/placeholderImg.png'
 import MediaFields from '../Components/AddMedia'
 import InputFileUpload from '../Components/InputFileUpload'
-import { saveCourseToFirestore, uploadAllVideos } from '../services/firebase'
+import { saveCourseToFirestore, saveLessonToFirestore, updateVideosWithFirebaseURLs, uploadAllVideos, uploadCourseVideos } from '../services/firebase'
 
 
 function AddCourseContent({ setOpenModal, courseDocumentId }) {
@@ -27,14 +27,15 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [topicNumber, setTopicNumber] = useState("")
     const [newLesson, setNewLesson] = useState({})
     const [selectedVideoIndex, setSelectedVideoIndex] = useState()
+    const [lessonDocumentID, setLessonDocumentID] = useState("")
 
-    console.log("DOC ID", courseDocumentId)
-    const handleAddButtonClick = () => {
+    const handleAddButtonClick = async () => {
         setNewLesson({
             lessonName: lessonName,
-            topics: []
         })
-
+        const lessonDocumentID = await saveLessonToFirestore(courseDocumentId, { lessonName: lessonName })
+        console.log("DOC ID", lessonDocumentID)
+        setLessonDocumentID(lessonDocumentID)
         setShowBox(true);
         setHideBox(false)
     };
@@ -199,7 +200,8 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                     topicName: '',
                     supportingLinks: [],
                     videoName: file.name,
-                    video: URL.createObjectURL(file),
+                    // video: URL.createObjectURL(file),
+                    video: file,
                 };
             });
 
@@ -212,23 +214,26 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         let tempVideos = [...videos];
         tempVideos[selectedVideoIndex].topicName = topicName;
         tempVideos[selectedVideoIndex].topicNumber = topicNumber;
-        tempVideos[selectedVideoIndex].videoName = `${topicNumber}: ${topicName}`;
+        const fileExt = tempVideos[selectedVideoIndex].videoName.substr(tempVideos[selectedVideoIndex].videoName.lastIndexOf("."))
+        tempVideos[selectedVideoIndex].videoName = `${topicNumber}: ${topicName}${fileExt}`;
         setVideos(tempVideos)
     }
 
-    const handleSaveAllToCourse = () => {
+    const handleSaveAllToCourse = async () => {
         // let tempLesson = { ...newLesson }
         // console.log("tempLesson", tempLesson);
         // tempLesson.topics = [...videos]
         // let newCourseWithLessons = null
-        uploadAllVideos(videos)
-            .then((updatedVideos) => {
-                console.log('Videos uploaded successfully:', updatedVideos);
-            })
-            .catch((error) => {
-                console.error('Error uploading videos:', error);
-            });
+        // uploadAllVideos(videos)
+        //     .then((updatedVideos) => {
+        //         console.log('Videos uploaded successfully:', updatedVideos);
+        //     })
+        //     .catch((error) => {
+        //         console.error('Error uploading videos:', error);
+        //     });
         // saveCourseToFirestore(newCourseWithLessons)
+        const updatedVideos = await uploadCourseVideos(courseDocumentId, videos);
+        console.log(updatedVideos)
     }
 
 

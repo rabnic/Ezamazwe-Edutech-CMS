@@ -24,6 +24,15 @@ const firebaseConfig = {
   appId: "1:904449562777:web:27e8ad9dd1a27d5054c008",
   measurementId: "G-7CCCTV9REH"
 };
+// const firebaseConfig = {
+//   apiKey: "AIzaSyC4jjc8DNsYsxTaxAdhY98kCiitok-58k0",
+//   authDomain: "hotel-app-f6ef9.firebaseapp.com",
+//   projectId: "hotel-app-f6ef9",
+//   storageBucket: "hotel-app-f6ef9.appspot.com",
+//   messagingSenderId: "668661025183",
+//   appId: "1:668661025183:web:33f4702258caf90dbb95aa",
+//   measurementId: "G-GYBK5P9EKQ"
+// };
 
 // // Initialize Firebase
 // const app = initializeApp(firebaseConfig);
@@ -354,54 +363,79 @@ export const saveCourseToFirestore = async (courseData) => {
   try {
     const docRef = await addDoc(collection(database, "courses"), courseData)
     documentId = docRef.id;
-    console.log('Document write success', documentId);
+    console.log('Document course write success', documentId);
   } catch (error) {
     console.error('Error adding document: ', error);
   }
   return documentId;
 };
 
-export const saveLessonToFirestore = async (courseData) => {
-
+export const saveLessonToFirestore = async (courseId, lessonData) => {
+  let documentId;
+  try {
+    const courseDocRef = doc(database, "courses", courseId);
+    const collectionRef = collection(courseDocRef, "lessons");
+    const docRef = await addDoc(collectionRef, lessonData);
+    documentId = docRef.id;
+    console.log('Document lesson write success', documentId);
+  } catch (error) {
+    console.error('Error adding document: ', error);
+  }
+  return documentId;
 };
 
-export const saveTopicToFirestore = async (courseData) => {
 
+export const saveTopicToFirestore = async (courseId, lessonId, topicData) => {
+  let documentId;
+  try {
+    const courseDocRef = doc(database, "courses", courseId);
+    const lessonsCollectionRef = collection(courseDocRef, "lessons");
+    const lessonDocRef = doc(database, "courses", courseId);
+
+    // const docRef = await addDoc(courseCollectionRef, lessonData);
+    // documentId = docRef.id;
+    // console.log('Document lessonTopic write success', documentId);
+  } catch (error) {
+    console.error('Error adding document: ', error);
+  }
+  return documentId;
 };
 
 
 
 // Function to upload video to Firebase Storage
-export const uploadVideoToFirebase = async (videoObject) => {
+export const uploadVideoToFirebase = async (courseId, videoObject) => {
   const { video, videoName } = videoObject;
-  
+
   // Create a reference to the storage location
-  const storageRef = storage.ref().child(`videos/${videoName}`);
-  
+  // const storageRef = storage.ref().child(`videos/${videoName}`);
+  const storageRef = ref(storage, `/videos/${courseId}/${videoName}`);
   // Convert the blob URL to a Blob object
   const response = await fetch(video);
   const blob = await response.blob();
-  
+
   // Upload the video to Firebase Storage
   await storageRef.put(blob);
-  
+
   // Get the download URL
   const downloadURL = await storageRef.getDownloadURL();
-  
+
   return downloadURL;
 };
 
 // Update each video object with the Firebase download URL
 export const updateVideosWithFirebaseURLs = async (videos) => {
   const uploadPromises = videos.map(uploadVideoToFirebase);
-  
+
   // Wait for all uploads to complete
   const downloadURLs = await Promise.all(uploadPromises);
-  
+
   // Update the original videos array with the Firebase download URLs
   videos.forEach((video, index) => {
     video.video = downloadURLs[index];
   });
+
+  return videos;
 };
 
 ////////////////////////////////////////////////////////////////
@@ -453,7 +487,28 @@ export const uploadAllVideos = async (videos) => {
 // Call the uploadAllVideos function with the videos array
 
 
+export const uploadCourseVideos = async (courseId, videos) => {
+  // const storage = getStorage();
+  const updatedVideos = [...videos];
 
+  // Upload 1 image at a time
+  for (let [index, video] of videos.entries()) {
+    // console.log(index)
+    const imageRef = ref(storage, `/videos/${courseId}/${video.videoName}`);
+    await uploadBytes(imageRef, video.video)
+      .then(async (snapshot) => {
+        // console.log(image.name, "upload success");
+        await getDownloadURL(snapshot.ref).then((url) => {
+          //   console.log(url);
+          updatedVideos[index].video = url;
+        });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
+  return updatedVideos;
+};
 
 
 
