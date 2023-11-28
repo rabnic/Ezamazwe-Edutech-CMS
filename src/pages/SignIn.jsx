@@ -163,7 +163,7 @@ export default function SignIn() {
       )}
 
       <Box bgcolor={"#1C3F53"} sx={{ width: { sm: "100%", lg: "65%" }, height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Paper sx={{ maxWidth: "500px", width: "80%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
+        <Paper sx={{ maxWidth: "500px", width: { xs: "100%", md: "80%", lg: "80%" }, height: { xs: "100vh", sm: "fit-content", md: "fit-content", lg: "fit-content" }, display: "flex", alignItems: { xs: "center" }, justifyContent: { xs: "center" }, flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: { xs: "0px", md: "10px", lg: "10px" }, paddingX: "60px", paddingY: "60px" }}>
           <Box sx={{ width: "100%", height: "fit-content", display: "flex", flexDirection: "column", gap: "30px", justifyContent: "center", alignItems: "center" }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: "10px", justifyContent: "center", alignItems: "center" }}>
               <SectionHeading>

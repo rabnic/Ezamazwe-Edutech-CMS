@@ -285,11 +285,11 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                     </Box>
                     {HideBox && (
                         <Box sx={{ padding: "30px" }}>
-                            <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
+                            <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px", alignItems: "center" }}>
 
                                 <TextFields isOutComes={false} label={"Lesson Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
-                                {/* <MediaFields type='file' label={"Select Lesson Content"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} /> */}
-                                <InputFileUpload handleFileChange={handleFileChange} />
+                                {/* <MediaFields type='file' label={"Select Lesson Content"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} /> */}
+                                <InputFileUpload handleFileChange={handleFileChange} label={"Select Lesson Content"} />
                             </Box>
                             <ButtonMUI variant='contained' sx={{
                                 backgroundColor: "primary.light",
@@ -308,7 +308,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                     )}
                     {showBox && (
                         <Box sx={{ width: "100%", height: "90vh", marginTop: "30px", padding: "30px", overflow: "scroll" }}>
-                            <Box sx={{ width: "100%", display: "flex", flexDirection: { lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
+                            <Box sx={{ width: "100%", display: "flex", flexDirection: { sm: "column", lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
 
                                 <Box sx={{ width: { lg: "40%", md: "70%" }, height: "50vh" }}>
                                     <video controls src={videos[selectedVideoIndex].video}/>
@@ -337,7 +337,8 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
                                     </Box>
                                     <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutComes} state={learningOutComes} />
-                                    {/* <MediaFields type='file' label={"Add Supporting Documents:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} /> */}
+                                    <InputFileUpload handleFileChange={handleFileChange} label={"Add Supporting Documents"} />
+
                                 </Box>
 
                             </Box>

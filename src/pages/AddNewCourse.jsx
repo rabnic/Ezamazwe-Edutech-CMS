@@ -295,7 +295,24 @@ function AddNewCourse() {
     setOpenModal(true)
   }
 
+  const handleFileChange = (event) => {
+    const fileInput = event.target;
+    const files = fileInput.files;
 
+    if (files.length > 0) {
+      const newVideos = Array.from(files).map((file) => {
+        return {
+          topicNumber: '', // Set your desired default values
+          topicName: '',
+          supportingLinks: [],
+          videoName: file.name,
+          video: URL.createObjectURL(file),
+        };
+      });
+
+      // setVideos((prevVideos) => [...prevVideos, ...newVideos]);
+    }
+  };
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100vh", paddingTop: "10px" }}>
@@ -350,7 +367,7 @@ function AddNewCourse() {
           <Typography variant='h6' sx={{ color: "primary.light", fontSize: "18px", fontWeight: "500" }}>Outcomes</Typography>
         </Box>
         <TextAreas label={"Course Full Description:"} errorStatus={validations.courseFullDescription.errorStatus} errorMessage={validations.courseFullDescription.errorMessage} setState={setCourseFullDescription} state={courseFullDescription} />
-        {/* <MediaFields type='file' label={"Add Video Content:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} /> */}
+        {/* <InputFileUpload handleFileChange={handleFileChange} label={"Add Video Content"} /> */}
         <Box sx={{ marginLeft: "auto", marginRight: "auto", marginTop: "30px" }}>
           <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} />
         </Box>

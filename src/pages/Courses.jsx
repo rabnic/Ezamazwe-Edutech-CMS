@@ -11,7 +11,6 @@ function Courses() {
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px" }}>
-
       <PageHeadingContainer
         heading="Courses"
         subHeading="Some sub heading for this page"

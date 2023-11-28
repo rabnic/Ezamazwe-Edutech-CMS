@@ -142,7 +142,7 @@ function AdminManagement() {
         setIsShowForm(!isShowForm)
     }
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: { xs: "90%", sm: "95%", lg: "100%" }, height: "auto", paddingTop: "10px" }}>
 
             <PageHeadingContainer
                 heading="Admin Management"
@@ -150,20 +150,20 @@ function AdminManagement() {
             />
 
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "50px", width: "100%", height: "100%", marginLeft: "auto", marginRight: "auto" }}>
-                <Box sx={{ maxWidth: "240px", alignSelf: "flex-start" }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "50px", width: { lg: "100%", sm: "100%", xs: "100%" }, height: "100vh", }}>
+                <Box sx={{ maxWidth: "240px", width: "50%", alignSelf: "flex-start" }}>
                     <Button text={"Add New Admin"} buttonFunction={handleToggleForm} isIconButton={true} iconType={isShowForm ? "up" : "down"} />
                 </Box>
                 {
                     isShowForm &&
-                    <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", border: 2, borderColor: "greys.main", width: "fit-content", margin: "0", padding: "60px", borderRadius: "5px", alignItems: { xs: "center", md: "flex-start" } }}>
+                    <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", border: 2, borderColor: "greys.main", width: "100%", margin: "0", padding: { xs: "40px", sm: "60px", md: "60px", lg: "60px" }, borderRadius: "5px", alignItems: { xs: "center", sm: "flex-start", md: "flex-start", lg: "flex-start" } }}>
                         {
                             statusAlert.show &&
                             <Alert severity={statusAlert.severity} >
                                 {statusAlert.message}
                             </Alert>
                         }
-                        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "column", md: "column", lg: "row" }, gap: "10px", }}>
+                        <Box sx={{ width: "100%", display: "flex", flexDirection: { xs: "column", sm: "column", md: "column", lg: "row" }, alignItems: "center", gap: "10px", }}>
                             <TextFields label={"Full Name"} isOutComes={false} errorStatus={validations.fullName.errorStatus} errorMessage={validations.fullName.errorMessage} setState={setFullName} state={fullName} />
                             <TextFields label={"Email"} isOutComes={false} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
                             <TextFields label={"Phone Number"} isOutComes={false} errorStatus={validations.phoneNumber.errorStatus} errorMessage={validations.phoneNumber.errorMessage} setState={setPhoneNumber} state={phoneNumber} />
@@ -171,7 +171,9 @@ function AdminManagement() {
                         <Button text={"Save"} buttonFunction={() => { handleCreateAdmin() }} isIconButton={isLoading} iconType='loader' />
                     </Box>
                 }
+
                 <TableLayout />
+
             </Box>
 
         </Box>
