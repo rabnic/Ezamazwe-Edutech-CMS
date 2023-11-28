@@ -36,7 +36,7 @@ function Grades() {
       <h1>{gradesData.name} Grades</h1>
       <ul style={{display:'flex', flexDirection:'column'}}>
         {gradesData.grades && gradesData.grades.map((grade, key) => (
-          <Link key={key} to={{pathname: `/subjects/${id}/${grade}`}}>{grade}</Link>
+            <Link key={key} to={{ pathname: `/subjects/${id}/${encodeURIComponent(grade.replace(' ', '_'))}` }}>{grade}</Link>
         ))}
       </ul>
     </div>
