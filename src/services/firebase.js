@@ -284,7 +284,7 @@ export const updatePasswordReset = async (email) => {
 // Forgot password function
 export const ForgotPasswordFunction = async (email) => {
   console.log("Forgot password", email);
-  const url = "https://ezamazwe-edutech-cms.netlify.app"
+  const url = "https://ezamazwe-edutech-cms.firebaseapp.com/"
   try {
     const apiUrl = await fetch(`https://ezamazwe-edutech-nodejs.onrender.com/reset-password`,
       {
