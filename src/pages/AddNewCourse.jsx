@@ -1,7 +1,7 @@
 import { Box, MenuItem, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import PageSubHeading from '../Components/PageSubHeading'
-import PageHeading from '../Components/PageHeading'
+// import PageSubHeading from '../Components/PageSubHeading'
+// import PageHeading from '../Components/PageHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
 import TextFields, { OutcomesFields, SelectFieldGrade, TextAreas } from '../Components/TextFields'
 import Button from '../Components/Buttons';
@@ -17,17 +17,18 @@ function AddNewCourse() {
   const [courseType, setCourseType] = useState("")
   const [courseShortDescription, setCourseShortDescription] = useState("")
   const [courseFullDescription, setCourseFullDescription] = useState("")
-  const [courseCategory, setCourseCategory] = useState("")
-  const [grade, setGrade] = useState("")
-  const [subject, setSubject] = useState("")
+  // const [courseCategory, setCourseCategory] = useState("")
+  // const [grade, setGrade] = useState("")
+  // const [subject, setSubject] = useState("")
 
-  const [learningOutCome, setLearningOutCome] = useState("")
+  const [supportingLink, setSupportingLink] = useState("")
   const [savedLearningOutcomes, setSavedLearningOutcomes] = useState([])
   const [id, setID] = useState('')
   const [show, setShow] = useState(false)
 
   const [courseDocumentId, setCourseDocumentId] = useState("")
   const [openModal, setOpenModal] = useState(false)
+  const [isLoading, setIsloading] = useState(false);
 
   const [categories, setCategories] = useState()
 
@@ -83,13 +84,11 @@ function AddNewCourse() {
     }
   };
 
-
-
   const editOutcome = (index, learningOutcome) => {
     console.log(index, learningOutcome);
 
 
-    setLearningOutCome(learningOutcome)
+    setSupportingLink(learningOutcome)
     setID(index)
 
     setShow(true)
@@ -161,7 +160,7 @@ function AddNewCourse() {
 
     if (courseName === "") {
       setValidations(prev => {
-        return { ...prev, courseName: { errorStatus: "yes", errorMessage: "Invalid input" } }
+        return { ...prev, courseName: { errorStatus: "yes", errorMessage: "Input required" } }
       })
       allFieldsValid = false;
 
@@ -173,7 +172,7 @@ function AddNewCourse() {
 
     if (courseType === "") {
       setValidations(prev => {
-        return { ...prev, courseType: { errorStatus: "yes", errorMessage: "Invalid input" } }
+        return { ...prev, courseType: { errorStatus: "yes", errorMessage: "Input required" } }
       })
 
       allFieldsValid = false;
@@ -186,7 +185,7 @@ function AddNewCourse() {
 
     if (courseShortDescription === "") {
       setValidations(prev => {
-        return { ...prev, courseShortDescription: { errorStatus: "yes", errorMessage: "Invalid input" } }
+        return { ...prev, courseShortDescription: { errorStatus: "yes", errorMessage: "Input required" } }
       })
       allFieldsValid = false;
 
@@ -199,7 +198,7 @@ function AddNewCourse() {
 
     if (courseFullDescription === "") {
       setValidations(prev => {
-        return { ...prev, courseFullDescription: { errorStatus: "yes", errorMessage: "Invalid input" } }
+        return { ...prev, courseFullDescription: { errorStatus: "yes", errorMessage: "Input required" } }
       })
       allFieldsValid = false;
 
@@ -209,9 +208,9 @@ function AddNewCourse() {
       })
       return allFieldsValid;
     }
-    if (courseCategory === "") {
+    if (selectedCategory === "") {
       setValidations(prev => {
-        return { ...prev, courseCategory: { errorStatus: "yes", errorMessage: "Invalid input" } }
+        return { ...prev, courseCategory: { errorStatus: "yes", errorMessage: "Input required" } }
       })
       allFieldsValid = false;
 
@@ -221,9 +220,9 @@ function AddNewCourse() {
       })
       return allFieldsValid;
     }
-    if (grade === "") {
+    if (selectedGrade === "") {
       setValidations(prev => {
-        return { ...prev, grade: { errorStatus: "yes", errorMessage: "Invalid input" } }
+        return { ...prev, grade: { errorStatus: "yes", errorMessage: "Input required" } }
       })
       allFieldsValid = false;
 
@@ -233,9 +232,9 @@ function AddNewCourse() {
       })
       return allFieldsValid;
     }
-    if (subject === "") {
+    if (selectedSubject === "") {
       setValidations(prev => {
-        return { ...prev, subject: { errorStatus: "yes", errorMessage: "Invalid input" } }
+        return { ...prev, subject: { errorStatus: "yes", errorMessage: "Input required" } }
       })
       allFieldsValid = false;
 
@@ -245,9 +244,9 @@ function AddNewCourse() {
       })
       return allFieldsValid;
     }
-    if (learningOutCome === "") {
+    if (savedLearningOutcomes.length < 1) {
       setValidations(prev => {
-        return { ...prev, learningOutComes: { errorStatus: "yes", errorMessage: "Invalid input" } }
+        return { ...prev, learningOutComes: { errorStatus: "yes", errorMessage: "Input required" } }
       })
       allFieldsValid = false;
 
@@ -262,47 +261,45 @@ function AddNewCourse() {
   const handleAddNewCourse = async () => {
     const isAllFieldsValid = validateInput()
     if (!isAllFieldsValid) return
+    try {
+      setIsloading(true)
+      const courseObject = {
+        courseName: courseName,
+        courseType: courseType,
+        courseShortDescription: courseShortDescription,
+        courseFullDescription: courseFullDescription,
+        courseCategory: selectedCategory,
+        grade: selectedGrade,
+        subject: selectedSubject,
+        learningOutcomes: savedLearningOutcomes,
+        createDate: new Date()
+      }
 
-    const courseObject = {
-      courseName: courseName,
-      courseType: courseType,
-      courseShortDescription: courseShortDescription,
-      courseFullDescription: courseFullDescription,
-      courseCategory: selectedCategory,
-      grade: selectedGrade,
-      subject: selectedSubject,
-      learningOutcomes: savedLearningOutcomes,
-      createDate: new Date()
+      if (courseDocumentId === "") {
+        const courseId = await saveCourseToFirestore(courseObject);
+        setCourseDocumentId(courseId);
+      }
+      setCourseName("")
+      setCourseType("")
+      setCourseShortDescription("")
+      setCourseFullDescription("")
+      setSupportingLink("")
+      setSavedLearningOutcomes([])
+      setID("")
+      setShow(false)
+      setSelectedCategory("")
+      setSelectedGrade("")
+      setSelectedSubject("")
+
+      setOpenModal(true)
+    } catch (error) {
+
+    } finally {
+      setIsloading(false)
     }
 
-    if (courseDocumentId === "") {
-      const courseId = await saveCourseToFirestore(courseObject);
-      setCourseDocumentId(courseId);
-    }
-
-
-    setOpenModal(true)
   }
 
-  const handleFileChange = (event) => {
-    const fileInput = event.target;
-    const files = fileInput.files;
-
-    if (files.length > 0) {
-      const newVideos = Array.from(files).map((file) => {
-        return {
-          topicNumber: '', // Set your desired default values
-          topicName: '',
-          supportingLinks: [],
-          videoName: file.name,
-          video: URL.createObjectURL(file),
-        };
-      });
-
-    }
-  };
-
-  console.log("Outcomes", savedLearningOutcomes)
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100vh", paddingTop: "10px" }}>
@@ -351,8 +348,14 @@ function AddNewCourse() {
           </SelectField>
         </Box>
         <Box>
-        <TextFields isOutComes={true} show={show} label={"Learning Outcomes:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutCome} state={learningOutCome} addOutcomes={setSavedLearningOutcomes} editOutcome={()=>{UpdateOutcomes(learningOutCome)}}  />
-          <Typography variant='h6' sx={{ color: "primary.light", fontSize: "18px", fontWeight: "500" }}>Outcomes</Typography>
+          <TextFields isOutComes={true} show={show} label={"Learning Outcomes:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLink} state={supportingLink} addOutcomes={setSavedLearningOutcomes} editOutcome={() => { UpdateOutcomes(supportingLink) }} />
+          {
+            savedLearningOutcomes.length > 0 &&
+            (
+              <Typography variant='h6' sx={{ color: "primary.light", fontSize: "18px", fontWeight: "500" }}>Outcomes</Typography>
+
+            )
+          }
           {
             savedLearningOutcomes.map((value, index) => {
               return (
@@ -370,16 +373,14 @@ function AddNewCourse() {
                   </Box>
                 </Box>
               )
-
-
-
             })
           }
         </Box>
         <TextAreas label={"Course Full Description:"} errorStatus={validations.courseFullDescription.errorStatus} errorMessage={validations.courseFullDescription.errorMessage} setState={setCourseFullDescription} state={courseFullDescription} />
         {/* <InputFileUpload handleFileChange={handleFileChange} label={"Add Video Content"} /> */}
         <Box sx={{ marginLeft: "auto", marginRight: "auto", marginTop: "30px" }}>
-          <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} />
+          <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} isIconButton={isLoading} iconType='loader' />
+
         </Box>
       </Box>
       {openModal && <AddCourseContent setOpenModal={setOpenModal} courseDocumentId={courseDocumentId} />}

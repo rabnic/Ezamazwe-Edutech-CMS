@@ -6,8 +6,12 @@ import CourseHeading from "../Components/CourseHeading";
 import CourseGrades from "./CourseGrades";
 import CourseSubjects from "./CourseSubjects";
 import Subject from "./Subject"
+import { useLocation } from "react-router-dom";
 
 function Courses() {
+  const location = useLocation();
+  const paths = location.pathname.split("/").slice(1);
+
   return (
     <Box
       sx={{
@@ -59,16 +63,7 @@ function Courses() {
           </CategoryCard>
         </Box>
       </Box>
-      {/* <br></br>
-      <Box>
-        <CourseGrades />
-      </Box>
-      <Box>
-      <CourseSubjects />
-      </Box>
-      <Box>
-        <Subject />
-      </Box> */}
+
     </Box>
   );
 }

@@ -1,5 +1,4 @@
-import { Add } from "@mui/icons-material";
-import { Box, Button, InputLabel, OutlinedInput } from "@mui/material";
+import { Box, InputLabel, OutlinedInput } from "@mui/material";
 
 export default function MediaFields({ label, type = "text", errorStatus, errorMessage, state, setState, }) {
 

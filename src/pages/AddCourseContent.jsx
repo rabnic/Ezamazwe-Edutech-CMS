@@ -4,7 +4,7 @@ import PageHeading from '../Components/PageHeading'
 import PageSubHeading from '../Components/PageSubHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
 import TextFields, { DocumentField, SelectField, TextFieldPassword } from '../Components/TextFields'
-import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, Done, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
+import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, Delete, Done, Edit, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
 import backgroundImage from '../assets/placeholderImg.png'
 import MediaFields from '../Components/AddMedia'
 import InputFileUpload from '../Components/InputFileUpload'
@@ -27,7 +27,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [courseCategory, setCourseCategory] = useState("")
     const [grade, setGrade] = useState("")
     const [subject, setSubject] = useState("")
-    const [supportingLinks, setSupportingLinks] = useState("")
+    // const [supportingLinks, setSupportingLinks] = useState("")
     const [supportingDocuments, setSupportingDocuments] = useState([])
     const [showBox, setShowBox] = useState(false);
     const [HideBox, setHideBox] = useState(true)
@@ -38,9 +38,14 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [selectedVideoIndex, setSelectedVideoIndex] = useState()
     const [lessonDocumentID, setLessonDocumentID] = useState("")
     const [isLoading, setIsloading] = useState(false);
+    const [isLoadingSaveTopic, setIsloadingSaveTopic] = useState(false);
     const [currentVideoPlaying, setCurrentVideoPlaying] = useState("")
     const [editDocumentName, setEditDocumentName] = useState("")
     const [selectedDocumentIndex, setSelectedDocumentIndex] = useState(-1)
+    const [supportingLinkText, setSupportingLinkText] = useState("")
+    const [supportingLinks, setSupportingLinks] = useState([])
+    const [id, setID] = useState('')
+    const [show, setShow] = useState(false)
 
 
 
@@ -62,6 +67,48 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         setLessonDocumentID(lessonDocumentID)
         setShowBox(true);
         setHideBox(false)
+    };
+
+    const learningOutcomesDelete = (index) => {
+
+        console.log(index);
+
+        if (index >= 0 && index < supportingLinks.length) {
+            let updatedOutcomes = [...supportingLinks];
+            updatedOutcomes.splice(index, 1);
+            console.log('Outcome deleted successfully!');
+            setSupportingLinks(updatedOutcomes);
+        } else {
+            console.log('Invalid index!');
+        }
+    };
+
+    const editOutcome = (index, learningOutcome) => {
+        console.log(index, learningOutcome);
+
+
+        setSupportingLinkText(learningOutcome)
+        setID(index)
+
+        setShow(true)
+    };
+
+    const UpdateOutcomes = (newlearningOutcome) => {
+        console.log(id, newlearningOutcome);
+        let updatedOutcomes = [...supportingLinks];
+
+        if (id >= 0 && id < supportingLinks.length) {
+
+
+            updatedOutcomes[id] = newlearningOutcome;
+            console.log('Outcome edited successfully!');
+
+            setSupportingLinks(updatedOutcomes);
+            setShow(false)
+
+        } else {
+            console.log('Invalid index!');
+        }
     };
 
     const [validations, setValidations] = useState({
@@ -102,12 +149,14 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
     })
 
+
+
     const validateInput = () => {
         let allFieldsValid = true;
 
         if (lessonName === "") {
             setValidations(prev => {
-                return { ...prev, courseName: { errorStatus: "yes", errorMessage: "Invalid input" } }
+                return { ...prev, courseName: { errorStatus: "yes", errorMessage: "Input required" } }
             })
             allFieldsValid = false;
 
@@ -119,7 +168,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
         if (courseType === "") {
             setValidations(prev => {
-                return { ...prev, courseType: { errorStatus: "yes", errorMessage: "Invalid input" } }
+                return { ...prev, courseType: { errorStatus: "yes", errorMessage: "Input required" } }
             })
 
             allFieldsValid = false;
@@ -132,7 +181,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
         if (courseShortDescription === "") {
             setValidations(prev => {
-                return { ...prev, courseShortDescription: { errorStatus: "yes", errorMessage: "Invalid input" } }
+                return { ...prev, courseShortDescription: { errorStatus: "yes", errorMessage: "Input required" } }
             })
             allFieldsValid = false;
 
@@ -145,7 +194,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
         if (courseFullDescription === "") {
             setValidations(prev => {
-                return { ...prev, courseFullDescription: { errorStatus: "yes", errorMessage: "Invalid input" } }
+                return { ...prev, courseFullDescription: { errorStatus: "yes", errorMessage: "Input required" } }
             })
             allFieldsValid = false;
 
@@ -157,7 +206,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         }
         if (courseCategory === "") {
             setValidations(prev => {
-                return { ...prev, courseCategory: { errorStatus: "yes", errorMessage: "Invalid input" } }
+                return { ...prev, courseCategory: { errorStatus: "yes", errorMessage: "Input required" } }
             })
             allFieldsValid = false;
 
@@ -169,7 +218,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         }
         if (grade === "") {
             setValidations(prev => {
-                return { ...prev, grade: { errorStatus: "yes", errorMessage: "Invalid input" } }
+                return { ...prev, grade: { errorStatus: "yes", errorMessage: "Input required" } }
             })
             allFieldsValid = false;
 
@@ -181,7 +230,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         }
         if (subject === "") {
             setValidations(prev => {
-                return { ...prev, subject: { errorStatus: "yes", errorMessage: "Invalid input" } }
+                return { ...prev, subject: { errorStatus: "yes", errorMessage: "Input required" } }
             })
             allFieldsValid = false;
 
@@ -193,7 +242,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         }
         if (supportingLinks === "") {
             setValidations(prev => {
-                return { ...prev, learningOutComes: { errorStatus: "yes", errorMessage: "Invalid input" } }
+                return { ...prev, learningOutComes: { errorStatus: "yes", errorMessage: "Input required" } }
             })
             allFieldsValid = false;
 
@@ -267,15 +316,28 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
             return;
         }
 
-        console.log("supportinnnnnnnnnn",supportingDocuments);
-        let tempVideos = [...videos];
-        tempVideos[selectedVideoIndex].topicName = topicName;
-        tempVideos[selectedVideoIndex].topicNumber = topicNumber;
-        tempVideos[selectedVideoIndex].supportingLinks = supportingLinks;
-        tempVideos[selectedVideoIndex].supportingDocuments = await uploadLessonSupportingDocs(courseDocumentId,supportingDocuments);
-        const fileExt = tempVideos[selectedVideoIndex].videoName.substr(tempVideos[selectedVideoIndex].videoName.lastIndexOf("."))
-        tempVideos[selectedVideoIndex].videoName = `${topicName}${fileExt}`;
-        setVideos(tempVideos)
+        try {
+            setIsloadingSaveTopic(true)
+            console.log("supportinnnnnnnnnn", supportingDocuments);
+            let tempVideos = [...videos];
+            tempVideos[selectedVideoIndex].topicName = topicName;
+            tempVideos[selectedVideoIndex].topicNumber = topicNumber;
+            tempVideos[selectedVideoIndex].supportingLinks = [...supportingLinks];
+            tempVideos[selectedVideoIndex].supportingDocuments = await uploadLessonSupportingDocs(courseDocumentId, supportingDocuments);
+            const fileExt = tempVideos[selectedVideoIndex].videoName.substr(tempVideos[selectedVideoIndex].videoName.lastIndexOf("."))
+            tempVideos[selectedVideoIndex].videoName = `${topicName}${fileExt}`;
+            setVideos(tempVideos)
+            setTopicNumber("")
+            setTopicName("")
+            setSupportingDocuments([])
+            setSupportingLinks([])
+        } catch (error) {
+
+        } finally {
+            setIsloadingSaveTopic(false)
+        }
+
+
     }
 
     const handleSaveAllToCourse = async () => {
@@ -348,7 +410,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                 </Box>
                 <Box sx={{ width: "85%", height: "100vh", display: "flex", flexDirection: "column", paddingTop: "50px" }}>
                     <Box sx={{ display: "flex", flexDirection: "column", marginLeft: "auto", textAlign: "right", paddingRight: "30px", }}>
-                        <Typography variant='h6' sx={{ color: "primary.main" }}>Course Content</Typography>
+                        <Typography variant='h6' sx={{ color: "primary.main" }}>{lessonName === "" ? "Course Content" : lessonName}</Typography>
                         <Typography variant='h6' sx={{ fontSize: "16px" }}>Lorem ipsum dolor sit amet, consectetur </Typography>
                     </Box>
                     {HideBox && (
@@ -359,19 +421,15 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                 {/* <MediaFields type='file' label={"Select Lesson Content"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} /> */}
                                 <InputFileUpload handleFileChange={handleFileChange} label={"Select Lesson Content"} />
                             </Box>
-                            <ButtonMUI variant='contained' sx={{
-                                backgroundColor: "primary.light",
-                                color: "#fff",
+
+                            <Box sx={{
                                 width: "fit-content",
-                                borderRadius: 20,
-                                height: "50px",
-                                fontSize: "18px",
-                                fontWeight: "500",
+                                height: "fit-content",
                                 marginTop: "30px",
                                 marginBottom: "40px",
-                            }} onClick={handleAddButtonClick
-                            }>Add Topics
-                            </ButtonMUI>
+                            }}>
+                                <Button text={"Add Topics"} buttonFunction={() => { handleAddButtonClick() }} iconType='loader' />
+                            </Box>
                         </Box>
                     )}
                     {showBox && (
@@ -414,7 +472,31 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                         <TextFields isOutComes={false} label={"Topic Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicName} state={topicName} />
 
                                     </Box>
-                                    <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLinks} state={supportingLinks} />
+                                    {/* <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLinks} state={supportingLinks} /> */}
+                                    <Box>
+                                        <TextFields isOutComes={true} show={show} label={"SupportingLinks:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLinkText} state={supportingLinkText} addOutcomes={setSupportingLinks} editOutcome={() => { UpdateOutcomes(supportingLinkText) }} />
+                                        <Typography variant='h6' sx={{ color: "primary.light", fontSize: "18px", fontWeight: "500" }}>Supporting Links</Typography>
+                                        {
+                                            supportingLinks.map((value, index) => {
+                                                return (
+                                                    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                                                        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                                                            <li key={index}>
+                                                            </li>
+                                                            <span style={{ color: "#000", fontSize: "20px", position: "relative", marginLeft: "-30px" }}>
+                                                                {value}
+                                                            </span>
+                                                        </Box>
+                                                        <Box sx={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+                                                            <Edit sx={{ color: "primary.main" }} onClick={(e) => { editOutcome(index, value) }} />
+                                                            <Delete sx={{ color: "primary.main" }} onClick={(e) => { learningOutcomesDelete(index) }} />
+                                                        </Box>
+                                                    </Box>
+                                                )
+                                            })
+                                        }
+                                    </Box>
+
                                     <InputFileUpload handleFileChange={handleDocumentsChange} label={"Add Supporting Documents"} />
                                     {
                                         supportingDocuments &&
@@ -478,7 +560,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
                                     marginLeft: { lg: "30px", md: "0" }
                                 }}>
-                                    <Button text={"Save Topic"} buttonFunction={() => { handleSaveTopic() }} isIconButton={isLoading} iconType='loader' />
+                                    <Button text={"Save Topic"} buttonFunction={() => { handleSaveTopic() }} isIconButton={isLoadingSaveTopic} iconType='loader' />
                                 </Box>
                             </Box>
                         </Box>
