@@ -3,12 +3,13 @@ import React, { useEffect, useState } from 'react'
 import PageSubHeading from '../Components/PageSubHeading'
 import PageHeading from '../Components/PageHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
-import TextFields, { SelectFieldGrade, TextAreas } from '../Components/TextFields'
+import TextFields, { OutcomesFields, SelectFieldGrade, TextAreas } from '../Components/TextFields'
 import Button from '../Components/Buttons';
 import AddCourseContent from './AddCourseContent'
 import MediaFields from '../Components/AddMedia'
 import { getCategoryData, saveCourseToFirestore } from '../services/firebase'
 import SelectField from '../Components/SelectField'
+import { Delete, Edit } from '@mui/icons-material'
 
 
 function AddNewCourse() {
@@ -19,7 +20,12 @@ function AddNewCourse() {
   const [courseCategory, setCourseCategory] = useState("")
   const [grade, setGrade] = useState("")
   const [subject, setSubject] = useState("")
-  const [learningOutComes, setLearningOutComes] = useState("")
+
+  const [learningOutCome, setLearningOutCome] = useState("")
+  const [savedLearningOutcomes, setSavedLearningOutcomes] = useState([])
+  const [id, setID] = useState('')
+  const [show, setShow] = useState(false)
+
   const [courseDocumentId, setCourseDocumentId] = useState("")
   const [openModal, setOpenModal] = useState(false)
 
@@ -29,8 +35,6 @@ function AddNewCourse() {
   const [selectedGrade, setSelectedGrade] = useState("")
   const [selectedSubject, setSelectedSubject] = useState("")
 
-  const [savedLearningOutcomes, setSavedLearningOutcomes] = useState([])
-  const [id, setID] = useState('')
 
   useEffect(() => {
     const category = async () => {
@@ -60,16 +64,9 @@ function AddNewCourse() {
   };
 
 
-  const learningOutcomesSaved = (learningOutComes) => {
-
-    const newlearningOutcome = {
-      id: savedLearningOutcomes.length,
-      learningOutcome: learningOutComes,
-    };
-
-    console.log(newlearningOutcome);
-    setSavedLearningOutcomes([...savedLearningOutcomes, newlearningOutcome]);
-  };
+  // const handleBlur = (id, newlearningOutcome) => {
+  //   learningOutcomesUpdate(id, newlearningOutcome);
+  // };
 
 
   const learningOutcomesDelete = (index) => {
@@ -92,13 +89,13 @@ function AddNewCourse() {
     console.log(index, learningOutcome);
 
 
-    setLearningOutComes(learningOutcome)
+    setLearningOutCome(learningOutcome)
     setID(index)
 
-    // setShow(true)
+    setShow(true)
   };
 
-  const learningOutcomesUpdate = (newlearningOutcome) => {
+  const UpdateOutcomes = (newlearningOutcome) => {
     console.log(id, newlearningOutcome);
     let updatedOutcomes = [...savedLearningOutcomes];
 
@@ -109,6 +106,7 @@ function AddNewCourse() {
       console.log('Outcome edited successfully!');
 
       setSavedLearningOutcomes(updatedOutcomes);
+      setShow(false)
 
     } else {
       console.log('Invalid index!');
@@ -116,16 +114,7 @@ function AddNewCourse() {
   };
 
 
-  // const [newCourse, setNewCourse] = useState({
-  //   courseName: "",
-  //   courseType: "",
-  //   courseShortDescription: "",
-  //   courseFullDescription: "",
-  //   courseCategory: "",
-  //   grade: "",
-  //   subject: "",
-  //   learningOutcomes: []
-  // })
+
 
 
 
@@ -256,7 +245,7 @@ function AddNewCourse() {
       })
       return allFieldsValid;
     }
-    if (learningOutComes === "") {
+    if (learningOutCome === "") {
       setValidations(prev => {
         return { ...prev, learningOutComes: { errorStatus: "yes", errorMessage: "Invalid input" } }
       })
@@ -310,9 +299,10 @@ function AddNewCourse() {
         };
       });
 
-      // setVideos((prevVideos) => [...prevVideos, ...newVideos]);
     }
   };
+
+  console.log("Outcomes", savedLearningOutcomes)
 
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100vh", paddingTop: "10px" }}>
@@ -342,7 +332,7 @@ function AddNewCourse() {
             {selectedCategory && grades(selectedCategory).map((value, index) => {
               console.log(value, index)
               return (
-                <MenuItem key={index} value={value.replace(" ","_")}>
+                <MenuItem key={index} value={value.replace(" ", "_")}>
                   {value}
                 </MenuItem>
               );
@@ -359,13 +349,32 @@ function AddNewCourse() {
                 );
               })}
           </SelectField>
-          {/* <SelectField inputLabel={"Select Category"} label={"Course Category:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedCategory} state={selectedCategory} options={categories} /> */}
-          {/* <SelectFieldGrade inputLabel={"Select Grade"} label={"Grade:"} errorStatus={validations.grade.errorStatus} errorMessage={validations.grade.errorMessage} setState={setSelectedGrade} state={selectedGrade} options={() => grades()}/>
-          <SelectField inputLabel={"Select Subject"} label={"Subject:"} errorStatus={validations.subject.errorStatus} errorMessage={validations.subject.errorMessage} setState={setSelectedSubject} state={selectedSubject} options={categories} /> */}
         </Box>
         <Box>
-          <TextFields label={"Learning Outcomes:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutComes} state={learningOutComes} />
+        <TextFields isOutComes={true} show={show} label={"Learning Outcomes:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutCome} state={learningOutCome} addOutcomes={setSavedLearningOutcomes} editOutcome={()=>{UpdateOutcomes(learningOutCome)}}  />
           <Typography variant='h6' sx={{ color: "primary.light", fontSize: "18px", fontWeight: "500" }}>Outcomes</Typography>
+          {
+            savedLearningOutcomes.map((value, index) => {
+              return (
+                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                  <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                    <li key={index}>
+                    </li>
+                    <span style={{ color: "#000", fontSize: "20px", position: "relative", marginLeft: "-30px" }}>
+                      {value}
+                    </span>
+                  </Box>
+                  <Box sx={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+                    <Edit sx={{ color: "primary.main" }} onClick={(e) => { editOutcome(index, value) }} />
+                    <Delete sx={{ color: "primary.main" }} onClick={(e) => { learningOutcomesDelete(index) }} />
+                  </Box>
+                </Box>
+              )
+
+
+
+            })
+          }
         </Box>
         <TextAreas label={"Course Full Description:"} errorStatus={validations.courseFullDescription.errorStatus} errorMessage={validations.courseFullDescription.errorMessage} setState={setCourseFullDescription} state={courseFullDescription} />
         {/* <InputFileUpload handleFileChange={handleFileChange} label={"Add Video Content"} /> */}
