@@ -4,11 +4,14 @@ import PageHeading from '../Components/PageHeading'
 import PageSubHeading from '../Components/PageSubHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
 import TextFields, { DocumentField, SelectField, TextFieldPassword } from '../Components/TextFields'
-import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
+import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, Done, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
 import backgroundImage from '../assets/placeholderImg.png'
 import MediaFields from '../Components/AddMedia'
 import InputFileUpload from '../Components/InputFileUpload'
 import Button from '../Components/Buttons';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import DoneIcon from '@mui/icons-material/Done';
+import SaveIcon from '@mui/icons-material/Save';
 
 import { saveCourseToFirestore, saveLessonToFirestore, saveTopicToFirestore, updateVideosWithFirebaseURLs, uploadAllVideos, uploadCourseVideos } from '../services/firebase'
 
@@ -22,6 +25,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [grade, setGrade] = useState("")
     const [subject, setSubject] = useState("")
     const [supportingLinks, setSupportingLinks] = useState("")
+    const [supportingDocuments, setSupportingDocuments] = useState([])
     const [showBox, setShowBox] = useState(false);
     const [HideBox, setHideBox] = useState(true)
     const [videos, setVideos] = useState([]);
@@ -32,6 +36,9 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [lessonDocumentID, setLessonDocumentID] = useState("")
     const [isLoading, setIsloading] = useState(false);
     const [currentVideoPlaying, setCurrentVideoPlaying] = useState("")
+    const [editDocumentName, setEditDocumentName] = useState("")
+    const [selectedDocumentIndex, setSelectedDocumentIndex] = useState()
+
 
 
     const handleAddButtonClick = async () => {
@@ -231,6 +238,24 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         }
     };
 
+    const handleDocumentsChange = (event) => {
+        const fileInput = event.target;
+        const files = fileInput.files;
+
+        if (files.length > 0) {
+            const newSupportingDocs = Array.from(files).map((file) => {
+                return {
+                    documentName: file.name,
+                    document: file,
+                    isDefaultNameChanged: false
+                };
+            });
+            console.log('Supporting', newSupportingDocs)
+
+            setSupportingDocuments((prevDocs) => [...prevDocs, ...newSupportingDocs]);
+        }
+    };
+
 
 
     const handleSaveTopic = () => {
@@ -271,6 +296,10 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         }
     }
 
+    const handleEditDocumentName = () => {
+
+    }
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", position: "fixed", zIndex: 100, top: 0, left: 0, backgroundColor: "#fff" }}>
             <Box sx={{ width: "100%", display: "flex", flexDirection: "row" }}>
@@ -278,7 +307,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                     <ButtonMUI sx={{ marginRight: "auto", marginTop: "20px" }} onClick={closeModal}>
                         <ArrowBackRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, }} />
                     </ButtonMUI>
-                    <Box sx={{ marginTop: "150px", marginBottom: "auto", }}>
+                    <Box sx={{ marginTop: "100px", marginBottom: "auto", height: "73%", border: "1px dashed red" }}>
                         <Box sx={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center", alignItems: "center", marginBottom: "50px" }}>
                             <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
                             <Typography sx={{ color: "#fff", fontWeight: "semi-bold", fontSize: "1.5rem" }}>Videos</Typography>
@@ -337,7 +366,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                     {
                                         currentVideoPlaying ?
                                             (
-                                                <video controls src={currentVideoPlaying} width="100%" height="85%"/>
+                                                <video controls src={currentVideoPlaying} width="100%" height="85%" />
                                             )
                                             :
                                             (
@@ -370,7 +399,37 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
                                     </Box>
                                     <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLinks} state={supportingLinks} />
-                                    <InputFileUpload handleFileChange={handleFileChange} label={"Add Supporting Documents"} />
+                                    <InputFileUpload handleFileChange={handleDocumentsChange} label={"Add Supporting Documents"} />
+                                    {
+                                        supportingDocuments &&
+                                        supportingDocuments.map((document, index) => {
+                                            return (
+                                                <Box key={index} onClick={() => setSelectedDocumentIndex(index)} variant="text" sx={{ border: "1px solid red", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "1px", width: "100%", marginBottom: "0px", marginTop: "5px", color: "primary.main", textTransform: 'none', }} >
+                                                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                                                        {
+                                                            document.isDefaultNameChanged ?
+                                                                <Done fontSize='small' sx={{ color: "#0f0" }} />
+                                                                :
+                                                                <PriorityHighIcon fontSize='small' sx={{ color: "warning.main" }} />
+                                                        }
+                                                        <Typography variant='body'>{document.documentName}</Typography>
+                                                    </Box>
+                                                    {
+                                                        selectedDocumentIndex === index &&
+                                                        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px" }}>
+                                                            <TextFields isOutComes={false} label="" errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setEditDocumentName} state={editDocumentName} />
+                                                            <SaveIcon fontSize='large' sx={{ color: "primary.main" }} />
+                                                        </Box>
+                                                    }
+
+                                                </Box>
+                                            )
+                                        })
+                                    }
+                                    {/* <Box sx={{ width: "330px", padding: "10px", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", border: "1px solid", color: "primary.light", borderRadius: "10px" }}>
+                                        <TextFields isOutComes={false} label={"Add Document Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicNumber} state={topicNumber} />
+                                        <Button text={"Save"} buttonFunction={() => { }} />
+                                    </Box> */}
 
                                 </Box>
 
