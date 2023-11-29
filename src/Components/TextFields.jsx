@@ -33,6 +33,7 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
                 (
                     !show ?
                         <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px", marginLeft: "auto", color: "primary.main", }} onClick={() => {
+                            setState("")
                             addOutcomes(prev => {
                                 return [...prev, state]
                             })
@@ -42,6 +43,7 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
                         </Button>
                         :
                         <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px", marginLeft: "auto", color: "primary.main", }} onClick={() => {
+                            setState("")
                             editOutcome(prev => {
                                 return [...prev, state]
                             })

@@ -16,7 +16,7 @@ import IconButton from '@mui/material/IconButton';
 import CircleIcon from '@mui/icons-material/Circle';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 
-import { saveCourseToFirestore, saveLessonToFirestore, saveTopicToFirestore, updateVideosWithFirebaseURLs, uploadAllVideos, uploadCourseVideos } from '../services/firebase'
+import { saveCourseToFirestore, saveLessonToFirestore, saveTopicToFirestore, updateVideosWithFirebaseURLs, uploadAllVideos, uploadCourseVideos, uploadLessonSupportingDocs } from '../services/firebase'
 
 
 function AddCourseContent({ setOpenModal, courseDocumentId }) {
@@ -261,16 +261,18 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
 
 
-    const handleSaveTopic = () => {
+    const handleSaveTopic = async () => {
         if (selectedVideoIndex === undefined) {
             alert('Please select a video to be linked to this topic');
             return;
         }
-        console.log(videos);
+
+        console.log("supportinnnnnnnnnn",supportingDocuments);
         let tempVideos = [...videos];
         tempVideos[selectedVideoIndex].topicName = topicName;
         tempVideos[selectedVideoIndex].topicNumber = topicNumber;
         tempVideos[selectedVideoIndex].supportingLinks = supportingLinks;
+        tempVideos[selectedVideoIndex].supportingDocuments = await uploadLessonSupportingDocs(courseDocumentId,supportingDocuments);
         const fileExt = tempVideos[selectedVideoIndex].videoName.substr(tempVideos[selectedVideoIndex].videoName.lastIndexOf("."))
         tempVideos[selectedVideoIndex].videoName = `${topicName}${fileExt}`;
         setVideos(tempVideos)
@@ -280,7 +282,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         try {
             setIsloading(true);
             const updatedVideos = await uploadCourseVideos(courseDocumentId, videos);
-            
+
             for (let topicObject of updatedVideos) {
 
                 await saveTopicToFirestore(courseDocumentId, lessonDocumentID, topicObject)
@@ -418,7 +420,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                         supportingDocuments &&
                                         supportingDocuments.map((document, index) => {
                                             return (
-                                                <Box key={index}  variant="text" sx={{ cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "1px", width: "100%", marginBottom: "0px", marginTop: "5px", color: "primary.main", textTransform: 'none', }} >
+                                                <Box key={index} variant="text" sx={{ cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "1px", width: "100%", marginBottom: "0px", marginTop: "5px", color: "primary.main", textTransform: 'none', }} >
                                                     <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", gap: "5px" }} onClick={() => setSelectedDocumentIndex(index)}>
                                                         {
                                                             document.isDefaultNameChanged ?
@@ -433,7 +435,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                                         <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px" }}>
                                                             <TextFields isOutComes={false} label="" errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setEditDocumentName} state={editDocumentName} />
                                                             <IconButton onClick={() => { handleEditDocumentName(index) }}>
-                                                                <SaveIcon fontSize='large' sx={{ color: "primary.main" }}  />
+                                                                <SaveIcon fontSize='large' sx={{ color: "primary.main" }} />
                                                             </IconButton>
                                                         </Box>
                                                     }
@@ -451,7 +453,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
                             </Box>
                             <Box sx={{ width: "100%", display: "flex", alignItems: { lg: "start", md: "center" }, justifyContent: { lg: "start", md: "center" } }}>
-                                <ButtonMUI variant='contained' sx={{
+                                {/* <ButtonMUI variant='contained' sx={{
                                     backgroundColor: "primary.light",
                                     color: "#fff",
                                     width: "30%",
@@ -464,7 +466,20 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                     marginLeft: { lg: "30px", md: "0" }
                                 }}
                                     onClick={handleSaveTopic}>Save
-                                </ButtonMUI>
+                                </ButtonMUI> */}
+                                <Box sx={{
+                                    color: "#fff",
+                                    width: "fit-content",
+                                    borderRadius: 20,
+                                    height: "fitcontent",
+                                    fontSize: "18px",
+                                    fontWeight: "500",
+                                    marginTop: "30px",
+
+                                    marginLeft: { lg: "30px", md: "0" }
+                                }}>
+                                    <Button text={"Save Topic"} buttonFunction={() => { handleSaveTopic() }} isIconButton={isLoading} iconType='loader' />
+                                </Box>
                             </Box>
                         </Box>
                     )}

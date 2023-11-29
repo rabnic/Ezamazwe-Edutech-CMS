@@ -505,7 +505,9 @@ export const uploadCourseVideos = async (courseId, videos) => {
 };
 
 export const uploadLessonSupportingDocs = async (courseId, documents) => {
+  console.log("documents",documents);
   // const storage = getStorage();
+
   const updatedDocuments = [...documents];
 
   // Upload 1 image at a time
