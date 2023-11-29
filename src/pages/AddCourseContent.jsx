@@ -31,15 +31,16 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [selectedVideoIndex, setSelectedVideoIndex] = useState()
     const [lessonDocumentID, setLessonDocumentID] = useState("")
     const [isLoading, setIsloading] = useState(false);
+    const [currentVideoPlaying, setCurrentVideoPlaying] = useState("")
 
 
     const handleAddButtonClick = async () => {
-        if(lessonName === "") {
+        if (lessonName === "") {
             alert("Lesson name required!");
             return;
         }
 
-        if(videos.length === 0) {
+        if (videos.length === 0) {
             alert("Please select videos for this lesson");
             return;
         }
@@ -199,6 +200,13 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     }
 
     const handleCurrentSelectedVideo = (index) => {
+        const reader = new FileReader();
+        reader.addEventListener("load", () => {
+            const videoURL = reader.result;
+            console.log("videoURL", videoURL)
+            setCurrentVideoPlaying(videoURL)
+        });
+        reader.readAsDataURL(videos[index].video);
         setSelectedVideoIndex(index)
     }
 
@@ -217,10 +225,13 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                     video: file,
                 };
             });
+            console.log('Videos', newVideos)
 
             setVideos((prevVideos) => [...prevVideos, ...newVideos]);
         }
     };
+
+
 
     const handleSaveTopic = () => {
         if (selectedVideoIndex === undefined) {
@@ -322,24 +333,34 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                         <Box sx={{ width: "100%", height: "90vh", marginTop: "30px", padding: "30px", overflow: "scroll" }}>
                             <Box sx={{ width: "100%", display: "flex", flexDirection: { sm: "column", lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
 
-                                <Box sx={{ width: { lg: "40%", md: "70%" }, height: "50vh" }}>
-                                    {/* <video controls src={videos[selectedVideoIndex].video}/> */}
-                                    <Box
-                                        sx={{
-                                            backgroundImage: `url(${backgroundImage})`,
-                                            backgroundRepeat: "no-repeat",
-                                            height: '100%',
-                                            width: '100%',
-                                            borderRadius: "20px",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            justifyContent: "center",
-                                            backgroundSize: "cover"
-                                        }}
-                                    >
-                                        <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, fontSize: "100px" }} />
+                                <Box sx={{ width: { lg: "40%", md: "70%" }, height: "40vh" }}>
+                                    {
+                                        currentVideoPlaying ?
+                                            (
+                                                <video controls src={currentVideoPlaying} width="100%" height="85%"/>
+                                            )
+                                            :
+                                            (
+                                                <Box
+                                                    sx={{
+                                                        backgroundImage: `url(${backgroundImage})`,
+                                                        backgroundRepeat: "no-repeat",
+                                                        height: '100%',
+                                                        width: '100%',
+                                                        borderRadius: "20px",
+                                                        display: "flex",
+                                                        alignItems: "center",
+                                                        justifyContent: "center",
+                                                        backgroundSize: "cover"
+                                                    }}
+                                                >
+                                                    <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, fontSize: "100px" }} />
 
-                                    </Box>
+                                                </Box>
+                                            )
+                                    }
+
+
                                 </Box>
                                 <Box sx={{ maxWidth: "700px", width: { lg: "60%", md: "70%" }, display: "flex", flexDirection: "column", gap: "20px" }}>
                                     <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>

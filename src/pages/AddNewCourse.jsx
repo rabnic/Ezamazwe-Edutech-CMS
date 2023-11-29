@@ -340,8 +340,9 @@ function AddNewCourse() {
           </SelectField>
           <SelectField inputLabel={"Select Grade"} label={"Course Grade:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedGrade} state={selectedGrade} isDisabled={selectedCategory === ""}>
             {selectedCategory && grades(selectedCategory).map((value, index) => {
+              console.log(value, index)
               return (
-                <MenuItem key={index} value={value}>
+                <MenuItem key={index} value={value.replace(" ","_")}>
                   {value}
                 </MenuItem>
               );
