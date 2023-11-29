@@ -26,23 +26,16 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
                 : null}
             {
                 isOutComes &&
-                 <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", width: "100%", marginTop: "5px", justifyContent: "flex-end", color: "primary.main" }} onClick={() => {
+                <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px", marginLeft: "auto", color: "primary.main", }} onClick={() => {
                     addOutcomes(prev => {
                         return [...prev, state]
                     })
                 }}>
                     <Add />
                     Add More
-                </Button> 
+                </Button>
 
-            // <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", width: "100%", marginTop: "5px", justifyContent: "flex-end", color: "primary.main" }} onClick={() => {
-            //     addOutcomes(prev => {
-            //         return [...prev, state]
-            //     })
-            // }}>
-            //     <Add />
-            //     Save
-            // </Button>
+
             }
         </Box>
     )
