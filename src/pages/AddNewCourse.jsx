@@ -24,6 +24,7 @@ function AddNewCourse() {
   const [learningOutCome, setLearningOutCome] = useState("")
   const [savedLearningOutcomes, setSavedLearningOutcomes] = useState([])
   const [id, setID] = useState('')
+  const [show, setShow] = useState(false)
 
   const [courseDocumentId, setCourseDocumentId] = useState("")
   const [openModal, setOpenModal] = useState(false)
@@ -63,9 +64,9 @@ function AddNewCourse() {
   };
 
 
-  const handleBlur = (id, newlearningOutcome) => {
-    learningOutcomesUpdate(id, newlearningOutcome);
-  };
+  // const handleBlur = (id, newlearningOutcome) => {
+  //   learningOutcomesUpdate(id, newlearningOutcome);
+  // };
 
 
   const learningOutcomesDelete = (index) => {
@@ -91,22 +92,26 @@ function AddNewCourse() {
     setLearningOutCome(learningOutcome)
     setID(index)
 
-    // setShow(true)
+    setShow(true)
   };
 
-  const learningOutcomesUpdate = (id, newlearningOutcome) => {
+  const UpdateOutcomes = (newlearningOutcome) => {
     console.log(id, newlearningOutcome);
     let updatedOutcomes = [...savedLearningOutcomes];
 
     if (id >= 0 && id < savedLearningOutcomes.length) {
+
+
       updatedOutcomes[id] = newlearningOutcome;
       console.log('Outcome edited successfully!');
+
       setSavedLearningOutcomes(updatedOutcomes);
+      setShow(false)
+
     } else {
       console.log('Invalid index!');
     }
   };
-
 
 
 
@@ -346,7 +351,7 @@ function AddNewCourse() {
           </SelectField>
         </Box>
         <Box>
-          <TextFields isOutComes={true} label={"Learning Outcomes:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutCome} state={learningOutCome} addOutcomes={setSavedLearningOutcomes} />
+        <TextFields isOutComes={true} show={show} label={"Learning Outcomes:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setLearningOutCome} state={learningOutCome} addOutcomes={setSavedLearningOutcomes} editOutcome={()=>{UpdateOutcomes(learningOutCome)}}  />
           <Typography variant='h6' sx={{ color: "primary.light", fontSize: "18px", fontWeight: "500" }}>Outcomes</Typography>
           {
             savedLearningOutcomes.map((value, index) => {
