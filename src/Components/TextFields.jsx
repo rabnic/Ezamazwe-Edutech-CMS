@@ -1,12 +1,12 @@
 import InputLabel from '@mui/material/InputLabel';
 import { Box, Button, FormControl, IconButton, InputAdornment, Link, MenuItem, OutlinedInput, Select, Typography } from '@mui/material';
 import { useState } from 'react';
-import { Add, Visibility, VisibilityOff } from '@mui/icons-material';
+import { Add, Edit, Visibility, VisibilityOff } from '@mui/icons-material';
 
 import { useNavigate } from 'react-router-dom';
 
 
-export default function TextFields({ label, type = "text", errorStatus, errorMessage, state, setState, isOutComes = true, addOutcomes }) {
+export default function TextFields({ label, type = "text", errorStatus, errorMessage, state, setState, isOutComes = true, addOutcomes, show,editOutcome }) {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
@@ -26,15 +26,27 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
                 : null}
             {
                 isOutComes &&
-                <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px", marginLeft: "auto", color: "primary.main", }} onClick={() => {
-                    addOutcomes(prev => {
-                        return [...prev, state]
-                    })
-                }}>
-                    <Add />
-                    Add More
-                </Button>
 
+                (
+                    !show ?
+                        <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px", marginLeft: "auto", color: "primary.main", }} onClick={() => {
+                            addOutcomes(prev => {
+                                return [...prev, state]
+                            })
+                        }}>
+                            <Add />
+                            Add More
+                        </Button>
+                        :
+                        <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px", marginLeft: "auto", color: "primary.main", }} onClick={() => {
+                            editOutcome(prev => {
+                                return [...prev, state]
+                            })
+                        }}>
+                            <Edit />
+                            Save
+                        </Button>
+                )
 
             }
         </Box>
