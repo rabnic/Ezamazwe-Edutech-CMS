@@ -12,6 +12,9 @@ import Button from '../Components/Buttons';
 import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
 import DoneIcon from '@mui/icons-material/Done';
 import SaveIcon from '@mui/icons-material/Save';
+import IconButton from '@mui/material/IconButton';
+import CircleIcon from '@mui/icons-material/Circle';
+import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 
 import { saveCourseToFirestore, saveLessonToFirestore, saveTopicToFirestore, updateVideosWithFirebaseURLs, uploadAllVideos, uploadCourseVideos } from '../services/firebase'
 
@@ -37,12 +40,12 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [isLoading, setIsloading] = useState(false);
     const [currentVideoPlaying, setCurrentVideoPlaying] = useState("")
     const [editDocumentName, setEditDocumentName] = useState("")
-    const [selectedDocumentIndex, setSelectedDocumentIndex] = useState()
+    const [selectedDocumentIndex, setSelectedDocumentIndex] = useState(-1)
 
 
 
     const handleAddButtonClick = async () => {
-        if (lessonName === "") {
+        if (lessonName?.trim() === "") {
             alert("Lesson name required!");
             return;
         }
@@ -277,6 +280,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         try {
             setIsloading(true);
             const updatedVideos = await uploadCourseVideos(courseDocumentId, videos);
+            
             for (let topicObject of updatedVideos) {
 
                 await saveTopicToFirestore(courseDocumentId, lessonDocumentID, topicObject)
@@ -296,8 +300,18 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         }
     }
 
-    const handleEditDocumentName = () => {
+    const handleEditDocumentName = (index) => {
+        if (editDocumentName === "") return;
 
+        const tempDocs = [...supportingDocuments];
+        console.log('tempDocs', tempDocs)
+        const fileExt = tempDocs[index].documentName.substr(tempDocs[index].documentName.lastIndexOf("."))
+        tempDocs[index].documentName = `${editDocumentName}${fileExt}`;
+        tempDocs[index].isDefaultNameChanged = true;
+        console.log(`EditDocument`, tempDocs)
+        setSupportingDocuments(tempDocs);
+        setSelectedDocumentIndex(-1)
+        setEditDocumentName("")
     }
 
     return (
@@ -404,13 +418,13 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                         supportingDocuments &&
                                         supportingDocuments.map((document, index) => {
                                             return (
-                                                <Box key={index} onClick={() => setSelectedDocumentIndex(index)} variant="text" sx={{ border: "1px solid red", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "1px", width: "100%", marginBottom: "0px", marginTop: "5px", color: "primary.main", textTransform: 'none', }} >
-                                                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center" }}>
+                                                <Box key={index}  variant="text" sx={{ cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "1px", width: "100%", marginBottom: "0px", marginTop: "5px", color: "primary.main", textTransform: 'none', }} >
+                                                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", gap: "5px" }} onClick={() => setSelectedDocumentIndex(index)}>
                                                         {
                                                             document.isDefaultNameChanged ?
-                                                                <Done fontSize='small' sx={{ color: "#0f0" }} />
+                                                                <CircleIcon fontSize='small' sx={{ color: "primary.main" }} />
                                                                 :
-                                                                <PriorityHighIcon fontSize='small' sx={{ color: "warning.main" }} />
+                                                                <CircleOutlinedIcon fontSize='small' sx={{ color: "primary.main" }} />
                                                         }
                                                         <Typography variant='body'>{document.documentName}</Typography>
                                                     </Box>
@@ -418,7 +432,9 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                                         selectedDocumentIndex === index &&
                                                         <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px" }}>
                                                             <TextFields isOutComes={false} label="" errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setEditDocumentName} state={editDocumentName} />
-                                                            <SaveIcon fontSize='large' sx={{ color: "primary.main" }} />
+                                                            <IconButton onClick={() => { handleEditDocumentName(index) }}>
+                                                                <SaveIcon fontSize='large' sx={{ color: "primary.main" }}  />
+                                                            </IconButton>
                                                         </Box>
                                                     }
 
