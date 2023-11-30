@@ -284,7 +284,7 @@ export const updatePasswordReset = async (email) => {
 // Forgot password function
 export const ForgotPasswordFunction = async (email) => {
   console.log("Forgot password", email);
-  const url = "https://ezamazwe-edutech-cms.netlify.app"
+  const url = "https://ezamazwe-edutech-cms.firebaseapp.com/"
   try {
     const apiUrl = await fetch(`https://ezamazwe-edutech-nodejs.onrender.com/reset-password`,
       {
@@ -476,87 +476,7 @@ export const getCategoryData = async () =>{
 
 
 
-
-// Function to upload video to Firebase Storage
-export const uploadVideoToFirebase = async (courseId, videoObject) => {
-  const { video, videoName } = videoObject;
-
-  // Create a reference to the storage location
-  // const storageRef = storage.ref().child(`videos/${videoName}`);
-  const storageRef = ref(storage, `/videos/${courseId}/${videoName}`);
-  // Convert the blob URL to a Blob object
-  const response = await fetch(video);
-  const blob = await response.blob();
-
-  // Upload the video to Firebase Storage
-  await storageRef.put(blob);
-
-  // Get the download URL
-  const downloadURL = await storageRef.getDownloadURL();
-
-  return downloadURL;
-};
-
-// Update each video object with the Firebase download URL
-export const updateVideosWithFirebaseURLs = async (videos) => {
-  const uploadPromises = videos.map(uploadVideoToFirebase);
-
-  // Wait for all uploads to complete
-  const downloadURLs = await Promise.all(uploadPromises);
-
-  // Update the original videos array with the Firebase download URLs
-  videos.forEach((video, index) => {
-    video.video = downloadURLs[index];
-  });
-
-  return videos;
-};
-
-////////////////////////////////////////////////////////////////
-
-
-// Create a function to upload a video and replace the URL
-export const uploadVideo = async (video) => {
-  try {
-    // Initialize Firebase Storage
-    const storage = getStorage();
-
-    // Create a reference to the video in Firebase Storage
-    const storageRef = ref(storage, video.videoName);
-
-    // Upload the video bytes to Firebase Storage
-    const snapshot = await uploadBytes(storageRef, video.video);
-
-    // Get the download URL of the uploaded video
-    const downloadURL = await getDownloadURL(snapshot.ref);
-
-    // Replace the blob URL with the Firebase download URL
-    video.video = downloadURL;
-
-    // Return the updated video object
-    return video;
-  } catch (error) {
-    console.error('Error uploading video:', error);
-    throw error;
-  }
-};
-
-// Use Promise.all to upload all videos and replace the URLs
-export const uploadAllVideos = async (videos) => {
-  try {
-    // Map each video to an upload promise
-    const uploadPromises = videos.map(uploadVideo);
-
-    // Wait for all upload promises to resolve
-    const updatedVideos = await Promise.all(uploadPromises);
-
-    // Return the array of updated videos
-    return updatedVideos;
-  } catch (error) {
-    console.error('Error uploading videos:', error);
-    throw error;
-  }
-};
+///////////////////////////////////////////////////////////////
 
 // Call the uploadAllVideos function with the videos array
 
@@ -582,6 +502,31 @@ export const uploadCourseVideos = async (courseId, videos) => {
       });
   }
   return updatedVideos;
+};
+
+export const uploadLessonSupportingDocs = async (courseId, documents) => {
+  console.log("documents",documents);
+  // const storage = getStorage();
+
+  const updatedDocuments = [...documents];
+
+  // Upload 1 image at a time
+  for (let [index, document] of documents.entries()) {
+    // console.log(index)
+    const documentRef = ref(storage, `/supporting_documents/${courseId}/${document.documentName}`);
+    await uploadBytes(documentRef, document.document)
+      .then(async (snapshot) => {
+        // console.log(image.name, "upload success");
+        await getDownloadURL(snapshot.ref).then((url) => {
+          //   console.log(url);
+          updatedDocuments[index].document = url;
+        });
+      })
+      .catch((err) => {
+        console.log(err.message);
+      });
+  }
+  return updatedDocuments;
 };
 
 

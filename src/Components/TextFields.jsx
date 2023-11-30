@@ -10,7 +10,10 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
-            <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
+            {
+                label !== "" &&
+                <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
+            }
             <OutlinedInput value={state} type={type} required placeholder="Enter" variant="outlined" sx={{
                 width: "100%", height: "50px", fontSize: "16px", borderRadius: "10px",
                 "& .MuiOutlinedInput-notchedOutline": {
@@ -30,6 +33,7 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
                 (
                     !show ?
                         <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px", marginLeft: "auto", color: "primary.main", }} onClick={() => {
+                            setState("")
                             addOutcomes(prev => {
                                 return [...prev, state]
                             })
@@ -39,6 +43,7 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
                         </Button>
                         :
                         <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px", marginLeft: "auto", color: "primary.main", }} onClick={() => {
+                            setState("")
                             editOutcome(prev => {
                                 return [...prev, state]
                             })

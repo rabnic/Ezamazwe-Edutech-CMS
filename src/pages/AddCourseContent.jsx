@@ -4,13 +4,19 @@ import PageHeading from '../Components/PageHeading'
 import PageSubHeading from '../Components/PageSubHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
 import TextFields, { DocumentField, SelectField, TextFieldPassword } from '../Components/TextFields'
-import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
+import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, Done, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
 import backgroundImage from '../assets/placeholderImg.png'
 import MediaFields from '../Components/AddMedia'
 import InputFileUpload from '../Components/InputFileUpload'
 import Button from '../Components/Buttons';
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import DoneIcon from '@mui/icons-material/Done';
+import SaveIcon from '@mui/icons-material/Save';
+import IconButton from '@mui/material/IconButton';
+import CircleIcon from '@mui/icons-material/Circle';
+import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 
-import { saveCourseToFirestore, saveLessonToFirestore, saveTopicToFirestore, updateVideosWithFirebaseURLs, uploadAllVideos, uploadCourseVideos } from '../services/firebase'
+import { saveCourseToFirestore, saveLessonToFirestore, saveTopicToFirestore, updateVideosWithFirebaseURLs, uploadAllVideos, uploadCourseVideos, uploadLessonSupportingDocs } from '../services/firebase'
 
 
 function AddCourseContent({ setOpenModal, courseDocumentId }) {
@@ -22,6 +28,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [grade, setGrade] = useState("")
     const [subject, setSubject] = useState("")
     const [supportingLinks, setSupportingLinks] = useState("")
+    const [supportingDocuments, setSupportingDocuments] = useState([])
     const [showBox, setShowBox] = useState(false);
     const [HideBox, setHideBox] = useState(true)
     const [videos, setVideos] = useState([]);
@@ -32,10 +39,13 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [lessonDocumentID, setLessonDocumentID] = useState("")
     const [isLoading, setIsloading] = useState(false);
     const [currentVideoPlaying, setCurrentVideoPlaying] = useState("")
+    const [editDocumentName, setEditDocumentName] = useState("")
+    const [selectedDocumentIndex, setSelectedDocumentIndex] = useState(-1)
+
 
 
     const handleAddButtonClick = async () => {
-        if (lessonName === "") {
+        if (lessonName?.trim() === "") {
             alert("Lesson name required!");
             return;
         }
@@ -231,18 +241,38 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         }
     };
 
+    const handleDocumentsChange = (event) => {
+        const fileInput = event.target;
+        const files = fileInput.files;
+
+        if (files.length > 0) {
+            const newSupportingDocs = Array.from(files).map((file) => {
+                return {
+                    documentName: file.name,
+                    document: file,
+                    isDefaultNameChanged: false
+                };
+            });
+            console.log('Supporting', newSupportingDocs)
+
+            setSupportingDocuments((prevDocs) => [...prevDocs, ...newSupportingDocs]);
+        }
+    };
 
 
-    const handleSaveTopic = () => {
+
+    const handleSaveTopic = async () => {
         if (selectedVideoIndex === undefined) {
             alert('Please select a video to be linked to this topic');
             return;
         }
-        console.log(videos);
+
+        console.log("supportinnnnnnnnnn",supportingDocuments);
         let tempVideos = [...videos];
         tempVideos[selectedVideoIndex].topicName = topicName;
         tempVideos[selectedVideoIndex].topicNumber = topicNumber;
         tempVideos[selectedVideoIndex].supportingLinks = supportingLinks;
+        tempVideos[selectedVideoIndex].supportingDocuments = await uploadLessonSupportingDocs(courseDocumentId,supportingDocuments);
         const fileExt = tempVideos[selectedVideoIndex].videoName.substr(tempVideos[selectedVideoIndex].videoName.lastIndexOf("."))
         tempVideos[selectedVideoIndex].videoName = `${topicName}${fileExt}`;
         setVideos(tempVideos)
@@ -252,6 +282,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         try {
             setIsloading(true);
             const updatedVideos = await uploadCourseVideos(courseDocumentId, videos);
+
             for (let topicObject of updatedVideos) {
 
                 await saveTopicToFirestore(courseDocumentId, lessonDocumentID, topicObject)
@@ -271,6 +302,20 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         }
     }
 
+    const handleEditDocumentName = (index) => {
+        if (editDocumentName === "") return;
+
+        const tempDocs = [...supportingDocuments];
+        console.log('tempDocs', tempDocs)
+        const fileExt = tempDocs[index].documentName.substr(tempDocs[index].documentName.lastIndexOf("."))
+        tempDocs[index].documentName = `${editDocumentName}${fileExt}`;
+        tempDocs[index].isDefaultNameChanged = true;
+        console.log(`EditDocument`, tempDocs)
+        setSupportingDocuments(tempDocs);
+        setSelectedDocumentIndex(-1)
+        setEditDocumentName("")
+    }
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", position: "fixed", zIndex: 100, top: 0, left: 0, backgroundColor: "#fff" }}>
             <Box sx={{ width: "100%", display: "flex", flexDirection: "row" }}>
@@ -278,7 +323,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                     <ButtonMUI sx={{ marginRight: "auto", marginTop: "20px" }} onClick={closeModal}>
                         <ArrowBackRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, }} />
                     </ButtonMUI>
-                    <Box sx={{ marginTop: "150px", marginBottom: "auto", }}>
+                    <Box sx={{ marginTop: "100px", marginBottom: "auto", height: "73%", border: "1px dashed red" }}>
                         <Box sx={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center", alignItems: "center", marginBottom: "50px" }}>
                             <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
                             <Typography sx={{ color: "#fff", fontWeight: "semi-bold", fontSize: "1.5rem" }}>Videos</Typography>
@@ -337,7 +382,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                     {
                                         currentVideoPlaying ?
                                             (
-                                                <video controls src={currentVideoPlaying} width="100%" height="85%"/>
+                                                <video controls src={currentVideoPlaying} width="100%" height="85%" />
                                             )
                                             :
                                             (
@@ -370,13 +415,45 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
                                     </Box>
                                     <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLinks} state={supportingLinks} />
-                                    <InputFileUpload handleFileChange={handleFileChange} label={"Add Supporting Documents"} />
+                                    <InputFileUpload handleFileChange={handleDocumentsChange} label={"Add Supporting Documents"} />
+                                    {
+                                        supportingDocuments &&
+                                        supportingDocuments.map((document, index) => {
+                                            return (
+                                                <Box key={index} variant="text" sx={{ cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "1px", width: "100%", marginBottom: "0px", marginTop: "5px", color: "primary.main", textTransform: 'none', }} >
+                                                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", gap: "5px" }} onClick={() => setSelectedDocumentIndex(index)}>
+                                                        {
+                                                            document.isDefaultNameChanged ?
+                                                                <CircleIcon fontSize='small' sx={{ color: "primary.main" }} />
+                                                                :
+                                                                <CircleOutlinedIcon fontSize='small' sx={{ color: "primary.main" }} />
+                                                        }
+                                                        <Typography variant='body'>{document.documentName}</Typography>
+                                                    </Box>
+                                                    {
+                                                        selectedDocumentIndex === index &&
+                                                        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px" }}>
+                                                            <TextFields isOutComes={false} label="" errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setEditDocumentName} state={editDocumentName} />
+                                                            <IconButton onClick={() => { handleEditDocumentName(index) }}>
+                                                                <SaveIcon fontSize='large' sx={{ color: "primary.main" }} />
+                                                            </IconButton>
+                                                        </Box>
+                                                    }
+
+                                                </Box>
+                                            )
+                                        })
+                                    }
+                                    {/* <Box sx={{ width: "330px", padding: "10px", display: "flex", flexDirection: "column", alignItems: "center", gap: "10px", border: "1px solid", color: "primary.light", borderRadius: "10px" }}>
+                                        <TextFields isOutComes={false} label={"Add Document Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicNumber} state={topicNumber} />
+                                        <Button text={"Save"} buttonFunction={() => { }} />
+                                    </Box> */}
 
                                 </Box>
 
                             </Box>
                             <Box sx={{ width: "100%", display: "flex", alignItems: { lg: "start", md: "center" }, justifyContent: { lg: "start", md: "center" } }}>
-                                <ButtonMUI variant='contained' sx={{
+                                {/* <ButtonMUI variant='contained' sx={{
                                     backgroundColor: "primary.light",
                                     color: "#fff",
                                     width: "30%",
@@ -389,7 +466,20 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                     marginLeft: { lg: "30px", md: "0" }
                                 }}
                                     onClick={handleSaveTopic}>Save
-                                </ButtonMUI>
+                                </ButtonMUI> */}
+                                <Box sx={{
+                                    color: "#fff",
+                                    width: "fit-content",
+                                    borderRadius: 20,
+                                    height: "fitcontent",
+                                    fontSize: "18px",
+                                    fontWeight: "500",
+                                    marginTop: "30px",
+
+                                    marginLeft: { lg: "30px", md: "0" }
+                                }}>
+                                    <Button text={"Save Topic"} buttonFunction={() => { handleSaveTopic() }} isIconButton={isLoading} iconType='loader' />
+                                </Box>
                             </Box>
                         </Box>
                     )}

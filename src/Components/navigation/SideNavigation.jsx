@@ -15,6 +15,7 @@ import { useAuthContext } from '../../context/authContext';
 import MenuIcon from '@mui/icons-material/Menu';
 import { Cancel, Menu } from '@mui/icons-material';
 import { useAdminContext } from '../../context/adminContext';
+import Groups3Icon from '@mui/icons-material/Groups3';
 
 
 const routePaths = {
@@ -132,7 +133,7 @@ function SideNavigation() {
                   active={activeTab === "AddNewCourse"}
                 />
                 <SideNavTab
-                  Icon={AddBoxIcon}
+                  Icon={Groups3Icon}
                   text={'Tutors'}
                   navigateFunction={() => {isDrawerOpen && closeDrawer(); handleNavigation("tutors") }}
                   active={activeTab === "Tutors"}
@@ -198,7 +199,7 @@ function SideNavigation() {
                 active={activeTab === "AddNewCourse"}
               />
               <SideNavTab
-                Icon={AddBoxIcon}
+                Icon={Groups3Icon}
                 text={isMediumScreen ? null : 'Tutors'}
                 navigateFunction={() => {isDrawerOpen && closeDrawer(); handleNavigation("tutors") }}
                 active={activeTab === "Tutors"}
@@ -270,7 +271,7 @@ function SideNavigation() {
                 active={activeTab === "AddNewCourse"}
               />
               <SideNavTab
-                Icon={AddBoxIcon}
+                Icon={Groups3Icon}
                 text={isSmallScreen ? null : 'Tutors'}
                 navigateFunction={() => {isDrawerOpen && closeDrawer(); handleNavigation("tutors") }}
                 active={activeTab === "Tutors"}
