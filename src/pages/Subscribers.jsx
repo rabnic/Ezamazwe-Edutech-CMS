@@ -49,18 +49,18 @@ const columns = [
   { label: 'First Name', minWidth: 80 },
   { label: 'Last Name', minWidth: 80 },
   {
-    
+
     label: 'Phone Number',
     minWidth: 100,
     // align: 'right',
-    
+
   },
   {
-    
+
     label: 'Email Address',
     minWidth: 100,
     // align: 'right',
-    
+
   },
   // {
   //   id: 'density',
@@ -175,13 +175,13 @@ function Subscribers() {
 
   }
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px", maxWidth: "1500px", marginLeft: "auto", marginRight: "auto" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px", marginLeft: "auto", marginRight: "auto" }}>
 
       <PageHeadingContainer
         heading="Subscribers"
         subHeading="Some sub heading for this page"
       />
-      <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: { xs: "85%", sm: "100%", md: "100%", lg: "100%" }, height: "100%", marginLeft: "auto", marginRight: "auto" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: { xs: "90%", sm: "100%", md: "100%", lg: "100%" }, height: "100%", marginLeft: "auto", marginRight: "auto" }}>
         <Tabs value={value} onChange={handleChange} aria-label="basic tabs example" centered variant='fullWidth'
           sx={{
             "& button:focus": { backgroundColor: "primary.main", color: "#fff" },
@@ -215,11 +215,11 @@ function Subscribers() {
                     subscribedUserList.map((data, index) => {
                       return (
                         <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                        <TableCell  align='left'>{data.firstName}</TableCell>
-                        <TableCell>{data.lastName}</TableCell>
-                        <TableCell>{data.phoneNum}</TableCell>
-                        <TableCell>{data.email}</TableCell>
-                        {/* <TableCell>{data.subscription}</TableCell> */}
+                          <TableCell align='left'>{data.firstName}</TableCell>
+                          <TableCell>{data.lastName}</TableCell>
+                          <TableCell>{data.phoneNum}</TableCell>
+                          <TableCell>{data.email}</TableCell>
+                          {/* <TableCell>{data.subscription}</TableCell> */}
                         </TableRow>
                       );
                     })}
@@ -259,11 +259,11 @@ function Subscribers() {
                     unsubscribedUserList.map((data, index) => {
                       return (
                         <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                        <TableCell  align='left'>{data.firstName}</TableCell>
-                        <TableCell>{data.lastName}</TableCell>
-                        <TableCell>{data.phoneNum}</TableCell>
-                        <TableCell>{data.email}</TableCell>
-                        {/* <TableCell>{data.subscription}</TableCell> */}
+                          <TableCell align='left'>{data.firstName}</TableCell>
+                          <TableCell>{data.lastName}</TableCell>
+                          <TableCell>{data.phoneNum}</TableCell>
+                          <TableCell>{data.email}</TableCell>
+                          {/* <TableCell>{data.subscription}</TableCell> */}
                         </TableRow>
                       );
                     })}

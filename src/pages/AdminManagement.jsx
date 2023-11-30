@@ -142,7 +142,7 @@ function AdminManagement() {
         setIsShowForm(!isShowForm)
     }
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: { xs: "90%", sm: "95%", lg: "100%" }, height: "auto", paddingTop: "10px" }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: { xs: "90%", sm: "95%", lg: "100%" }, height: "auto", paddingTop: "10px", marginLeft: "auto", marginRight: "auto" }}>
 
             <PageHeadingContainer
                 heading="Admin Management"
@@ -150,7 +150,7 @@ function AdminManagement() {
             />
 
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "50px", width: { lg: "100%", sm: "100%", xs: "100%" }, height: "100vh", }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "50px", width: { lg: "100%", sm: "100%", xs: "100%" }, height: "100vh" }}>
                 <Box sx={{ maxWidth: "240px", width: "50%", alignSelf: "flex-start" }}>
                     <Button text={"Add New Admin"} buttonFunction={handleToggleForm} isIconButton={true} iconType={isShowForm ? "up" : "down"} />
                 </Box>
