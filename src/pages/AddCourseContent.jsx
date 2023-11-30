@@ -4,7 +4,7 @@ import PageHeading from '../Components/PageHeading'
 import PageSubHeading from '../Components/PageSubHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
 import TextFields, { DocumentField, SelectField, TextFieldPassword } from '../Components/TextFields'
-import { Add, ArrowBack, ArrowBackRounded, BackHand, Cancel, CloseRounded, Done, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
+import { Add, ArrowBack, ArrowBackRounded, BackHand, Cancel, CloseRounded, Delete, Done, Edit, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
 import backgroundImage from '../assets/placeholderImg.png'
 import MediaFields from '../Components/AddMedia'
 import InputFileUpload from '../Components/InputFileUpload'
@@ -355,7 +355,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
             setTopicName("")
             setTopicNumber("")
             setLessonName("")
-            setSupportingLinks("")
+            setSupportingLinks([])
             alert("Successfully saved lesson and its topics")
         } catch (error) {
             console.log(error)
