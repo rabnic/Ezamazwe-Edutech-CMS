@@ -1,9 +1,42 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageHeadingContainer from "../Components/PageHeadingContainer";
 import SubjectCard from "../Components/SubjectCard";
+import { fetchFilteredCourseDocuments } from "../services/firebase";
 
-function CourseSubjects() {
+function CourseList() {
+  const [filteredDocuments, setFilteredDocuments] = useState([]);
+
+  useEffect(() => {
+    // Assuming you have already initialized Firebase app and authenticated the user
+    // const firestore = firebase.firestore();
+
+    // Fetch the collection documents
+    // const fetchDocuments = async () => {
+    //   try {
+    //     const querySnapshot = await firestore
+    //       .collection("yourCollectionName")
+    //       .where("courseCategory", "==", "cap")
+    //       .where("grade", "==", "grade 1")
+    //       .where("subject", "==", "maths")
+    //       .get();
+
+    //     // Extract the filtered documents
+    //     const documents = querySnapshot.docs.map((doc) => doc.data());
+    //     setFilteredDocuments(documents);
+    //   } catch (error) {
+    //     console.error("Error fetching documents: ", error);
+    //   }
+    // };
+
+    // fetchDocuments();
+
+    const tester = async () => {
+
+      await fetchFilteredCourseDocuments()
+    }
+    tester()
+  }, []);
   return (
     <Box
       sx={{
@@ -12,21 +45,14 @@ function CourseSubjects() {
         alignItems: "center",
         width: "100%",
         height: "100%",
-        paddingTop: "20px",
-        gap: "50px",
-        marginTop: {
-          xs: "60vh",
-          sm: "40vh",
-          md: "20vh",
-          lg: "-20vh",
-          xl: "-20vh",
-        },
+        paddingTop: "5px",
       }}
     >
       <PageHeadingContainer
-        heading="Mathematics"
+        heading="Courses List"
         subHeading="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
       />
+   
       <Box
         sx={{
           display: "flex",
@@ -78,8 +104,9 @@ function CourseSubjects() {
           />
         </Box>
       </Box>
+   
     </Box>
   );
 }
 
-export default CourseSubjects;
+export default CourseList;

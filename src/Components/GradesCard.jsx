@@ -1,9 +1,14 @@
 import React from "react";
 import { Typography, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-function GradesCard({ children, Grade }) {
+
+function GradesCard({ children, Grade, path }) {
+  const navigate = useNavigate();
+
   return (
     <Box
+    onClick={() => navigate(path)}
       sx={{
         display: "flex",
         flexDirection: "row",
@@ -13,6 +18,7 @@ function GradesCard({ children, Grade }) {
         color: "#FFFFFF",
         gap: "49px",
         justifyContent: "space-between",
+        cursor: "pointer",
       }}
     >
       <Box

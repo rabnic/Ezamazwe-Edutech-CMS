@@ -35,8 +35,10 @@ function SideNavigation() {
   const { admin } = useAdminContext();
 
 
-  const currentPath = location.pathname.replace("/", "")
-  console.log("currentPath", currentPath)
+  const paths = location.pathname.split("/").slice(1)
+  const currentPath = paths[0]
+
+  console.log("currentPath", currentPath, paths)
   const [activeTab, setActiveTab] = useState(routePaths[currentPath]);
   console.log("activeTab", activeTab)
 

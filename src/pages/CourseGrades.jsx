@@ -1,9 +1,37 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageHeadingContainer from "../Components/PageHeadingContainer";
 import GradesCard from "../Components/GradesCard";
+import { useParams, useLocation } from "react-router-dom";
+import { getCategoryData } from "../services/firebase";
+import Breadcrumb from "../Components/navigation/Breadcrumb";
 
 function CourseGrades() {
+  const params = useParams();
+  const location = useLocation();
+  console.log("params",params);
+  console.log("location",location.pathname);
+
+  const [categories, setCategories] = useState([])
+
+
+  useEffect(() => {
+    const category = async () => {
+      await getCategoryData().then(data => {
+        setCategories(data)
+      })
+    }
+    category()
+  }, [])
+
+  
+
+  const grades = (key) => {
+    return categories[key]?.grades || [];
+  };
+
+  console.log("grades",grades(params.subCategory));
+
   return (
     <Box
       sx={{
@@ -21,6 +49,8 @@ function CourseGrades() {
         heading="Grades"
         subHeading="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
       />
+      <Breadcrumb />
+
       <Box
         sx={{
           width: {lg: "100%"},
@@ -28,7 +58,17 @@ function CourseGrades() {
           height: "100vh",
         }}
       >
-        <Box
+        {
+          grades(params.subCategory).map(grade => {
+            console.log(grade);
+            return(
+          <GradesCard path={`${location.pathname}/${grade.toLowerCase().replace(" ", "-")}`} Grade={grade} />
+              
+            )
+          })
+        }
+
+        {/* <Box
           sx={{
             display: "flex",
             flexDirection: {xs: "column", sm: "row", md: "row",lg :"row", xl: "row"},
@@ -83,7 +123,7 @@ function CourseGrades() {
         >
           <GradesCard Grade={"Grade 1"} />
           <GradesCard Grade={"Grade 1"} />
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );

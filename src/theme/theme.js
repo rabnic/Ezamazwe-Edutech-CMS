@@ -31,4 +31,14 @@ export const theme = createTheme({
         main: "#151522"
       }
     },
+    components: {
+      MuiBreadcrumbs: {
+        styleOverrides: {
+          li: {
+            fontSize: "4px"
+          },
+        },
+      },
+    },
   })
+

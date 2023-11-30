@@ -1,9 +1,42 @@
 import { Box } from "@mui/material";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import PageHeadingContainer from "../Components/PageHeadingContainer";
 import SubjectCategory from "../Components/SubjectsCategory";
+import { useParams } from "react-router-dom";
+import { getCategoryData } from "../services/firebase";
+import Breadcrumb from "../Components/navigation/Breadcrumb";
 
 function CourseSubjects() {
+
+  const params = useParams();
+  let { subCategory, subject } = params;
+  console.log(params);
+  const [categories, setCategories] = useState([])
+
+
+  useEffect(() => {
+    const category = async () => {
+      await getCategoryData().then(data => {
+        setCategories(data)
+      })
+    }
+    category()
+  }, [])
+
+  function capitalizeFirstLetter(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+  subject = capitalizeFirstLetter(subject)
+
+  const subjects = (key, grade) => {
+    if (categories[key] && categories[key].subjects && categories[key].subjects[grade]) {
+      return categories[key].subjects[grade];
+    }
+    return [];
+  };
+
+  console.log("grades", subjects(subCategory, subject.replace("-", "_")));
+
   return (
     <Box
       sx={{
@@ -20,9 +53,11 @@ function CourseSubjects() {
         heading="Subjects"
         subHeading="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
       />
+      <Breadcrumb />
+
       <Box
         sx={{
-          width: {lg: "100%"},
+          width: { lg: "100%" },
           marginTop: "40px",
           height: "100vh",
         }}
@@ -30,8 +65,8 @@ function CourseSubjects() {
         <Box
           sx={{
             display: "flex",
-            flexDirection: {xs: "column", sm: "row", md: "row",lg :"row", xl: "row"},
-            width: {xs: "100%", sm:"100%" ,md: "100%",lg: "100%", xl: "100%"},
+            flexDirection: { xs: "column", sm: "row", md: "row", lg: "row", xl: "row" },
+            width: { xs: "100%", sm: "100%", md: "100%", lg: "100%", xl: "100%" },
             height: "fill 680px",
             justifyContent: "space-between",
             padding: "20px",
@@ -44,8 +79,8 @@ function CourseSubjects() {
         <Box
           sx={{
             display: "flex",
-            flexDirection: {xs: "column", sm: "row", md: "row",lg :"row", xl: "row"},
-            width: {xs: "100%", sm:"100%" ,md: "100%",lg: "100%", xl: "100%"},
+            flexDirection: { xs: "column", sm: "row", md: "row", lg: "row", xl: "row" },
+            width: { xs: "100%", sm: "100%", md: "100%", lg: "100%", xl: "100%" },
             height: "fill 680px",
             justifyContent: "space-between",
             padding: "20px",
@@ -58,8 +93,8 @@ function CourseSubjects() {
         <Box
           sx={{
             display: "flex",
-            flexDirection: {xs: "column", sm: "row", md: "row",lg :"row", xl: "row"},
-            width: {xs: "100%", sm:"100%" ,md: "100%",lg: "100%", xl: "100%"},
+            flexDirection: { xs: "column", sm: "row", md: "row", lg: "row", xl: "row" },
+            width: { xs: "100%", sm: "100%", md: "100%", lg: "100%", xl: "100%" },
             height: "fill 680px",
             justifyContent: "space-between",
             padding: "20px",
@@ -72,8 +107,8 @@ function CourseSubjects() {
         <Box
           sx={{
             display: "flex",
-            flexDirection: {xs: "column", sm: "row", md: "row",lg :"row", xl: "row"},
-            width: {xs: "100%", sm:"100%" ,md: "100%",lg: "100%", xl: "100%"},
+            flexDirection: { xs: "column", sm: "row", md: "row", lg: "row", xl: "row" },
+            width: { xs: "100%", sm: "100%", md: "100%", lg: "100%", xl: "100%" },
             height: "fill 680px",
             justifyContent: "space-between",
             padding: "20px",
