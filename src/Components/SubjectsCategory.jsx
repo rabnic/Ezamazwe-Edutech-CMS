@@ -1,9 +1,13 @@
 import React from "react";
 import { Typography, Box } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 
-function SubjectCategory({ children, Subject, Desc }) {
+function SubjectCategory({ children, Subject, Desc,path }) {
+  const navigate = useNavigate();
+  
   return (
     <Box
+    onClick={() => navigate(path)}
       sx={{
         display: "flex",
         flexDirection: "row",
@@ -12,6 +16,7 @@ function SubjectCategory({ children, Subject, Desc }) {
         border: "1px solid #B3B3B3",
         bgcolor: "#FFFFFF",
         gap: "49px",
+        cursor: "pointer"
       }}
     >
       <Box

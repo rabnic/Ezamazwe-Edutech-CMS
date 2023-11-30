@@ -1,14 +1,17 @@
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PageHeadingContainer from "../Components/PageHeadingContainer";
 import SubjectCategory from "../Components/SubjectsCategory";
-import { useParams } from "react-router-dom";
+import { useLocation, useParams } from "react-router-dom";
 import { getCategoryData } from "../services/firebase";
 import Breadcrumb from "../Components/navigation/Breadcrumb";
 
 function CourseSubjects() {
 
   const params = useParams();
+  const location = useLocation();
+  console.log("location", location.pathname);
+
   let { subCategory, subject } = params;
   console.log(params);
   const [categories, setCategories] = useState([])
@@ -58,11 +61,29 @@ function CourseSubjects() {
       <Box
         sx={{
           width: { lg: "100%" },
-          marginTop: "40px",
+          marginTop: "5px",
           height: "100vh",
         }}
       >
-        <Box
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={4}>
+
+            {
+              subjects(subCategory, subject.replace("-", "_")).map(subject => {
+
+                console.log(subject);
+                return (
+                  <Grid item xs={12} md={6}  >
+                    {/* <GradesCard path={`${location.pathname}/${grade.toLowerCase().replace(" ", "-")}`} Grade={grade} /> */}
+                    <SubjectCategory path={`${location.pathname}/${subject}`} Subject={subject} Desc={"Pure"} />
+
+                  </Grid>
+                )
+              })
+            }
+          </Grid>
+        </Box>
+        {/* <Box
           sx={{
             display: "flex",
             flexDirection: { xs: "column", sm: "row", md: "row", lg: "row", xl: "row" },
@@ -117,10 +138,11 @@ function CourseSubjects() {
         >
           <SubjectCategory Subject={"Mathematics"} Desc={"Pure"} />
           <SubjectCategory Subject={"Mathematics"} Desc={"Pure"} />
-        </Box>
+        </Box> */}
       </Box>
     </Box>
   );
 }
 
 export default CourseSubjects;
+

@@ -532,13 +532,13 @@ export const uploadLessonSupportingDocs = async (courseId, documents) => {
 export const fetchFilteredCourseDocuments = async () => {
   let filteredDocs = []
   try {
+    console.log("qqqqqqqqqqqqqqqqqqqqqqqq")
     const coursesRef = collection(database, "courses");
     const q = query(coursesRef,
       where("courseCategory", "==", "caps"),
       where("grade", "==", "Grade_1"),
       where("subject", "==", "Reading"),
     );
-
     // const querySnapshot = await database
     // .collection("courses")
     // .where("courseCategory", "==", "caps")
@@ -553,7 +553,7 @@ export const fetchFilteredCourseDocuments = async () => {
       // doc.data() is never undefined for query doc snapshots
       console.log(doc.id, " => ", doc.data());
     });
-    // console.log("firebase docsssssssssss", q)
+    console.log("firebase docsssssssssss", q)
     filteredDocs = q;
   } catch (error) {
     console.error("Error fetching documents: ", error);

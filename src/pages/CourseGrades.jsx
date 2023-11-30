@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PageHeadingContainer from "../Components/PageHeadingContainer";
 import GradesCard from "../Components/GradesCard";
@@ -9,8 +9,8 @@ import Breadcrumb from "../Components/navigation/Breadcrumb";
 function CourseGrades() {
   const params = useParams();
   const location = useLocation();
-  console.log("params",params);
-  console.log("location",location.pathname);
+  console.log("params", params);
+  console.log("location", location.pathname);
 
   const [categories, setCategories] = useState([])
 
@@ -24,13 +24,13 @@ function CourseGrades() {
     category()
   }, [])
 
-  
+
 
   const grades = (key) => {
     return categories[key]?.grades || [];
   };
 
-  console.log("grades",grades(params.subCategory));
+  console.log("grades", grades(params.subCategory));
 
   return (
     <Box
@@ -42,7 +42,7 @@ function CourseGrades() {
         height: "100%",
         paddingTop: "20px",
         gap: "50px",
-        marginBottom: {xs:"50vh", sm: "-20vh", md: "-20vh", lg: "-20vh", xl: "-30vh"}
+        marginBottom: { xs: "50vh", sm: "-20vh", md: "-20vh", lg: "-20vh", xl: "-30vh" }
       }}
     >
       <PageHeadingContainer
@@ -53,21 +53,37 @@ function CourseGrades() {
 
       <Box
         sx={{
-          width: {lg: "100%"},
-          marginTop: "50px",
+          width: { lg: "100%" },
+          marginTop: "5px",
           height: "100vh",
         }}
       >
-        {
+        {/* {
           grades(params.subCategory).map(grade => {
             console.log(grade);
-            return(
-          <GradesCard path={`${location.pathname}/${grade.toLowerCase().replace(" ", "-")}`} Grade={grade} />
-              
+            return (
+
+              <GradesCard path={`${location.pathname}/${grade.toLowerCase().replace(" ", "-")}`} Grade={grade} />
+
             )
           })
-        }
+        } */}
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container spacing={4}>
 
+            {
+              grades(params.subCategory).map(grade => {
+                console.log(grade);
+                return (
+                  <Grid item xs={12} md={6}  >
+                    <GradesCard path={`${location.pathname}/${grade.toLowerCase().replace(" ", "-")}`} Grade={grade} />
+
+                  </Grid>
+                )
+              })
+            }
+          </Grid>
+        </Box>
         {/* <Box
           sx={{
             display: "flex",

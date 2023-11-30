@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Grid } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PageHeadingContainer from "../Components/PageHeadingContainer";
 import CategoryCard from "../Components/CategoryCard";
@@ -25,7 +25,7 @@ function Courses() {
 
   const categoryNames = () => {
     return Object.keys(categories).map(key => {
-      return [ [key], categories[key].name ]
+      return [[key], categories[key].name]
 
     })
   }
@@ -45,7 +45,7 @@ function Courses() {
         height: "100%",
         paddingTop: "20px",
         gap: "50px",
-        marginBottom: {xs:"50vh", sm: "-20vh", md: "-20vh", lg: "-20vh", xl: "-30vh"}
+        marginBottom: { xs: "50vh", sm: "-20vh", md: "-20vh", lg: "-20vh", xl: "-30vh" }
       }}
     >
       <PageHeadingContainer
@@ -55,21 +55,30 @@ function Courses() {
       <Breadcrumb />
       <Box
         sx={{
-          width: { xs: "80%", sm: "100%", md: "100%", lg: "100%" },
-          marginTop: "50px",
-          marginLeft: { xs: "-85px", sm: "0px", md: "0px", lg: "0px" },
+          width: "100%",
+          marginTop: "5px",
+          marginLeft: "auto",
+          marginRight: "auto"
+         
         }}
       >
-        {
-          categoryNames().map((category) => {
-            console.log('---------------------',category)
-            return(
-              <CategoryCard  path={`${category[0]}`} category={"Caps.png"}>
-            <CourseHeading>{category[1]}.</CourseHeading>
-          </CategoryCard>
-            )
-          })
-        }
+        <Box sx={{ flexGrow: 1 }}>
+          <Grid container  spacing={2}>
+
+            {
+              categoryNames().map((category, index) => {
+                console.log('---------------------', category)
+                return (
+                  <Grid item xs={12} md={index <= 1 ? 6 : 12}  >
+                    <CategoryCard path={`${category[0]}`} category={"Caps.png"}>
+                      <CourseHeading>{category[1]}.</CourseHeading>
+                    </CategoryCard>
+                  </Grid>
+                )
+              })
+            }
+          </Grid>
+        </Box>
         {/* <Box
           sx={{
             display: "flex",

@@ -3,40 +3,20 @@ import React, { useEffect, useState } from "react";
 import PageHeadingContainer from "../Components/PageHeadingContainer";
 import SubjectCard from "../Components/SubjectCard";
 import { fetchFilteredCourseDocuments } from "../services/firebase";
+import Breadcrumb from "../Components/navigation/Breadcrumb";
 
 function CourseList() {
   const [filteredDocuments, setFilteredDocuments] = useState([]);
-
+  console.log("********************************")
   useEffect(() => {
-    // Assuming you have already initialized Firebase app and authenticated the user
-    // const firestore = firebase.firestore();
-
-    // Fetch the collection documents
-    // const fetchDocuments = async () => {
-    //   try {
-    //     const querySnapshot = await firestore
-    //       .collection("yourCollectionName")
-    //       .where("courseCategory", "==", "cap")
-    //       .where("grade", "==", "grade 1")
-    //       .where("subject", "==", "maths")
-    //       .get();
-
-    //     // Extract the filtered documents
-    //     const documents = querySnapshot.docs.map((doc) => doc.data());
-    //     setFilteredDocuments(documents);
-    //   } catch (error) {
-    //     console.error("Error fetching documents: ", error);
-    //   }
-    // };
-
-    // fetchDocuments();
 
     const tester = async () => {
-
+      console.log("trying to fetch")
       await fetchFilteredCourseDocuments()
     }
     tester()
   }, []);
+
   return (
     <Box
       sx={{
@@ -45,14 +25,16 @@ function CourseList() {
         alignItems: "center",
         width: "100%",
         height: "100%",
-        paddingTop: "5px",
+        paddingTop: "20px",
+        gap: "50px",
       }}
     >
       <PageHeadingContainer
         heading="Courses List"
         subHeading="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
       />
-   
+      <Breadcrumb />
+
       <Box
         sx={{
           display: "flex",
@@ -104,7 +86,7 @@ function CourseList() {
           />
         </Box>
       </Box>
-   
+
     </Box>
   );
 }
