@@ -302,19 +302,19 @@ function AddNewCourse() {
 
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100vh", paddingTop: "10px" }}>
+    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100vh", paddingTop: "10px", marginLeft: "auto", marginRight: "auto" }}>
 
       <PageHeadingContainer
         heading="Add New Course"
         subHeading="Some sub heading for this page"
       />
-      <Box sx={{ display: "flex", flexDirection: "column", gap: "20px", marginTop: "50px", maxWidth: { sm: "600px", lg: "1000px" }, width: "100%", height: "100vh", marginLeft: "auto", marginRight: "auto" }}>
-        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row", lg: "row" }, gap: "20px" }}>
+      <Box sx={{ display: "flex", flexDirection: "column", gap: "30px", marginTop: "50px", maxWidth: { sm: "600px", lg: "1000px" }, width: "100%", height: "100vh", marginLeft: "auto", marginRight: "auto" }}>
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row", lg: "row" }, gap: { xs: "30px", sm: "2px", md: "8px", lg: "20px" } }}>
           <TextFields isOutComes={false} label={"Course Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
           <TextFields isOutComes={false} label={"Type of Course:"} errorStatus={validations.courseType.errorStatus} errorMessage={validations.courseType.errorMessage} setState={setCourseType} state={courseType} />
         </Box>
         <TextAreas isOutComes={false} label={"Course Short Description:"} errorStatus={validations.courseShortDescription.errorStatus} errorMessage={validations.courseShortDescription.errorMessage} setState={setCourseShortDescription} state={courseShortDescription} />
-        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "column", lg: "row" }, gap: "10px" }}>
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "column", lg: "row" }, gap: "30px" }}>
           <SelectField inputLabel={"Select Category"} label={"Course Category:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedCategory} state={selectedCategory}>
             {categories &&
               Object.entries(categories).map(([key, object]) => {
@@ -384,7 +384,7 @@ function AddNewCourse() {
         </Box>
       </Box>
       {openModal && <AddCourseContent setOpenModal={setOpenModal} courseDocumentId={courseDocumentId} />}
-    </Box>
+    </Box >
   )
 }
 

@@ -12,17 +12,17 @@ function TopAppBar() {
   function getFormattedDate() {
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const monthsOfYear = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-  
+
     const today = new Date();
     const dayOfWeek = daysOfWeek[today.getDay()];
     const dayOfMonth = today.getDate();
     const month = monthsOfYear[today.getMonth()];
-  
+
     const formattedDate = `${dayOfWeek}, ${dayOfMonth} ${month}`;
-  
+
     return formattedDate;
   }
-  
+
   return (
     <AppBar position="static" sx={{ bgcolor: "white.main", display: "flex", justifyContent: "center", alignItems: "center", boxShadow: "0" }} style={{ borderBottom: "2px solid black" }}>
       <Container maxWidth="xl" sx={{ display: "flex" }} style={{ padding: "0" }}>
@@ -32,7 +32,7 @@ function TopAppBar() {
             <AppBarSubHeading>{getFormattedDate()}</AppBarSubHeading>
           </Box>
 
-          <Box sx={{ flexGrow: 0, marginRight: { xs: "20px", sm: "0px", md: "0px", lg: "0px" } }}>
+          <Box sx={{ flexGrow: 0 }}>
             <IconButton onClick={() => { }} sx={{ p: 0 }}>
               <Avatar sx={{ bgcolor: "primary.light" }}>ET</Avatar>
             </IconButton>
