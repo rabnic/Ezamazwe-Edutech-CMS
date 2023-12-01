@@ -106,7 +106,7 @@ export default function SignIn() {
         setStatusAlert(
           {
             show: true,
-            message: "Invalid credentilas provided",
+            message: "Email not authorized",
             severity: "error"
           }
         )
