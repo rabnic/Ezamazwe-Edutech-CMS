@@ -127,7 +127,7 @@ export const AdminLogin = async (emailA, password) => {
       body: JSON.stringify(email),
 
     })
-
+console.log("in")
     const result = await response.json()
 
     console.log("sssssss", result);
@@ -157,6 +157,8 @@ export const AdminLogin = async (emailA, password) => {
       // alert('Invalid ')
 
     }
+    console.log("sssssss", result);
+
     return result
 
 
@@ -539,12 +541,8 @@ export const fetchFilteredCourseDocuments = async () => {
       where("grade", "==", "Grade_1"),
       where("subject", "==", "Reading"),
     );
-    // const querySnapshot = await database
-    // .collection("courses")
-    // .where("courseCategory", "==", "caps")
-    // .where("grade", "==", "Grade_1")
-    // .where("subject", "==", "Reading")
-    // .get();
+    console.log("coursesRef", coursesRef)
+
 
     // Extract the filtered documents
     // const documents = querySnapshot.docs.map((doc) => doc.data());
@@ -553,10 +551,13 @@ export const fetchFilteredCourseDocuments = async () => {
       // doc.data() is never undefined for query doc snapshots
       console.log(doc.id, " => ", doc.data());
     });
-    console.log("firebase docsssssssssss", q)
+
+    console.log("firebase docsssssssssss", querySnapshot)
     filteredDocs = q;
   } catch (error) {
     console.error("Error fetching documents: ", error);
+  } finally {
+    console.log("finally")
   }
   return filteredDocs;
 };

@@ -4,12 +4,21 @@ import PageHeadingContainer from "../Components/PageHeadingContainer";
 import SubjectCard from "../Components/SubjectCard";
 import { fetchFilteredCourseDocuments } from "../services/firebase";
 import Breadcrumb from "../Components/navigation/Breadcrumb";
+import { useParams, useLocation } from "react-router-dom";
+
 
 function CourseList() {
   const [filteredDocuments, setFilteredDocuments] = useState([]);
-  console.log("********************************")
-  useEffect(() => {
+  // console.log("********************************")
+  const params = useParams();
+  const location = useLocation();
+  // console.log("params", params);
+  // console.log("location", location.pathname);
+console.log('Inside CourseList')
+fetchFilteredCourseDocuments()
 
+
+  useEffect(() => {
     const tester = async () => {
       console.log("trying to fetch")
       await fetchFilteredCourseDocuments()
@@ -30,8 +39,8 @@ function CourseList() {
       }}
     >
       <PageHeadingContainer
-        heading="Courses List"
-        subHeading="Lorem ipsum dolor sit amet, consectetur adipiscing elit."
+        heading={`${params.course}`}
+        subHeading="Filtered course list."
       />
       <Breadcrumb />
 
@@ -39,8 +48,8 @@ function CourseList() {
         sx={{
           display: "flex",
           flexDirection: "column",
-          padding: "20px 10px 10px 10px",
-          marginTop: "30px",
+          padding: "10px",
+          marginTop: "5px",
         }}
       >
         <Box

@@ -31,8 +31,8 @@ function Courses() {
   }
 
   if (true) {
-    console.log("Categories", categoryNames())
-    console.log("Categories", categories)
+    // console.log("Categories", categoryNames())
+    // console.log("Categories", categories)
   }
 
   return (
@@ -67,7 +67,7 @@ function Courses() {
 
             {
               categoryNames().map((category, index) => {
-                console.log('---------------------', category)
+                // console.log('---------------------', category)
                 return (
                   <Grid item xs={12} md={index <= 1 ? 6 : 12}  >
                     <CategoryCard path={`${category[0]}`} category={"Caps.png"}>

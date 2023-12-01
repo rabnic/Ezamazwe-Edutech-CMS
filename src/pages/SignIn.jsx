@@ -42,7 +42,7 @@ export default function SignIn() {
 
     try {
       setIsloading(true);
-      console.time("Sign-in")
+      // console.time("Sign-in")
 
       const response = await AdminLogin(email, password)
       console.log("response", response)
@@ -114,7 +114,7 @@ export default function SignIn() {
     } catch (error) {
 
     } finally {
-      console.timeEnd("Sign-in")
+      // console.timeEnd("Sign-in")
 
       setIsloading(false)
     }

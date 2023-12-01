@@ -8,7 +8,7 @@ import { Box } from '@mui/material';
 
 function handleClick(event) {
     event.preventDefault();
-    console.info('You clicked a breadcrumb.');
+    // console.info('You clicked a breadcrumb.');
 }
 
 export default function Breadcrumb() {
@@ -16,7 +16,7 @@ export default function Breadcrumb() {
     const navigate = useNavigate();
 
     const paths = location.pathname.split("/").slice(1)
-    console.info('paths:', paths)
+    // console.info('paths:', paths)
     const styles = {
         separator: {
           fontSize: '20px',
@@ -31,12 +31,13 @@ export default function Breadcrumb() {
                         return (
                             index === paths.length - 1 ?
                                 (
-                                    <Typography sx={{ marginBottom:"auto", marginTop:"auto"}} variant='body1' color="text.primary">{index === 0 ? "Category" : path}</Typography>
+                                    <Typography key={index} sx={{ marginBottom:"auto", marginTop:"auto"}} variant='body1' color="text.primary">{index === 0 ? "Category" : path}</Typography>
 
                                 )
                                 :
                                 (
                                     <Typography
+                                    key={index}
                                         underline="hover"
                                         color="inherit"
                                         variant='body1'

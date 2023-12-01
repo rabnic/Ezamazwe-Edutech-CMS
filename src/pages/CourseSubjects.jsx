@@ -10,10 +10,10 @@ function CourseSubjects() {
 
   const params = useParams();
   const location = useLocation();
-  console.log("location", location.pathname);
+  // console.log("location", location.pathname);
 
   let { subCategory, subject } = params;
-  console.log(params);
+  // console.log(params);
   const [categories, setCategories] = useState([])
 
 
@@ -38,7 +38,7 @@ function CourseSubjects() {
     return [];
   };
 
-  console.log("grades", subjects(subCategory, subject.replace("-", "_")));
+  // console.log("grades", subjects(subCategory, subject.replace("-", "_")));
 
   return (
     <Box
@@ -69,11 +69,11 @@ function CourseSubjects() {
           <Grid container spacing={4}>
 
             {
-              subjects(subCategory, subject.replace("-", "_")).map(subject => {
+              subjects(subCategory, subject.replace("-", "_")).map((subject,index) => {
 
-                console.log(subject);
+                // console.log(subject);
                 return (
-                  <Grid item xs={12} md={6}  >
+                  <Grid key={index} item xs={12} md={6}  >
                     {/* <GradesCard path={`${location.pathname}/${grade.toLowerCase().replace(" ", "-")}`} Grade={grade} /> */}
                     <SubjectCategory path={`${location.pathname}/${subject}`} Subject={subject} Desc={"Pure"} />
 

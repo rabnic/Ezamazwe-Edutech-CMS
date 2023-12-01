@@ -9,8 +9,8 @@ import Breadcrumb from "../Components/navigation/Breadcrumb";
 function CourseGrades() {
   const params = useParams();
   const location = useLocation();
-  console.log("params", params);
-  console.log("location", location.pathname);
+  // console.log("params", params);
+  // console.log("location", location.pathname);
 
   const [categories, setCategories] = useState([])
 
@@ -30,7 +30,7 @@ function CourseGrades() {
     return categories[key]?.grades || [];
   };
 
-  console.log("grades", grades(params.subCategory));
+  // console.log("grades", grades(params.subCategory));
 
   return (
     <Box
@@ -73,7 +73,7 @@ function CourseGrades() {
 
             {
               grades(params.subCategory).map(grade => {
-                console.log(grade);
+                // console.log(grade);
                 return (
                   <Grid item xs={12} md={6}  >
                     <GradesCard path={`${location.pathname}/${grade.toLowerCase().replace(" ", "-")}`} Grade={grade} />
