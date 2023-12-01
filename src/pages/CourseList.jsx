@@ -8,20 +8,31 @@ import { useParams, useLocation } from "react-router-dom";
 
 
 function CourseList() {
-  const [filteredDocuments, setFilteredDocuments] = useState([]);
+  const [filteredCourseDocuments, setFilteredCourseDocuments] = useState([]);
+  const [isLoading, setIsloading] = useState(false)
   // console.log("********************************")
   const params = useParams();
   const location = useLocation();
   // console.log("params", params);
   // console.log("location", location.pathname);
-console.log('Inside CourseList')
-fetchFilteredCourseDocuments()
+  console.log('Inside CourseList')
+  fetchFilteredCourseDocuments()
 
 
   useEffect(() => {
     const tester = async () => {
-      console.log("trying to fetch")
-      await fetchFilteredCourseDocuments()
+      try {
+        setIsloading(true)
+        console.log("trying to fetch")
+        const data = await fetchFilteredCourseDocuments()
+        console.log(data)
+        setFilteredCourseDocuments(data)
+      } catch (error) {
+        console.log("Failed to fetch", error)
+      } finally {
+        setIsloading(false)
+      }
+
     }
     tester()
   }, []);
@@ -48,25 +59,35 @@ fetchFilteredCourseDocuments()
         sx={{
           display: "flex",
           flexDirection: "column",
+          justifyContent: "center",
+          alignItems: "center",
           padding: "10px",
           marginTop: "5px",
         }}
       >
-        <Box
-          sx={{
-            gap: "10px",
-          }}
-        >
-          <SubjectCard
-            Topic={"Geometry"}
-            Duration={"Duration: 1 h 30 m"}
-            Description={
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquamgestas metus nulla, et tincidunt sapien faucibus quis."
-            }
-            category={"Free"}
-          />
-        </Box>
-        <Box
+        {
+          filteredCourseDocuments.map(course => {
+            return (
+              <Box
+              key={course.id}
+                sx={{
+                  gap: "10px",
+                }}
+              >
+                <SubjectCard
+                  Topic={course.courseName}
+                  Duration={"Duration: 1 h 30 m"}
+                  Description={
+                   course.courseShortDescription
+                  }
+                  category={course.courseType}
+                />
+              </Box>
+            )
+          })
+        }
+
+        {/* <Box
           sx={{
             gap: "10px",
           }}
@@ -93,7 +114,7 @@ fetchFilteredCourseDocuments()
             }
             category={"Free"}
           />
-        </Box>
+        </Box> */}
       </Box>
 
     </Box>

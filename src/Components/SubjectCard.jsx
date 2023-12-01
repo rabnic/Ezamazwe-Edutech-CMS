@@ -28,7 +28,7 @@ function SubjectCard({ children, Topic, category, Duration, Description }) {
           sx={{
             display: "flex",
             justifyContent: "center",
-            width: {xs: "30%", sm: "30%", md: "30%", lg: "30%", xl: "30%"},
+            width: {xs: "30%"},
           }}
         >
           <Box

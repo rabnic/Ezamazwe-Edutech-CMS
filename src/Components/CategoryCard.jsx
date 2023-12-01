@@ -2,7 +2,7 @@ import React from "react";
 import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-function CategoryCard({ children, category,path }) {
+function CategoryCard({ children, uri,category,path }) {
   const navigate = useNavigate();
 
   return (
@@ -15,7 +15,8 @@ function CategoryCard({ children, category,path }) {
         borderRadius: "15px",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        backgroundImage: `url(${require(`../assets/${category}`)})`,
+        // backgroundImage: `url(${require(`../assets/${category}`)})`,
+        backgroundImage: `url(${uri})`,
         objectFit: "cover",
         gap: "50px",
         margin: "20px",

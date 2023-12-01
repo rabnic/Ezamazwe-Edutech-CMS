@@ -541,25 +541,27 @@ export const fetchFilteredCourseDocuments = async () => {
       where("grade", "==", "Grade_1"),
       where("subject", "==", "Reading"),
     );
-    console.log("coursesRef", coursesRef)
+    // console.log("coursesRef", coursesRef)
 
 
     // Extract the filtered documents
     // const documents = querySnapshot.docs.map((doc) => doc.data());
     const querySnapshot = await getDocs(q);
+    // for(let doc of querySnapshot.docs) {
+
+    // }
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
+       filteredDocs.push({id: doc.id,  ...doc.data()});
     });
 
-    console.log("firebase docsssssssssss", querySnapshot)
-    filteredDocs = q;
+    // console.log("firebase docsssssssssss", querySnapshot)
   } catch (error) {
     console.error("Error fetching documents: ", error);
   } finally {
     console.log("finally")
+    return filteredDocs;
   }
-  return filteredDocs;
 };
 
 

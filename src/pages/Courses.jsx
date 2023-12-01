@@ -25,14 +25,14 @@ function Courses() {
 
   const categoryNames = () => {
     return Object.keys(categories).map(key => {
-      return [[key], categories[key].name]
+      return [[key], categories[key].name, categories[key].imageUrl]
 
     })
   }
 
   if (true) {
-    // console.log("Categories", categoryNames())
-    // console.log("Categories", categories)
+    console.log("Categories", categoryNames())
+    console.log("Categories", categories)
   }
 
   return (
@@ -68,9 +68,10 @@ function Courses() {
             {
               categoryNames().map((category, index) => {
                 // console.log('---------------------', category)
+                const key = category[0];
                 return (
                   <Grid item xs={12} md={index <= 1 ? 6 : 12}  >
-                    <CategoryCard path={`${category[0]}`} category={"Caps.png"}>
+                    <CategoryCard path={`${category[0]}`} uri={category[2]} category={"Caps.png"}>
                       <CourseHeading>{category[1]}.</CourseHeading>
                     </CategoryCard>
                   </Grid>

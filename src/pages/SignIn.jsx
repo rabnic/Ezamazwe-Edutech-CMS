@@ -1,5 +1,5 @@
 import { Alert, Box, Paper, useMediaQuery } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import SectionHeading from '../Components/SectionHeading'
 import SectionSubHeading from '../Components/SectionSubHeading'
 import TextFields, { TextFieldPassword } from '../Components/TextFields';
@@ -34,7 +34,11 @@ export default function SignIn() {
 
   })
 
-  const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email", "* Password is not strong"]
+  useEffect(() => {
+    console.log({alert: statusAlert})
+  },[statusAlert])
+
+  const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email", "* Password is not strong", "Password must be between 6 and 30 character"]
 
   const handleSignIn = async () => {
     const allFieldsValid = validateInput()
@@ -94,7 +98,9 @@ export default function SignIn() {
         })
 
 
-      } else if (response.message === "Not Authorized") {
+      } else if (response.message === "Not authorized") {
+        console.log("after not authorized");
+
         setStatusAlert(
           {
             show: true,
@@ -102,11 +108,21 @@ export default function SignIn() {
             severity: "error"
           }
         )
-      } else {
+      } else if (response.message === "Invalid credentials") {
+        console.log("after Invalid credentials");
+
         setStatusAlert(
           {
             show: true,
-            message: "Email not authorized",
+            message: "Invalid credentials",
+            severity: "error"
+          }
+        )
+      }  else if (response.errors[0].msg === "Password must be between 6 and 30 characters") {
+        setStatusAlert(
+          {
+            show: true,
+            message: "Invalid sign in credentials",
             severity: "error"
           }
         )
@@ -142,6 +158,11 @@ export default function SignIn() {
     if (password === "") {
       setValidations(prev => {
         return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[0] } };
+      });
+      allFieldsValid = false;
+    } else if (password.length < 6 || password.length > 30 ) {
+      setValidations(prev => {
+        return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[4] } };
       });
       allFieldsValid = false;
     } else {
