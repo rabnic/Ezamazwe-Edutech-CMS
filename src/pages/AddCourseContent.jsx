@@ -1,16 +1,22 @@
-import { Box, Button as ButtonMUI, Paper, TextField, Typography } from '@mui/material'
+import { Box, Button as ButtonMUI, Drawer, Paper, TextField, Typography, useMediaQuery } from '@mui/material'
 import React, { useState } from 'react'
 import PageHeading from '../Components/PageHeading'
 import PageSubHeading from '../Components/PageSubHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
 import TextFields, { DocumentField, SelectField, TextFieldPassword } from '../Components/TextFields'
-import { Add, ArrowBack, ArrowBackRounded, BackHand, CloseRounded, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
+import { Add, ArrowBack, ArrowBackRounded, BackHand, Cancel, CloseRounded, Done, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
 import backgroundImage from '../assets/placeholderImg.png'
 import MediaFields from '../Components/AddMedia'
 import InputFileUpload from '../Components/InputFileUpload'
 import Button from '../Components/Buttons';
-
-import { saveCourseToFirestore, saveLessonToFirestore, saveTopicToFirestore, updateVideosWithFirebaseURLs, uploadAllVideos, uploadCourseVideos } from '../services/firebase'
+import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
+import DoneIcon from '@mui/icons-material/Done';
+import SaveIcon from '@mui/icons-material/Save';
+import IconButton from '@mui/material/IconButton';
+import CircleIcon from '@mui/icons-material/Circle';
+import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
+import MenuIcon from '@mui/icons-material/Menu';
+import { saveCourseToFirestore, saveLessonToFirestore, saveTopicToFirestore, updateVideosWithFirebaseURLs, uploadAllVideos, uploadCourseVideos, uploadLessonSupportingDocs } from '../services/firebase'
 
 
 function AddCourseContent({ setOpenModal, courseDocumentId }) {
@@ -22,6 +28,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [grade, setGrade] = useState("")
     const [subject, setSubject] = useState("")
     const [supportingLinks, setSupportingLinks] = useState("")
+    const [supportingDocuments, setSupportingDocuments] = useState([])
     const [showBox, setShowBox] = useState(false);
     const [HideBox, setHideBox] = useState(true)
     const [videos, setVideos] = useState([]);
@@ -32,10 +39,13 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const [lessonDocumentID, setLessonDocumentID] = useState("")
     const [isLoading, setIsloading] = useState(false);
     const [currentVideoPlaying, setCurrentVideoPlaying] = useState("")
+    const [editDocumentName, setEditDocumentName] = useState("")
+    const [selectedDocumentIndex, setSelectedDocumentIndex] = useState(-1)
+
 
 
     const handleAddButtonClick = async () => {
-        if (lessonName === "") {
+        if (lessonName?.trim() === "") {
             alert("Lesson name required!");
             return;
         }
@@ -231,18 +241,38 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         }
     };
 
+    const handleDocumentsChange = (event) => {
+        const fileInput = event.target;
+        const files = fileInput.files;
+
+        if (files.length > 0) {
+            const newSupportingDocs = Array.from(files).map((file) => {
+                return {
+                    documentName: file.name,
+                    document: file,
+                    isDefaultNameChanged: false
+                };
+            });
+            console.log('Supporting', newSupportingDocs)
+
+            setSupportingDocuments((prevDocs) => [...prevDocs, ...newSupportingDocs]);
+        }
+    };
 
 
-    const handleSaveTopic = () => {
+
+    const handleSaveTopic = async () => {
         if (selectedVideoIndex === undefined) {
             alert('Please select a video to be linked to this topic');
             return;
         }
-        console.log(videos);
+
+        console.log("supportinnnnnnnnnn", supportingDocuments);
         let tempVideos = [...videos];
         tempVideos[selectedVideoIndex].topicName = topicName;
         tempVideos[selectedVideoIndex].topicNumber = topicNumber;
         tempVideos[selectedVideoIndex].supportingLinks = supportingLinks;
+        tempVideos[selectedVideoIndex].supportingDocuments = await uploadLessonSupportingDocs(courseDocumentId, supportingDocuments);
         const fileExt = tempVideos[selectedVideoIndex].videoName.substr(tempVideos[selectedVideoIndex].videoName.lastIndexOf("."))
         tempVideos[selectedVideoIndex].videoName = `${topicName}${fileExt}`;
         setVideos(tempVideos)
@@ -252,6 +282,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         try {
             setIsloading(true);
             const updatedVideos = await uploadCourseVideos(courseDocumentId, videos);
+
             for (let topicObject of updatedVideos) {
 
                 await saveTopicToFirestore(courseDocumentId, lessonDocumentID, topicObject)
@@ -271,47 +302,127 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         }
     }
 
+    const handleEditDocumentName = (index) => {
+        if (editDocumentName === "") return;
+
+        const tempDocs = [...supportingDocuments];
+        console.log('tempDocs', tempDocs)
+        const fileExt = tempDocs[index].documentName.substr(tempDocs[index].documentName.lastIndexOf("."))
+        tempDocs[index].documentName = `${editDocumentName}${fileExt}`;
+        tempDocs[index].isDefaultNameChanged = true;
+        console.log(`EditDocument`, tempDocs)
+        setSupportingDocuments(tempDocs);
+        setSelectedDocumentIndex(-1)
+        setEditDocumentName("")
+    }
+
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+
+
+    const isMediumScreen = useMediaQuery('(max-width:900px)')
+    const handleDrawerToggle = () => {
+        setIsDrawerOpen(!isDrawerOpen);
+    };
+
+    const closeDrawer = () => {
+        setIsDrawerOpen(false);
+    }
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", position: "fixed", zIndex: 100, top: 0, left: 0, backgroundColor: "#fff" }}>
             <Box sx={{ width: "100%", display: "flex", flexDirection: "row" }}>
-                <Box sx={{ width: "15%", height: "100vh", display: "flex", flexDirection: "column", backgroundColor: "primary.light" }}>
-                    <ButtonMUI sx={{ marginRight: "auto", marginTop: "20px" }} onClick={closeModal}>
-                        <ArrowBackRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, }} />
-                    </ButtonMUI>
-                    <Box sx={{ marginTop: "150px", marginBottom: "auto", }}>
-                        <Box sx={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center", alignItems: "center", marginBottom: "50px" }}>
-                            <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
-                            <Typography sx={{ color: "#fff", fontWeight: "semi-bold", fontSize: "1.5rem" }}>Videos</Typography>
-                        </Box>
-                        {
-                            videos &&
-                            videos.map((videoObj, index) => {
-                                return (
-                                    <Box key={index} onClick={() => handleCurrentSelectedVideo(index)} variant="text" sx={{ cursor: "pointer", display: "flex", flexDirection: "row", border: selectedVideoIndex === index ? "1px dashed orange" : "none", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", color: videoObj.topicName !== "" ? "#0f0" : "#fff", textTransform: 'none', }} >
-                                        <PlayArrow sx={{ color: "#fff", }} />
-                                        <Typography>{videoObj.videoName}</Typography>
+                {isMediumScreen ? (
+                    <>
+                        <IconButton
+                            color="inherit"
+                            aria-label="open drawer"
+                            edge="start"
+                            onClick={handleDrawerToggle}
+                            sx={{ display: { md: 'none' }, position: "relative", left: "15px", top: "15px", }}
+                            style={{ position: "absolute", top: 0, left: 0, zIndex: 100 }}
+                        >
+                            <MenuIcon color='primary' sx={{ fontSize: "30px", marginBottom: "auto", marginTop: "50px", marginLeft: "30px" }} />
+                        </IconButton>
+                        <Drawer
+                            anchor="left"
+                            open={isDrawerOpen}
+                            onClose={handleDrawerToggle}
+                            sx={{ display: { xs: 'block', md: 'none' } }}
+                        >
+                            <Box sx={{ width: { xs: "300px", sm: "500px" }, height: "100vh", display: "flex", flexDirection: "column", backgroundColor: "primary.light" }}>
+                                <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "space-between" }}>
+                                    <ButtonMUI sx={{ marginRight: "auto", marginTop: "20px" }} onClick={closeModal}>
+                                        <ArrowBackRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, }} />
+                                    </ButtonMUI>
+                                    <ButtonMUI sx={{ marginLeft: "auto", marginTop: "20px" }} onClick={closeDrawer}>
+                                        <Cancel sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, }} />
+                                    </ButtonMUI>
+                                </Box>
+                                <Box sx={{ marginTop: "100px", marginBottom: "auto", height: "73%", border: "1px dashed red" }}>
+                                    <Box sx={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center", alignItems: "center", marginBottom: "50px" }}>
+                                        <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
+                                        <Typography sx={{ color: "#fff", fontWeight: "semi-bold", fontSize: "1.5rem" }}>Videos</Typography>
                                     </Box>
-                                )
-                            })
-                        }
+                                    {
+                                        videos &&
+                                        videos.map((videoObj, index) => {
+                                            return (
+                                                <Box key={index} onClick={() => handleCurrentSelectedVideo(index)} variant="text" sx={{ cursor: "pointer", display: "flex", flexDirection: "row", border: selectedVideoIndex === index ? "1px dashed orange" : "none", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", color: videoObj.topicName !== "" ? "#0f0" : "#fff", textTransform: 'none', }} >
+                                                    <PlayArrow sx={{ color: "#fff", }} />
+                                                    <Typography>{videoObj.videoName}</Typography>
+                                                </Box>
+                                            )
+                                        })
+                                    }
 
+                                </Box>
+                                <ButtonMUI variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
+                                    <Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
+                                    Add More
+                                </ButtonMUI>
+                            </Box>
+                        </Drawer>
+                    </>
+                ) : (
+                    <Box sx={{ width: "15%", height: "100vh", display: "flex", flexDirection: "column", backgroundColor: "primary.light" }}>
+                        <ButtonMUI sx={{ marginRight: "auto", marginTop: "20px" }} onClick={closeModal}>
+                            <ArrowBackRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, }} />
+                        </ButtonMUI>
+                        <Box sx={{ marginTop: "100px", marginBottom: "auto", height: "73%", border: "1px dashed red" }}>
+                            <Box sx={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center", alignItems: "center", marginBottom: "50px" }}>
+                                <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
+                                <Typography sx={{ color: "#fff", fontWeight: "semi-bold", fontSize: "1.5rem" }}>Videos</Typography>
+                            </Box>
+                            {
+                                videos &&
+                                videos.map((videoObj, index) => {
+                                    return (
+                                        <Box key={index} onClick={() => handleCurrentSelectedVideo(index)} variant="text" sx={{ cursor: "pointer", display: "flex", flexDirection: "row", border: selectedVideoIndex === index ? "1px dashed orange" : "none", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", marginTop: "20px", color: videoObj.topicName !== "" ? "#0f0" : "#fff", textTransform: 'none', }} >
+                                            <PlayArrow sx={{ color: "#fff", }} />
+                                            <Typography>{videoObj.videoName}</Typography>
+                                        </Box>
+                                    )
+                                })
+                            }
+
+                        </Box>
+                        <ButtonMUI variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
+                            <Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
+                            Add More
+                        </ButtonMUI>
                     </Box>
-                    <ButtonMUI variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
-                        <Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
-                        Add More
-                    </ButtonMUI>
-                </Box>
-                <Box sx={{ width: "85%", height: "100vh", display: "flex", flexDirection: "column", paddingTop: "50px" }}>
+                )}
+
+                <Box sx={{ width: { xs: "100%", sm: "100%", md: "85%", lg: "85%" }, height: "100vh", display: "flex", flexDirection: "column", paddingTop: "50px" }}>
                     <Box sx={{ display: "flex", flexDirection: "column", marginLeft: "auto", textAlign: "right", paddingRight: "30px", }}>
                         <Typography variant='h6' sx={{ color: "primary.main" }}>Course Content</Typography>
-                        <Typography variant='h6' sx={{ fontSize: "16px" }}>Lorem ipsum dolor sit amet, consectetur </Typography>
+                        <Typography variant='h6' sx={{ fontSize: "16px", width: { xs: "60%", sm: "100%", md: "100%", lg: "100%" }, textAlign: { xs: "right" }, marginLeft: "auto" }}>Lorem ipsum dolor sit amet, consectetur </Typography>
                     </Box>
                     {HideBox && (
                         <Box sx={{ padding: "30px" }}>
-                            <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px", alignItems: "center" }}>
+                            <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column", xs: "column" }, gap: "30px", alignItems: "center" }}>
 
                                 <TextFields isOutComes={false} label={"Lesson Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
-                                {/* <MediaFields type='file' label={"Select Lesson Content"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} /> */}
                                 <InputFileUpload handleFileChange={handleFileChange} label={"Select Lesson Content"} />
                             </Box>
                             <ButtonMUI variant='contained' sx={{
@@ -331,13 +442,13 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                     )}
                     {showBox && (
                         <Box sx={{ width: "100%", height: "90vh", marginTop: "30px", padding: "30px", overflow: "scroll" }}>
-                            <Box sx={{ width: "100%", display: "flex", flexDirection: { sm: "column", lg: "row", md: "column" }, maxWidth: "1500px", alignItems: "center", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
+                            <Box sx={{ width: "100%", display: "flex", flexDirection: { sm: "column", lg: "row", md: "column", xs: "column" }, maxWidth: "1500px", alignItems: "center", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
 
-                                <Box sx={{ width: { lg: "40%", md: "70%" }, height: "40vh" }}>
+                                <Box sx={{ width: { lg: "40%", md: "70%", sm: "90%", xs: "90%" }, height: "40vh" }}>
                                     {
                                         currentVideoPlaying ?
                                             (
-                                                <video controls src={currentVideoPlaying} width="100%" height="85%"/>
+                                                <video controls src={currentVideoPlaying} width="100%" height="85%" />
                                             )
                                             :
                                             (
@@ -362,55 +473,66 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
 
                                 </Box>
-                                <Box sx={{ maxWidth: "700px", width: { lg: "60%", md: "70%" }, display: "flex", flexDirection: "column", gap: "20px" }}>
-                                    <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column" }, gap: "30px" }}>
+                                <Box sx={{ maxWidth: "700px", width: { lg: "60%", md: "70%", sm: "90%", xs: "90%" }, display: "flex", flexDirection: "column", gap: "20px" }}>
+                                    <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column", xs: "column" }, gap: "30px" }}>
 
                                         <TextFields isOutComes={false} label={"Topic Number:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicNumber} state={topicNumber} />
                                         <TextFields isOutComes={false} label={"Topic Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicName} state={topicName} />
 
                                     </Box>
                                     <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLinks} state={supportingLinks} />
-                                    <InputFileUpload handleFileChange={handleFileChange} label={"Add Supporting Documents"} />
+                                    <InputFileUpload handleFileChange={handleDocumentsChange} label={"Add Supporting Documents"} />
+                                    {
+                                        supportingDocuments &&
+                                        supportingDocuments.map((document, index) => {
+                                            return (
+                                                <Box key={index} variant="text" sx={{ cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "flex-start", gap: "1px", width: "100%", marginBottom: "0px", marginTop: "5px", color: "primary.main", textTransform: 'none', }} >
+                                                    <Box sx={{ display: "flex", flexDirection: "row", justifyContent: "flex-start", alignItems: "center", gap: "5px" }} onClick={() => setSelectedDocumentIndex(index)}>
+                                                        {
+                                                            document.isDefaultNameChanged ?
+                                                                <CircleIcon fontSize='small' sx={{ color: "primary.main" }} />
+                                                                :
+                                                                <CircleOutlinedIcon fontSize='small' sx={{ color: "primary.main" }} />
+                                                        }
+                                                        <Typography variant='body'>{document.documentName}</Typography>
+                                                    </Box>
+                                                    {
+                                                        selectedDocumentIndex === index &&
+                                                        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px" }}>
+                                                            <TextFields isOutComes={false} label="" errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setEditDocumentName} state={editDocumentName} />
+                                                            <IconButton onClick={() => { handleEditDocumentName(index) }}>
+                                                                <SaveIcon fontSize='large' sx={{ color: "primary.main" }} />
+                                                            </IconButton>
+                                                        </Box>
+                                                    }
 
+                                                </Box>
+                                            )
+                                        })
+                                    }
                                 </Box>
 
                             </Box>
-                            <Box sx={{ width: "100%", display: "flex", alignItems: { lg: "start", md: "center" }, justifyContent: { lg: "start", md: "center" } }}>
-                                <ButtonMUI variant='contained' sx={{
-                                    backgroundColor: "primary.light",
+                            <Box sx={{ width: "100%", display: "flex", alignItems: { lg: "start", md: "center", }, justifyContent: { lg: "start", md: "center" } }}>
+                                <Box sx={{
                                     color: "#fff",
-                                    width: "30%",
+                                    width: "fit-content",
                                     borderRadius: 20,
-                                    height: "50px",
+                                    height: "fitcontent",
                                     fontSize: "18px",
                                     fontWeight: "500",
                                     marginTop: "30px",
 
-                                    marginLeft: { lg: "30px", md: "0" }
-                                }}
-                                    onClick={handleSaveTopic}>Save
-                                </ButtonMUI>
+                                    marginLeft: { lg: "175px", md: "170px", sm: "auto", xs: "auto" },
+                                    marginRight: { lg: "0", md: "0", sm: "auto", xs: "auto" }
+
+                                }}>
+                                    <Button text={"Save Topic"} buttonFunction={() => { handleSaveTopic() }} isIconButton={isLoading} iconType='loader' />
+                                </Box>
                             </Box>
                         </Box>
                     )}
                     <Box sx={{ width: "100%", height: "10vh", display: "flex", backgroundColor: "primary.light", marginTop: "auto" }}>
-                        {/* <Button variant='contained' sx={{
-                            backgroundColor: "#fff",
-                            color: "primary.main",
-                            width: { sm: "150px", md: "200px", lg: "230px" },
-                            borderRadius: 20, minWidth: "150px",
-                            height: "36.5px",
-                            marginLeft: "auto",
-                            marginTop: "auto",
-                            marginBottom: "auto",
-                            marginRight: "20px",
-                            fontSize: "18px",
-                            fontWeight: "500"
-                        }}
-                            onClick={handleSaveAllToCourse}
-                        >
-                            Save All
-                        </Button> */}
                         <Box sx={{ marginTop: "30px", marginLeft: "auto", marginRight: "20px", }}>
                             <Button text={"Save All"} buttonFunction={() => { handleSaveAllToCourse() }} isIconButton={isLoading} iconType='loader' />
                         </Box>

@@ -145,7 +145,7 @@ function AdminProfile() {
     }
 
     return (
-        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px", marginLeft: { xs: "-20px" } }}>
+        <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px", marginLeft: "auto", marginRight: "auto" }}>
             <PageHeadingContainer
                 heading="Admin Profile"
                 subHeading="Some sub heading for this page"
