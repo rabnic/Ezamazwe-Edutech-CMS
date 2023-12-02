@@ -62,27 +62,21 @@ function CourseList() {
           justifyContent: "center",
           alignItems: "center",
           padding: "10px",
-          marginTop: "5px",
+          gap: "20px"
         }}
       >
         {
           filteredCourseDocuments.map(course => {
             return (
-              <Box
-              key={course.id}
-                sx={{
-                  gap: "10px",
-                }}
-              >
-                <SubjectCard
-                  Topic={course.courseName}
-                  Duration={"Duration: 1 h 30 m"}
-                  Description={
-                   course.courseShortDescription
-                  }
-                  category={course.courseType}
-                />
-              </Box>
+              <SubjectCard
+                key={course.id}
+                Topic={course.courseName}
+                Duration={"Duration: 1 h 30 m"}
+                Description={
+                  course.courseShortDescription
+                }
+                category={course.courseType}
+              />
             )
           })
         }

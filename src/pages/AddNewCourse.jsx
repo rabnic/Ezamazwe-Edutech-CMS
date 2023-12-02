@@ -356,7 +356,7 @@ function AddNewCourse() {
                   <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
                     <li key={index}>
                     </li>
-                    <span style={{ color: "#000", fontSize: "20px", position: "relative", marginLeft: "-30px" }}>
+                    <span style={{ color: "#000", fontSize: "20px", position: "relative", marginLeft: "0px" }}>
                       {value}
                     </span>
                   </Box>

@@ -1,4 +1,4 @@
-import { Box, Button as ButtonMUI, Drawer, Paper, TextField, Typography, useMediaQuery } from '@mui/material'
+import { Box, Button as ButtonMUI, Drawer, Paper, TextField, Typography, styled, useMediaQuery } from '@mui/material'
 import React, { useState } from 'react'
 import PageHeading from '../Components/PageHeading'
 import PageSubHeading from '../Components/PageSubHeading'
@@ -267,6 +267,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         });
         reader.readAsDataURL(videos[index].video);
         setSelectedVideoIndex(index)
+        closeDrawer()
     }
 
     const handleFileChange = (event) => {
@@ -343,6 +344,10 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
     const handleSaveAllToCourse = async () => {
         try {
             setIsloading(true);
+            if (!lessonDocumentID) {
+                alert("You need to add lesson and content");
+                return;
+            }
             const updatedVideos = await uploadCourseVideos(courseDocumentId, videos);
 
             for (let topicObject of updatedVideos) {
@@ -390,6 +395,18 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
         setIsDrawerOpen(false);
     }
 
+    const VisuallyHiddenInput = styled('input')({
+        clip: 'rect(0 0 0 0)',
+        clipPath: 'inset(50%)',
+        height: 1,
+        overflow: 'hidden',
+        position: 'absolute',
+        bottom: 0,
+        left: 0,
+        whiteSpace: 'nowrap',
+        width: 1,
+    });
+
     return (
         <Box sx={{ display: "flex", flexDirection: "column", width: "100%", height: "100vh", position: "fixed", zIndex: 100, top: 0, left: 0, backgroundColor: "#fff" }}>
             <Box sx={{ width: "100%", display: "flex", flexDirection: "row" }}>
@@ -420,7 +437,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                         <Cancel sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, }} />
                                     </ButtonMUI>
                                 </Box>
-                                <Box sx={{ marginTop: "100px", marginBottom: "auto", height: "73%", border: "1px dashed red" }}>
+                                <Box sx={{ marginTop: "100px", marginBottom: "auto", height: "66%", overflowY: "auto" }}>
                                     <Box sx={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center", alignItems: "center", marginBottom: "50px" }}>
                                         <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
                                         <Typography sx={{ color: "#fff", fontWeight: "semi-bold", fontSize: "1.5rem" }}>Videos</Typography>
@@ -438,9 +455,14 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                     }
 
                                 </Box>
-                                <ButtonMUI variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
-                                    <Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
+                                {/* <ButtonMUI startIcon={<Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />} variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
+                                    <VisuallyHiddenInput type="file" />
                                     Add More
+                                    <VisuallyHiddenInput type="file" />
+                                </ButtonMUI> */}
+                                <ButtonMUI component="label" variant="text" startIcon={<Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />} sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }}>
+                                    Add More
+                                    <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
                                 </ButtonMUI>
                             </Box>
                         </Drawer>
@@ -450,7 +472,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                         <ButtonMUI sx={{ marginRight: "auto", marginTop: "20px" }} onClick={closeModal}>
                             <ArrowBackRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100, }} />
                         </ButtonMUI>
-                        <Box sx={{ marginTop: "100px", marginBottom: "auto", height: "73%", border: "1px dashed red" }}>
+                        <Box sx={{ marginTop: "100px", marginBottom: "auto", height: "66%", overflowY: "auto" }}>
                             <Box sx={{ display: "flex", flexDirection: "row", gap: "15px", justifyContent: "center", alignItems: "center", marginBottom: "50px" }}>
                                 <PlayArrowRounded sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
                                 <Typography sx={{ color: "#fff", fontWeight: "semi-bold", fontSize: "1.5rem" }}>Videos</Typography>
@@ -468,9 +490,13 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                             }
 
                         </Box>
-                        <ButtonMUI variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
+                        {/* <ButtonMUI variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
                             <Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
                             Add More
+                        </ButtonMUI> */}
+                        <ButtonMUI component="label" variant="text" startIcon={<Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />} sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }}>
+                            Add More
+                            <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
                         </ButtonMUI>
                     </Box>
                 )}
@@ -485,7 +511,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                             <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column", xs: "column" }, gap: "30px", alignItems: "center" }}>
 
                                 <TextFields isOutComes={false} label={"Lesson Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setLessonName} state={lessonName} />
-                                <InputFileUpload handleFileChange={handleFileChange} label={"Select Lesson Content"} />
+                                <InputFileUpload handleFileChange={handleFileChange} label={"Select Lesson Videos"} />
                             </Box>
 
                             <Box sx={{
@@ -499,7 +525,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                         </Box>
                     )}
                     {showBox && (
-                        <Box sx={{ width: "100%", height: "90vh", marginTop: "30px", padding: "30px", overflow: "scroll" }}>
+                        <Box sx={{ width: "100%", height: "90vh", marginTop: "30px", padding: "30px", overflowY: "auto" }}>
                             <Box sx={{ width: "100%", display: "flex", flexDirection: { sm: "column", lg: "row", md: "column", xs: "column" }, maxWidth: "1500px", alignItems: "center", justifyContent: { md: "center", lg: "space-between", gap: "30px" } }}>
 
                                 <Box sx={{ width: { lg: "40%", md: "70%", sm: "90%", xs: "90%" }, height: "40vh" }}>
@@ -614,14 +640,14 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                             </Box>
                         </Box>
                     )}
-                    <Box sx={{ width: "100%", height: "10vh", display: "flex", backgroundColor: "primary.light", marginTop: "auto" }}>
-                        <Box sx={{ marginTop: "30px", marginLeft: "auto", marginRight: "20px", }}>
-                            <Button text={"Save All"} buttonFunction={() => { handleSaveAllToCourse() }} isIconButton={isLoading} iconType='loader' />
+                    <Box sx={{ width: "100%", height: "10vh", display: "flex", marginTop: "auto", backgroundColor: "primary.light" }}>
+                        <Box sx={{ marginTop: "auto", marginBottom: "auto", marginLeft: "auto", marginRight: "20px", }}>
+                            <Button text={"Save All"} buttonFunction={() => { handleSaveAllToCourse() }} isIconButton={isLoading} iconType='loader' lightMode={true} />
                         </Box>
                     </Box>
                 </Box>
             </Box>
-        </Box>
+        </Box >
     )
 }
 
