@@ -1,13 +1,18 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '../Components/Buttons';
-import { Alert, Box } from '@mui/material';
+import { Alert, Box, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, tableCellClasses, } from '@mui/material';
+// import { IconButton } from '@mui/material';
+import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
+import EditIcon from '@mui/icons-material/Edit';
+import Paper from '@mui/material/Paper';
 import TextFields from '../Components/TextFields';
 import PageHeading from '../Components/PageHeading';
 import PageSubHeading from '../Components/PageSubHeading';
 import PageHeadingContainer from '../Components/PageHeadingContainer';
 import PhoneNumber, { parsePhoneNumberFromString } from 'libphonenumber-js';
-import { createNewAdmin } from '../services/firebase';
+import { createNewAdmin, database } from '../services/firebase';
 import TableLayout from '../Components/TableLayout';
+import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
 
 
 function AdminManagement() {
@@ -20,6 +25,46 @@ function AdminManagement() {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneNumberRegex = /^(\+27|0)[1-9]\d{8}$/;
 
+    const [adminList, setAdminList] = useState([]);
+    const [id, setID] = useState('')
+
+    const adminCollection = collection(database, "admins")
+
+    useEffect(() => {
+        getAdminList()
+    }, [])
+
+    const StyledTableCell = styled(TableCell)(({ theme }) => ({
+        [`&.${tableCellClasses.head}`]: {
+            backgroundColor: "#1C3F53",
+            color: theme.palette.common.white,
+        },
+        [`&.${tableCellClasses.body}`]: {
+            fontSize: 14,
+        },
+    }));
+
+    const StyledTableRow = styled(TableRow)(({ theme }) => ({
+        '&:nth-of-type(odd)': {
+            backgroundColor: theme.palette.action.hover,
+        },
+        // hide last border
+        '&:last-child td, &:last-child th': {
+            border: 0,
+        },
+    }));
+
+    function createData(name, calories, fat, carbs, protein) {
+        return { name, calories, fat, carbs, protein };
+    }
+
+    const rows = [
+        createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
+        createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
+        createData('Eclair', 262, 16.0, 24, 6.0),
+        createData('Cupcake', 305, 3.7, 67, 4.3),
+        createData('Gingerbread', 356, 16.0, 49, 3.9),
+    ];
 
 
     const [validations, setValidations] = useState({
@@ -43,6 +88,85 @@ function AdminManagement() {
     const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email", "* Please enter a 10-digit number starting with +27."]
 
     // Invalid phone number. Please enter a 10-digit number starting with +27.
+
+    //creates new admin
+    const newUsers = async (e,) => {
+
+        e.preventDefault();
+
+        alert("User has been registered successfully")
+
+        // CreateNewUser(email, firstName, lastName, phoneNumber, role, image)
+        const newAdmin = { fullName: fullName, phoneNumber: phoneNumber, email: email, }
+        await addDoc(adminCollection, { fullName: fullName, phoneNumber: phoneNumber, email: email, })
+        // const docRef = await setDoc(doc(database, "admins", email), newAdmin)
+        // console.log("Doc Reff ===== ",docRef);
+
+    };
+
+    //deletes admin
+    const deleteAdmin = async (id) => {
+
+        const admin = doc(database, "admins", id);
+        await deleteDoc(admin);
+        alert("This item was deleted")
+
+    }
+
+    //edit admin
+    const editAdmin = async (id, fullName, phoneNumber, email,) => {
+        setFullName(fullName)
+        setEmail(email)
+        setPhoneNumber(phoneNumber)
+        setID(id)
+
+        handleToggleForm()
+
+    };
+
+
+    //udates admin with new information
+    const updateAdmin = async () => {
+        // setItem(item)
+        // setQuantity(quantity)
+        // setID(id)
+
+        const shopItem = doc(database, "List", id);
+        // await updateDoc(shopItem, { Item: updatedItem });
+        await updateDoc(shopItem, { fullName: fullName, phoneNumber: phoneNumber, email: email });
+        alert("Item was updated")
+        // setShow(false)
+
+
+    };
+
+
+    //gets information from firestore
+    const getAdminList = async () => {
+
+        //get data from database 
+        try {
+            const data = await getDocs(adminCollection);
+
+            const filtereddata = data.docs.map((doc) => ({
+
+                //this fucntion  returns the values in the collection
+                ...doc.data(),
+                id: doc.id,
+
+            }));
+
+            setAdminList(filtereddata);
+            // setShoppingList(data);
+
+            console.log(filtereddata);
+        } catch (error) {
+            console.error("Error fetching collection", error);
+        }
+    };
+
+
+
 
     const handleCreateAdmin = async () => {
         const allFieldsValid = validateInput()
@@ -172,8 +296,40 @@ function AdminManagement() {
                     </Box>
                 }
 
-                <TableLayout />
+                <TableContainer component={Paper}>
+                    <Table sx={{ width: "100%" }} aria-label="customized table">
+                        <TableHead>
+                            <TableRow>
+                                <StyledTableCell >FullName</StyledTableCell>
+                                <StyledTableCell >Phone Number</StyledTableCell>
+                                <StyledTableCell >Email Address</StyledTableCell>
+                                {/* <StyledTableCell >Role</StyledTableCell> */}
+                                <StyledTableCell >Actions</StyledTableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            {adminList.map((data) => (
+                                <StyledTableRow key={data.email}>
+                                    <StyledTableCell >{data.firstName}</StyledTableCell>
+                                    {/* <StyledTableCell >{data.fullName}</StyledTableCell> */}
+                                    <StyledTableCell >{data.phoneNumber}</StyledTableCell>
+                                    <StyledTableCell >{data.email}</StyledTableCell>
+                                    {/* <StyledTableCell >{data.protein}</StyledTableCell> */}
+                                    <StyledTableCell sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
+                                        <IconButton onClick={() => editAdmin(data.id, data.firstName, data.phoneNumber, data.email)}>
+                                            <EditIcon />
+                                        </IconButton>
 
+                                        <IconButton onClick={() => { deleteAdmin(data.id) }}>
+                                            <DeleteForeverIcon />
+                                        </IconButton>
+                                    </StyledTableCell>
+                                </StyledTableRow>
+                            ))}
+                        </TableBody>
+
+                    </Table>
+                </TableContainer>
             </Box>
 
         </Box>
