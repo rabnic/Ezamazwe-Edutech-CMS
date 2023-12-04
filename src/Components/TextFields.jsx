@@ -6,7 +6,7 @@ import { Add, Edit, Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 
-export default function TextFields({ label, type = "text", errorStatus, errorMessage, state, setState, isOutComes = true, addOutcomes, show, editOutcome }) {
+export default function TextFields({ label, type = "text", errorStatus, errorMessage, state, setState, isOutComes = true, addOutcomes, show, editOutcome, placeholder="Enter" }) {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
@@ -14,7 +14,7 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
                 label !== "" &&
                 <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
             }
-            <OutlinedInput value={state} type={type} required placeholder="Enter" variant="outlined" sx={{
+            <OutlinedInput value={state} type={type} required placeholder={placeholder} variant="outlined" sx={{
                 width: "100%", height: "50px", fontSize: "16px", borderRadius: "10px",
                 "& .MuiOutlinedInput-notchedOutline": {
                     borderColor: "primary.light",

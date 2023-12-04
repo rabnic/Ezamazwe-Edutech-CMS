@@ -13,6 +13,7 @@ import PhoneNumber, { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { createNewAdmin, database } from '../services/firebase';
 import TableLayout from '../Components/TableLayout';
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
+import AlertDialog from '../Components/AlertDialog';
 
 
 function AdminManagement() {
@@ -22,6 +23,8 @@ function AdminManagement() {
     const [phoneNumber, setPhoneNumber] = useState("")
     const [isLoading, setIsloading] = useState(false);
     const [statusAlert, setStatusAlert] = useState({ show: false, message: "", severity: "" });
+    const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false)
+    const [isDeleteConfirmed, setIsDeleteConfirmed] = useState(false)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneNumberRegex = /^(\+27|0)[1-9]\d{8}$/;
 
@@ -110,6 +113,7 @@ function AdminManagement() {
         const admin = doc(database, "admins", id);
         await deleteDoc(admin);
         alert("This item was deleted")
+        getAdminList()
 
     }
 
@@ -174,14 +178,37 @@ function AdminManagement() {
 
         try {
             setIsloading(true)
-            await createNewAdmin(email, fullName, phoneNumber)
-            setStatusAlert(
-                {
-                    show: true,
-                    message: "You have successfully create a new admin and default password sent to email address",
-                    severity: "success"
-                }
-            )
+            const responseData = await createNewAdmin(email, fullName, phoneNumber)
+            console.log("response", responseData)
+
+            if (responseData === null) {
+                setStatusAlert(
+                    {
+                        show: true,
+                        message: "Could not create admin",
+                        severity: "error"
+                    }
+                )
+            } else if (responseData.error) {
+
+                setStatusAlert(
+                    {
+                        show: true,
+                        message: responseData.error,
+                        severity: "error"
+                    }
+                )
+            } else if (responseData.message) {
+
+   
+                setStatusAlert(
+                    {
+                        show: true,
+                        message: "You have successfully created a new admin and default password has been sent to email address",
+                        severity: "success"
+                    }
+                )
+            }
         } catch (error) {
             console.log('Error creating admin', error)
             setStatusAlert(
@@ -262,7 +289,7 @@ function AdminManagement() {
 
 
     const handleToggleForm = () => {
-        console.log(isShowForm)
+        // console.log(isShowForm)
         setIsShowForm(!isShowForm)
     }
     return (
@@ -274,7 +301,7 @@ function AdminManagement() {
             />
 
 
-            <Box sx={{ display: "flex", flexDirection: "column", gap: "10px", marginTop: "50px", width: { lg: "100%", sm: "100%", xs: "100%" }, height: "100vh" }}>
+            <Box sx={{ display: "flex", flexDirection: "column", gap: "25px", marginTop: "50px", width: { lg: "100%", sm: "100%", xs: "100%" }, height: "100vh" }}>
                 <Box sx={{ maxWidth: "240px", width: "50%", alignSelf: "flex-start" }}>
                     <Button text={"Add New Admin"} buttonFunction={handleToggleForm} isIconButton={true} iconType={isShowForm ? "up" : "down"} />
                 </Box>
@@ -288,12 +315,16 @@ function AdminManagement() {
                             </Alert>
                         }
                         <Box sx={{ width: "100%", display: "flex", flexDirection: { xs: "column", sm: "column", md: "column", lg: "row" }, alignItems: "center", gap: "10px", }}>
-                            <TextFields label={"Full Name"} isOutComes={false} errorStatus={validations.fullName.errorStatus} errorMessage={validations.fullName.errorMessage} setState={setFullName} state={fullName} />
-                            <TextFields label={"Email"} isOutComes={false} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
-                            <TextFields label={"Phone Number"} isOutComes={false} errorStatus={validations.phoneNumber.errorStatus} errorMessage={validations.phoneNumber.errorMessage} setState={setPhoneNumber} state={phoneNumber} />
+                            <TextFields label={"Full Name"} placeholder='E.g Joe Zulu' isOutComes={false} errorStatus={validations.fullName.errorStatus} errorMessage={validations.fullName.errorMessage} setState={setFullName} state={fullName} />
+                            <TextFields label={"Email"} placeholder='E.g zuluj@gmail.com' isOutComes={false} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
+                            <TextFields label={"Phone Number"} placeholder='E.g +27812345678' isOutComes={false} errorStatus={validations.phoneNumber.errorStatus} errorMessage={validations.phoneNumber.errorMessage} setState={setPhoneNumber} state={phoneNumber} />
                         </Box>
                         <Button text={"Save"} buttonFunction={() => { handleCreateAdmin() }} isIconButton={isLoading} iconType='loader' />
                     </Box>
+                }
+                {
+                    setIsAlertDialogOpen &&
+                    <AlertDialog message={"Are you really sure you want to delete this admin?"} setIsDeleteConfirmed={setIsDeleteConfirmed} isAlertDialogOpen={isAlertDialogOpen} setIsAlertDialogOpen={setIsAlertDialogOpen} deleteAdmin={deleteAdmin} adminId={id} />
                 }
 
                 <TableContainer component={Paper}>
@@ -310,22 +341,23 @@ function AdminManagement() {
                         <TableBody>
                             {adminList.map((data) => (
                                 <StyledTableRow key={data.email}>
-                                    <StyledTableCell >{data.firstName}</StyledTableCell>
-                                    {/* <StyledTableCell >{data.fullName}</StyledTableCell> */}
+                                    {/* <StyledTableCell >{data.firstName}</StyledTableCell> */}
+                                    <StyledTableCell >{data.fullName || data.firstName}</StyledTableCell>
                                     <StyledTableCell >{data.phoneNumber}</StyledTableCell>
                                     <StyledTableCell >{data.email}</StyledTableCell>
                                     {/* <StyledTableCell >{data.protein}</StyledTableCell> */}
                                     <StyledTableCell sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
-                                        <IconButton onClick={() => editAdmin(data.id, data.firstName, data.phoneNumber, data.email)}>
+                                        <IconButton onClick={() => editAdmin(data.id, data.fullName, data.phoneNumber, data.email)}>
                                             <EditIcon />
                                         </IconButton>
 
-                                        <IconButton onClick={() => { deleteAdmin(data.id) }}>
+                                        <IconButton onClick={() => { setID(data.id); setIsAlertDialogOpen(true) }}>
                                             <DeleteForeverIcon />
                                         </IconButton>
                                     </StyledTableCell>
                                 </StyledTableRow>
                             ))}
+
                         </TableBody>
 
                     </Table>

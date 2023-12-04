@@ -10,7 +10,7 @@ export const AdminProvider = ({ children }) => {
 
     const [admin, setAdmin] = useState({
         email: "",
-        fullName: "Admin",
+        fullName: "",
         passwordChanged: false,
         phoneNumber: "",
         uid: "",
@@ -27,7 +27,7 @@ export const AdminProvider = ({ children }) => {
 
         console.log("Trying to check authStateChanged");
         onAuthStateChanged(auth, async (_user) => {
-            console.log("user after onAuthState", _user)
+            // console.log("user after onAuthState", _user)
             const user = _user ? await getUserCustomClaims(_user) : _user;
             console.log("user after getUserCustomClaims", _user)
             if (user && user.admin) {

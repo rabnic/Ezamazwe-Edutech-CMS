@@ -53,7 +53,7 @@ function CourseGrades() {
 
       <Box
         sx={{
-          width: { lg: "100%" },
+          width: { xs: "100%" },
           marginTop: "5px",
           height: "100vh",
         }}
@@ -72,10 +72,10 @@ function CourseGrades() {
           <Grid container spacing={4}>
 
             {
-              grades(params.subCategory).map(grade => {
+              grades(params.subCategory).map((grade,index) => {
                 // console.log(grade);
                 return (
-                  <Grid item xs={12} md={6}  >
+                  <Grid item xs={12} md={6} key={index} >
                     <GradesCard path={`${location.pathname}/${grade.toLowerCase().replace(" ", "-")}`} Grade={grade} />
 
                   </Grid>

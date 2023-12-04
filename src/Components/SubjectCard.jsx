@@ -81,7 +81,7 @@ function SubjectCard({ children, Topic, category, Duration, Description }) {
           alignItems: "center",
           border: "1px solid #B3B3B3",
         }}
-      >
+      > 
         <Typography
           variant="h5"
           sx={{

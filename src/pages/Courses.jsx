@@ -31,8 +31,8 @@ function Courses() {
   }
 
   if (true) {
-    console.log("Categories", categoryNames())
-    console.log("Categories", categories)
+    // console.log("Categories", categoryNames())
+    // console.log("Categories", categories)
   }
 
   return (
@@ -70,7 +70,7 @@ function Courses() {
                 // console.log('---------------------', category)
                 const key = category[0];
                 return (
-                  <Grid item xs={12} md={index <= 1 ? 6 : 12}  >
+                  <Grid item xs={12} md={index <= 1 ? 6 : 12} key={index} >
                     <CategoryCard path={`${category[0]}`} uri={category[2]} category={"Caps.png"}>
                       <CourseHeading>{category[1]}.</CourseHeading>
                     </CategoryCard>

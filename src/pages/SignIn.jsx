@@ -8,13 +8,13 @@ import Button from '../Components/Buttons';
 import { useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../context/authContext';
 import { useAdminContext } from '../context/adminContext';
-import { AdminLogin, auth } from '../services/firebase';
+import { AdminLogin, auth, getAdminDocument } from '../services/firebase';
 import { getIdTokenResult, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 
 
 export default function SignIn() {
   const navigate = useNavigate();
-  const { signIn, isAuthenticated } = useAuthContext();
+  const { signIn} = useAuthContext();
   const { loadAdmin } = useAdminContext();
   const [email, setEmail] = useState("");
   const [password, setPassWord] = useState("");
@@ -33,10 +33,6 @@ export default function SignIn() {
     },
 
   })
-
-  useEffect(() => {
-    console.log({alert: statusAlert})
-  },[statusAlert])
 
   const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email", "* Password is not strong", "Password must be between 6 and 30 character"]
 
@@ -62,8 +58,13 @@ export default function SignIn() {
               const customClaims = idTokenResult.claims;
               console.log("Custom claims", customClaims);
 
+              const adminDoc = await getAdminDocument(customClaims.user_id)
+              console.log("Admin document", adminDoc)
+
+
+
               const adminData = {
-                fullname: "Admin",
+                fullName: adminDoc.fullName,
                 email: customClaims.email,
                 passwordChanged: !customClaims.forcePasswordReset,
                 phoneNumber: customClaims.phone_number,
@@ -83,7 +84,6 @@ export default function SignIn() {
               loadAdmin(adminData)
 
               signIn()
-
             }
           })
         }).catch((error) => {
@@ -118,7 +118,7 @@ export default function SignIn() {
             severity: "error"
           }
         )
-      }  else if (response.errors[0].msg === "Password must be between 6 and 30 characters") {
+      } else if (response.errors[0].msg === "Password must be between 6 and 30 characters") {
         setStatusAlert(
           {
             show: true,
@@ -160,7 +160,7 @@ export default function SignIn() {
         return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[0] } };
       });
       allFieldsValid = false;
-    } else if (password.length < 6 || password.length > 30 ) {
+    } else if (password.length < 6 || password.length > 30) {
       setValidations(prev => {
         return { ...prev, password: { errorStatus: "yes", errorMessage: warningMessages[4] } };
       });

@@ -85,7 +85,7 @@ export const signOutFromFirebase = () => {
 
 export const createNewAdmin = async (email, fullName, phoneNumber) => {
   // e.preventDefault();
-  let uid = "userRecord.uid"
+  let uid = null;
   try {
     const response = await fetch('https://ezamazwe-edutech-nodejs.onrender.com/create-user', {
 
@@ -97,16 +97,29 @@ export const createNewAdmin = async (email, fullName, phoneNumber) => {
     });
 
     const responseData = await response.json();
-    // setMessage(responseData.message);
+    
+    if (responseData.message) {
+      // Add a new document in collection "cities"
+      const setDocResponse = await setDoc(doc(database, "admins", responseData.userRecord.uid), {
+        fullName: fullName,
+        email: email,
+        phoneNumber: phoneNumber
+      });
+      // console.log("setDocResponse", setDocResponse);
 
-    console.log("Details: ", email, fullName, phoneNumber);
-    console.log("Creating user: ", responseData);
+    }
 
+    // console.log("Details: ", email, fullName, phoneNumber);
+    // console.log("Creating user: ", responseData);
+    uid = responseData
   } catch (error) {
     console.log("Unable to create user: ", error);
     // setMessage('Unable to create user. Please try again later.');
+  } finally {
+    return uid;
   }
 }
+
 
 export const AdminLogin = async (emailA, password) => {
 
@@ -127,24 +140,24 @@ export const AdminLogin = async (emailA, password) => {
       body: JSON.stringify(email),
 
     })
-console.log("in")
+    // console.log("in")
     const result = await response.json()
 
-    console.log("sssssss", result);
+    // console.log("sssssss", result);
 
     // return
 
     //   // Handle the response data
     if (result.message === 'Authorized') {
 
-      console.log('Admin:', result.message);
+      // console.log('Admin:', result.message);
 
 
       // Further actions for an authorized user
 
 
     } else if (result.message === 'Not authorized') {
-      console.log('Not Admin:', result.message);
+      // console.log('Not Admin:', result.message);
       // Further actions for an unauthorized user
 
       // alert('Not Authorized')
@@ -157,7 +170,7 @@ console.log("in")
       // alert('Invalid ')
 
     }
-    console.log("sssssss", result);
+    // console.log("sssssss", result);
 
     return result
 
@@ -169,6 +182,27 @@ console.log("in")
 
 }
 
+export const getAdminDocument = async (id) => {
+  let adminDoc = null
+  try {
+    const docRef = doc(database, "admins",id);
+const docSnap = await getDoc(docRef);
+
+if (docSnap.exists()) {
+  console.log("Document data:", docSnap.data());
+  adminDoc = docSnap.data();
+} else {
+  // docSnap.data() will be undefined in this case
+  console.log("No such document!");
+}
+  } catch (error) {
+    console.log("Error getting admin document",error)
+  } finally {
+    return adminDoc;
+  }
+
+
+}
 
 // export async function AdminLogin(email, password) {
 //   try {
@@ -238,17 +272,17 @@ export const logout = () => {
 
 export const ResetPasswordFunction = async (oldPassword, newPassword) => {
   const user = auth.currentUser;
-  console.log("User currently logged in:", user);
+  // console.log("User currently logged in:", user);
   try {
     // Re-authenticate the user with their current password
     const credential = EmailAuthProvider.credential(user.email, oldPassword);
     const reAuthed = await reauthenticateWithCredential(user, credential);
-    console.log("reAuthed", reAuthed)
+    // console.log("reAuthed", reAuthed)
     // If re-authentication is successful, update the password
     const updatedPass = await updatePassword(user, newPassword);
-    console.log("updatedPass", updatedPass)
-    console.log('Password reset successful:', user);
-    console.log('Password reset successful.');
+    // console.log("updatedPass", updatedPass)
+    // console.log('Password reset successful:', user);
+    // console.log('Password reset successful.');
   } catch (error) {
     console.error('Error resetting password:', error.message);
     // Handle specific error cases, such as incorrect current password
@@ -262,7 +296,7 @@ export const ResetPasswordFunction = async (oldPassword, newPassword) => {
 };
 
 export const updatePasswordReset = async (email) => {
-  console.log("update password reset", email);
+  // console.log("update password reset", email);
 
   try {
     const apiUrl = await fetch(`https://ezamazwe-edutech-nodejs.onrender.com/update-password-reset`,
@@ -277,7 +311,7 @@ export const updatePasswordReset = async (email) => {
     return response;
     // alert("Email for password reset has been sent")
     // Handle the response here
-    console.log('Server Response:', response);
+    // console.log('Server Response:', response);
   } catch (error) {
     console.log("Error resetting password", error);
   }
@@ -285,7 +319,7 @@ export const updatePasswordReset = async (email) => {
 
 // Forgot password function
 export const ForgotPasswordFunction = async (email) => {
-  console.log("Forgot password", email);
+  // console.log("Forgot password", email);
   const url = "https://ezamazwe-edutech-cms.firebaseapp.com/"
   try {
     const apiUrl = await fetch(`https://ezamazwe-edutech-nodejs.onrender.com/reset-password`,
@@ -300,22 +334,22 @@ export const ForgotPasswordFunction = async (email) => {
     return response;
     // alert("Email for password reset has been sent")
     // Handle the response here
-    console.log('Server Response:', response);
+    // console.log('Server Response:', response);
   } catch (error) {
     console.log("Error resetting password", error);
   }
 }
 
 export const checkAuthState = () => {
-  console.log("inside checkAuthState")
+  // console.log("inside checkAuthState")
   return new Promise((resolve) => {
-    console.log("inside new Promise")
+    // console.log("inside new Promise")
     onAuthStateChanged(auth, async (user) => {
-      console.log("inside onAuthStateChanged")
+      // console.log("inside onAuthStateChanged")
       if (user) {
         const idTokenResult = await getIdTokenResult(user, true);
         const customClaims = idTokenResult.claims;
-        console.log("Custom claims", customClaims);
+        // console.log("Custom claims", customClaims);
 
         const adminData = {
           fullname: "Admin",
@@ -337,7 +371,7 @@ export const checkAuthState = () => {
 export const getUserCustomClaims = async (user) => {
   const idTokenResult = await getIdTokenResult(user, true);
   const customClaims = idTokenResult.claims;
-  console.log("Custom claims", customClaims);
+  // console.log("Custom claims", customClaims);
 
   const adminData = {
     fullname: "Admin",
@@ -348,7 +382,7 @@ export const getUserCustomClaims = async (user) => {
     admin: customClaims.admin,
     permissions: customClaims.permissions
   }
-  console.log("====", adminData)
+  // console.log("====", adminData)
   return adminData;
 }
 
@@ -357,7 +391,7 @@ export const getUserCustomClaims = async (user) => {
 const createAdminToFirestore = async (admin) => {
   // await addDoc(adminCollection, { firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, image: uri, passwordChanged: passwordChanged })
   const docRef = await setDoc(doc(database, "admins", admin.uid), admin)
-  console.log("Doc Reff ===== ", docRef);
+  // console.log("Doc Reff ===== ", docRef);
 };
 
 export const saveCourseToFirestore = async (courseData) => {
@@ -365,7 +399,7 @@ export const saveCourseToFirestore = async (courseData) => {
   try {
     const docRef = await addDoc(collection(database, "courses"), courseData)
     documentId = docRef.id;
-    console.log('Document course write success', documentId);
+    // console.log('Document course write success', documentId);
   } catch (error) {
     console.error('Error adding document: ', error);
   }
@@ -379,7 +413,7 @@ export const saveLessonToFirestore = async (courseId, lessonData) => {
     const collectionRef = collection(courseDocRef, "lessons");
     const docRef = await addDoc(collectionRef, lessonData);
     documentId = docRef.id;
-    console.log('Document lesson write success', documentId);
+    // console.log('Document lesson write success', documentId);
   } catch (error) {
     console.error('Error adding document: ', error);
   }
@@ -401,7 +435,7 @@ export const saveTopicToFirestore = async (courseId, lessonId, topicData) => {
 
     const docRef = await addDoc(lessonsCollectionRef, topicData);
     documentId = docRef.id;
-    console.log('Document lessonTopic write success', documentId);
+    // console.log('Document lessonTopic write success', documentId);
   } catch (error) {
     console.error('Error adding document: ', error);
   }
@@ -410,11 +444,11 @@ export const saveTopicToFirestore = async (courseId, lessonId, topicData) => {
 
 export const getCategoryData = async () => {
   //get data from database 
-  console.log("before try");
+  // console.log("before try");
 
   try {
     const data = await getDocs(collection(database, "Content"));
-    console.log("after get docs", data);
+    // console.log("after get docs", data);
 
     // const filtereddata = data.docs.map((doc) => ({
 
@@ -431,9 +465,9 @@ export const getCategoryData = async () => {
         id: doc.id
       }));
 
-    console.log("after Filtered data");
+    // console.log("after Filtered data");
 
-    console.log(categoryData);
+    // console.log(categoryData);
     return categoryData
 
   } catch (error) {
@@ -500,14 +534,14 @@ export const uploadCourseVideos = async (courseId, videos) => {
         });
       })
       .catch((err) => {
-        console.log(err.message);
+        // console.log(err.message);
       });
   }
   return updatedVideos;
 };
 
 export const uploadLessonSupportingDocs = async (courseId, documents) => {
-  console.log("documents", documents);
+  // console.log("documents", documents);
   // const storage = getStorage();
 
   const updatedDocuments = [...documents];
@@ -534,7 +568,7 @@ export const uploadLessonSupportingDocs = async (courseId, documents) => {
 export const fetchFilteredCourseDocuments = async () => {
   let filteredDocs = []
   try {
-    console.log("qqqqqqqqqqqqqqqqqqqqqqqq")
+    // console.log("qqqqqqqqqqqqqqqqqqqqqqqq")
     const coursesRef = collection(database, "courses");
     const q = query(coursesRef,
       where("courseCategory", "==", "caps"),
@@ -552,7 +586,7 @@ export const fetchFilteredCourseDocuments = async () => {
     // }
     querySnapshot.forEach((doc) => {
       // doc.data() is never undefined for query doc snapshots
-       filteredDocs.push({id: doc.id,  ...doc.data()});
+      filteredDocs.push({ id: doc.id, ...doc.data() });
     });
 
     // console.log("firebase docsssssssssss", querySnapshot)

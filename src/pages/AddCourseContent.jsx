@@ -558,7 +558,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
 
                                 </Box>
                                 <Box sx={{ maxWidth: "700px", width: { lg: "60%", md: "70%", sm: "90%", xs: "90%" }, display: "flex", flexDirection: "column", gap: "20px" }}>
-                                    <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column", xs: "column" }, gap: "30px" }}>
+                                    <Box sx={{ display: "flex", flexDirection: { lg: "row", md: "column", xs: "column" }, gap: "20px" }}>
 
                                         <TextFields isOutComes={false} label={"Topic Number:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicNumber} state={topicNumber} />
                                         <TextFields isOutComes={false} label={"Topic Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicName} state={topicName} />
@@ -571,15 +571,15 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                         {
                                             supportingLinks.map((value, index) => {
                                                 return (
-                                                    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                                                        <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                                                    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", maxWidth: "100%",height:"auto"}}>
+                                                        <Box sx={{ width: "90%" }}>
                                                             <li key={index}>
+                                                                <span style={{ color: "#000", fontSize: "20px", position: "relative", marginLeft: "0px", wordWrap: "break-word", overflowWrap: "anywhere" }}>
+                                                                    {value}
+                                                                </span>
                                                             </li>
-                                                            <span style={{ color: "#000", fontSize: "20px", position: "relative", marginLeft: "-30px" }}>
-                                                                {value}
-                                                            </span>
                                                         </Box>
-                                                        <Box sx={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+                                                        <Box sx={{ display: "flex", flexDirection: "row", gap: "20px", marginLeft: "auto",width:"10%" }}>
                                                             <Edit sx={{ color: "primary.main" }} onClick={(e) => { editOutcome(index, value) }} />
                                                             <Delete sx={{ color: "primary.main" }} onClick={(e) => { learningOutcomesDelete(index) }} />
                                                         </Box>

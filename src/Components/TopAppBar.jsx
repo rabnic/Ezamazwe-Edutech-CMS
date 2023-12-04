@@ -7,8 +7,11 @@ import Container from '@mui/material/Container';
 import Avatar from '@mui/material/Avatar';
 import AppBarHeading from './AppBarHeading';
 import AppBarSubHeading from './AppBarSubHeading';
+import { useAdminContext } from '../context/adminContext';
 
 function TopAppBar() {
+  const {admin} = useAdminContext()
+  console.log("admin",admin)
   function getFormattedDate() {
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const monthsOfYear = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -28,7 +31,7 @@ function TopAppBar() {
       <Container maxWidth="xl" sx={{ display: "flex" }} style={{ padding: "0" }}>
         <Toolbar disableGutters sx={{ flex: "1" }}>
           <Box sx={{ flexGrow: 1, display: "flex", flexDirection: "column" }}>
-            <AppBarHeading>Hello, Admin</AppBarHeading>
+            <AppBarHeading>Hello, {admin.fullName}</AppBarHeading>
             <AppBarSubHeading>{getFormattedDate()}</AppBarSubHeading>
           </Box>
 
