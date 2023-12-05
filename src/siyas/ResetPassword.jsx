@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 import { ResetPasswordFunction, auth } from '../services/firebase';
 import { Router, Routes, Route, useNavigate } from 'react-router-dom'
 

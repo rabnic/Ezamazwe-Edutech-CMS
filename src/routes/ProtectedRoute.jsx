@@ -1,8 +1,7 @@
 import { Navigate } from 'react-router-dom';
 import { useAdminContext } from '../context/adminContext';
-import { Outlet } from 'react-router-dom';
 
-const ProtectedRoute = ({ element: Component }) => {
+const ProtectedRoute = ({ component: Component }) => {
     const { admin } = useAdminContext();
 
     return (

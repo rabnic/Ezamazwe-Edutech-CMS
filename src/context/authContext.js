@@ -1,15 +1,17 @@
 import React, { createContext, useContext, useState } from 'react';
+import { signOutFromFirebase } from '../services/firebase';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-    const [isAuthenticated, setAuthenticated] = useState(false);
+    const [isAuthenticated, setAuthenticated] = useState();
 
     const signIn = () => {
         setAuthenticated(true);
     };
 
     const signOut = () => {
+        signOutFromFirebase()
         setAuthenticated(false);
     };
 

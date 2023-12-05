@@ -9,20 +9,26 @@ import AdminManagement from './pages/AdminManagement';
 import AdminProfile from './pages/AdminProfile';
 import SignIn from './pages/SignIn';
 import ResetPassword from './pages/ResetPassword';
+import CourseGrades from './pages/CourseGrades';
+import CourseSubjects from './pages/CourseSubjects';
+import CourseList from './pages/CourseList';
 import { useAuthContext } from './context/authContext';
 
 import { Route, Routes, Navigate } from 'react-router-dom';
 import MainContainerLayout from './Components/layouts/MainContainerLayout';
 import ProtectedRoute from './routes/ProtectedRoute';
+import LoadingScreen from './pages/LoadingScreen';
 
 function App() {
   const { isAuthenticated, } = useAuthContext();
+
+  if (isAuthenticated === undefined) return (<LoadingScreen />);
 
   if (!isAuthenticated) {
     return (
       <Routes>
         <Route path="/" element={<SignIn />} />
-        <Route path='/reset-password' element={<ResetPassword />} />
+        <Route path='reset-password' element={<ResetPassword />} />
         <Route path='*' element={<Navigate to="/" />} />
       </Routes>
     )
@@ -32,6 +38,9 @@ function App() {
         <Routes>
           <Route path="/" element={<ProtectedRoute component={Home} />} />
           <Route path="courses" element={<ProtectedRoute component={Courses} />} />
+          <Route path="courses/:subCategory" element={<ProtectedRoute component={CourseGrades} />} />
+          <Route path="courses/:subCategory/:subject" element={<ProtectedRoute component={CourseSubjects} />} />
+          <Route path="courses/:subCategory/:subjects/:course" element={<ProtectedRoute component={CourseList} />} />
           <Route path="add-new-course" element={<ProtectedRoute component={AddNewCourse} />} />
           <Route path="tutors" element={<ProtectedRoute component={Tutors} />} />
           <Route path="tutor-applications" element={<ProtectedRoute component={TutorApplications} />} />

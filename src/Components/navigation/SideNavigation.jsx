@@ -1,5 +1,5 @@
 import { Box, Drawer, IconButton, useMediaQuery } from '@mui/material'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import SideNavTab from './SideNavTab'
 import SideNavLogoutTab from './SideNavLogoutTab'
 import HomeIcon from '@mui/icons-material/Home';
@@ -15,6 +15,8 @@ import { useAuthContext } from '../../context/authContext';
 //Different
 import MenuIcon from '@mui/icons-material/Menu';
 import { Cancel, Menu } from '@mui/icons-material';
+import { useAdminContext } from '../../context/adminContext';
+import Groups3Icon from '@mui/icons-material/Groups3';
 
 
 const routePaths = {
@@ -31,13 +33,25 @@ const routePaths = {
 function SideNavigation() {
   const { signOut, isAuthenticated } = useAuthContext();
   const location = useLocation();
+  const { admin } = useAdminContext();
 
-  const currentPath = location.pathname.replace("/", "")
-  console.log("currentPath", currentPath)
+
+  const paths = location.pathname.split("/").slice(1)
+  const currentPath = paths[0]
+
+  // console.log("currentPath", currentPath, paths)
   const [activeTab, setActiveTab] = useState(routePaths[currentPath]);
-  console.log("activeTab", activeTab)
+  // console.log("activeTab", activeTab)
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // console.log('Current path', currentPath)
+    if (activeTab !== currentPath) {
+      setActiveTab(routePaths[currentPath])
+    }
+
+  }, [currentPath])
 
   const handleNavigation = (path) => {
     setActiveTab(routePaths[path]);
@@ -50,11 +64,7 @@ function SideNavigation() {
 
 
   const isSmallScreen = useMediaQuery('(max-width:576px)')
-  //Different
-  const textOnSmallScreen = useMediaQuery('(max-width:576px)')
 
-
-  // Different
   const isMediumScreen = useMediaQuery('(max-width:900px)')
 
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -62,6 +72,10 @@ function SideNavigation() {
   const handleDrawerToggle = () => {
     setIsDrawerOpen(!isDrawerOpen);
   };
+
+  const closeDrawer = () => {
+    setIsDrawerOpen(false);
+  }
 
   return (
     <>
@@ -72,25 +86,24 @@ function SideNavigation() {
             aria-label="open drawer"
             edge="start"
             onClick={handleDrawerToggle}
-            sx={{ display: { md: 'none' } }}
+            sx={{ display: { md: 'none' }, position: "relative", left: "15px", top: "15px" }}
+            style={{ position: "absolute", top: 0, left: 0, zIndex: 100, padding: "30px" }}
           >
-
-            {/* Difference */}
-            <MenuIcon color='#000' />
+            <MenuIcon color='primary' sx={{ fontSize: "25px" }} />
           </IconButton>
           <Drawer
-            anchor="top"
+            anchor="left"
             open={isDrawerOpen}
             onClose={handleDrawerToggle}
             sx={{ display: { xs: 'block', md: 'none' } }}
           >
-            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "40px", bgcolor: "primary.main", width: "100%", height: "100%" }}>
+            <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "40px", bgcolor: "primary.main", width: { xs: "100%", md: "100%", lg: "100%" }, height: "100%" }}>
               <IconButton
                 color="inherit"
                 aria-label="open drawer"
                 edge="start"
                 onClick={handleDrawerToggle}
-                sx={{ display: { md: 'none' } }}
+                sx={{ display: { md: 'none' }, marginLeft: "auto", color: "#fff" }}
               >
                 <Cancel />
               </IconButton>
@@ -107,62 +120,59 @@ function SideNavigation() {
                 <SideNavTab
                   Icon={HomeIcon}
                   text={'Home'}
-                  navigateFunction={() => { handleNavigation("Home") }}
+                  navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("") }}
                   active={activeTab === "Home"}
                 />
                 <SideNavTab
                   Icon={AutoStoriesIcon}
                   text={'Courses'}
-                  navigateFunction={() => { handleNavigation("Courses") }}
+                  navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("courses") }}
                   active={activeTab === "Courses"}
                 />
                 <SideNavTab
                   Icon={AddBoxIcon}
                   text={'Add New Course'}
-                  navigateFunction={() => { handleNavigation("AddNewCourse") }}
+                  navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("add-new-course") }}
                   active={activeTab === "AddNewCourse"}
                 />
                 <SideNavTab
-                  Icon={GroupsIcon}
+                  Icon={Groups3Icon}
                   text={'Tutors'}
-                  navigateFunction={() => { handleNavigation("Tutors") }}
+                  navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("tutors") }}
                   active={activeTab === "Tutors"}
-                />
-                <SideNavTab
-                  Icon={AddBoxIcon}
-                  text={'Tutor Applications'}
-                  navigateFunction={() => { handleNavigation("TutorApplications") }}
-                  active={activeTab === "TutorApplications"}
                 />
                 <SideNavTab
                   Icon={SchoolIcon}
                   text={'Subscribers'}
-                  navigateFunction={() => { handleNavigation("Subscribers") }}
+                  navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("subscribers") }}
                   active={activeTab === "Subscribers"}
                 />
                 <SideNavTab
                   Icon={PersonIcon}
                   text={'Admin Profile'}
-                  navigateFunction={() => { handleNavigation("AdminProfile") }}
+                  navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("admin-profile") }}
                   active={activeTab === "AdminProfile"}
                 />
-                <SideNavTab
-                  Icon={SupervisorAccountIcon}
-                  text={'Admins'}
-                  navigateFunction={() => { handleNavigation("AdminManagement") }}
-                  active={activeTab === "AdminManagement"}
-                />
+                {
+                  admin.permissions === "owner" &&
+                  <SideNavTab
+                    Icon={SupervisorAccountIcon}
+                    text={'Admins'}
+                    navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("admin-management") }}
+                    active={activeTab === "AdminManagement"}
+                  />
+                }
               </Box>
               <Box sx={{ marginTop: "auto", width: "calc(100% - 15px)", display: "flex", justifyContent: "center", height: "80px", paddingRight: "15px" }}>
                 <SideNavLogoutTab
-                  Icon={LogoutIcon} text={"Sign Out"} navigateFunction={() => { }} />
+                  Icon={LogoutIcon} text={"Sign Out"} navigateFunction={handleSignOut} />
               </Box>
             </Box>
           </Drawer>
         </>
       ) : (
         isMediumScreen ? (
-          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "40px", bgcolor: "primary.main", width: "100%", height: "100%" }}>
+          <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "40px", bgcolor: "primary.main", width: { xs: "100%", md: "100%", lg: "100%" }, height: "100%" }}>
             <Box
               component="img"
               sx={{
@@ -176,55 +186,52 @@ function SideNavigation() {
               <SideNavTab
                 Icon={HomeIcon}
                 text={isMediumScreen ? null : 'Home'}
-                navigateFunction={() => { handleNavigation("Home") }}
+                navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("") }}
                 active={activeTab === "Home"}
               />
               <SideNavTab
                 Icon={AutoStoriesIcon}
                 text={isMediumScreen ? null : 'Courses'}
-                navigateFunction={() => { handleNavigation("Courses") }}
+                navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("courses") }}
                 active={activeTab === "Courses"}
               />
               <SideNavTab
                 Icon={AddBoxIcon}
                 text={isMediumScreen ? null : 'Add New Course'}
-                navigateFunction={() => { handleNavigation("AddNewCourse") }}
+                navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("add-new-course") }}
                 active={activeTab === "AddNewCourse"}
               />
               <SideNavTab
-                Icon={GroupsIcon}
+                Icon={Groups3Icon}
                 text={isMediumScreen ? null : 'Tutors'}
-                navigateFunction={() => { handleNavigation("Tutors") }}
+                navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("tutors") }}
                 active={activeTab === "Tutors"}
-              />
-              <SideNavTab
-                Icon={AddBoxIcon}
-                text={isMediumScreen ? null : 'Tutor Applications'}
-                navigateFunction={() => { handleNavigation("TutorApplications") }}
-                active={activeTab === "TutorApplications"}
               />
               <SideNavTab
                 Icon={SchoolIcon}
                 text={isMediumScreen ? null : 'Subscribers'}
-                navigateFunction={() => { handleNavigation("Subscribers") }}
+                navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("subscribers") }}
                 active={activeTab === "Subscribers"}
               />
               <SideNavTab
                 Icon={PersonIcon}
                 text={isMediumScreen ? null : 'Admin Profile'}
-                navigateFunction={() => { handleNavigation("AdminProfile") }}
+                navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("admin-profile") }}
                 active={activeTab === "AdminProfile"}
               />
-              <SideNavTab
-                Icon={SupervisorAccountIcon}
-                text={isMediumScreen ? null : 'Admins'}
-                navigateFunction={() => { handleNavigation("AdminManagement") }}
-                active={activeTab === "AdminManagement"}
-              />
+              {
+                admin.permissions === "owner" &&
+                <SideNavTab
+                  Icon={SupervisorAccountIcon}
+                  text={isMediumScreen ? null : 'Admins'}
+                  navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("admin-management") }}
+                  active={activeTab === "AdminManagement"}
+                />
+              }
             </Box>
             <Box sx={{ marginTop: "auto", width: "calc(100% - 15px)", display: "flex", justifyContent: "center", height: "80px", paddingRight: "15px" }}>
               <SideNavLogoutTab
-                Icon={LogoutIcon} text={"Sign Out"} navigateFunction={() => { }} />
+                Icon={LogoutIcon} text={isMediumScreen ? null : "Sign Out"} navigateFunction={handleSignOut} />
             </Box>
           </Box>
         ) : (
@@ -251,55 +258,52 @@ function SideNavigation() {
               <SideNavTab
                 Icon={HomeIcon}
                 text={isSmallScreen ? null : 'Home'}
-                navigateFunction={() => { handleNavigation("Home") }}
+                navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("") }}
                 active={activeTab === "Home"}
               />
               <SideNavTab
                 Icon={AutoStoriesIcon}
                 text={isSmallScreen ? null : 'Courses'}
-                navigateFunction={() => { handleNavigation("Courses") }}
+                navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("courses") }}
                 active={activeTab === "Courses"}
               />
               <SideNavTab
                 Icon={AddBoxIcon}
                 text={isSmallScreen ? null : 'Add New Course'}
-                navigateFunction={() => { handleNavigation("AddNewCourse") }}
+                navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("add-new-course") }}
                 active={activeTab === "AddNewCourse"}
               />
               <SideNavTab
-                Icon={GroupsIcon}
+                Icon={Groups3Icon}
                 text={isSmallScreen ? null : 'Tutors'}
-                navigateFunction={() => { handleNavigation("Tutors") }}
+                navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("tutors") }}
                 active={activeTab === "Tutors"}
-              />
-              <SideNavTab
-                Icon={AddBoxIcon}
-                text={isSmallScreen ? null : 'Tutor Applications'}
-                navigateFunction={() => { handleNavigation("TutorApplications") }}
-                active={activeTab === "TutorApplications"}
               />
               <SideNavTab
                 Icon={SchoolIcon}
                 text={isSmallScreen ? null : 'Subscribers'}
-                navigateFunction={() => { handleNavigation("Subscribers") }}
+                navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("subscribers") }}
                 active={activeTab === "Subscribers"}
               />
               <SideNavTab
                 Icon={PersonIcon}
                 text={isSmallScreen ? null : 'Admin Profile'}
-                navigateFunction={() => { handleNavigation("AdminProfile") }}
+                navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("admin-profile") }}
                 active={activeTab === "AdminProfile"}
               />
-              <SideNavTab
-                Icon={SupervisorAccountIcon}
-                text={isSmallScreen ? null : 'Admins'}
-                navigateFunction={() => { handleNavigation("AdminManagement") }}
-                active={activeTab === "AdminManagement"}
-              />
+              {
+                admin.permissions === "owner" &&
+                <SideNavTab
+                  Icon={SupervisorAccountIcon}
+                  text={isSmallScreen ? null : 'Admins'}
+                  navigateFunction={() => { isDrawerOpen && closeDrawer(); handleNavigation("admin-management") }}
+                  active={activeTab === "AdminManagement"}
+                />
+              }
             </Box>
             <Box sx={{ marginTop: "auto", width: "calc(100% - 15px)", display: "flex", justifyContent: "center", height: "80px", paddingRight: "15px" }}>
               <SideNavLogoutTab
-                Icon={LogoutIcon} text={"Sign Out"} navigateFunction={() => { }} />
+                Icon={LogoutIcon} text={isSmallScreen ? null : "Sign Out"} navigateFunction={handleSignOut} />
             </Box>
           </Box>
         ))}

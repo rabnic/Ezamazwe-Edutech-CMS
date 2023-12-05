@@ -1,18 +1,94 @@
 import InputLabel from '@mui/material/InputLabel';
-import { Box, IconButton, InputAdornment, Link, OutlinedInput, Typography } from '@mui/material';
+import { Box, Button, FormControl, IconButton, InputAdornment, Link, MenuItem, OutlinedInput, Select, TextField, Typography } from '@mui/material';
 import { useState } from 'react';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Add, Edit, Visibility, VisibilityOff } from '@mui/icons-material';
 
 import { useNavigate } from 'react-router-dom';
 
 
-export default function TextFields({ label, type = "text", errorStatus, errorMessage, state, setState }) {
+export default function TextFields({ label, type = "text", errorStatus, errorMessage, state, setState, isOutComes = true, addOutcomes, show, editOutcome, placeholder="Enter" }) {
+
+    return (
+        <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
+            {
+                label !== "" &&
+                <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
+            }
+            <OutlinedInput value={state} type={type} required placeholder={placeholder} variant="outlined" sx={{
+                width: "100%", height: "50px", fontSize: "16px", borderRadius: "10px",
+                "& .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "primary.light",
+                    borderWidth: 2
+                },
+                "&:hover > .MuiOutlinedInput-notchedOutline": {
+                    borderColor: "primary.main"
+                }
+            }} onChange={(e) => setState(e.target.value)} />
+            {errorStatus ?
+                <InputLabel sx={{ color: "warning.main", fontSize: "12px", marginTop: "10px", marginLeft: "5px" }}>{errorMessage}</InputLabel>
+                : null}
+            {
+                isOutComes &&
+
+                (
+                    !show ?
+                        <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px", marginLeft: "auto", color: "primary.main", }} onClick={() => {
+                            setState("")
+                            addOutcomes(prev => {
+                                return [...prev, state]
+                            })
+                        }}>
+                            <Add />
+                            Add More
+                        </Button>
+                        :
+                        <Button variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "5px", marginTop: "5px", marginLeft: "auto", color: "primary.main", }} onClick={() => {
+                            setState("")
+                            editOutcome(prev => {
+                                return [...prev, state]
+                            })
+                        }}>
+                            <Edit />
+                            Save
+                        </Button>
+                )
+
+            }
+        </Box>
+    )
+}
+
+
+export function TextAreas({ label, type = "text", errorStatus, errorMessage, state, setState, }) {
+
+    return (
+        <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
+            <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
+            <TextField multiline
+                rows={3} value={state} type={type} required placeholder="Enter" variant="outlined" sx={{
+                    width: "100%", height: "100px", fontSize: "16px", borderRadius: "20px",
+                    "& .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "primary.light",
+                        borderWidth: 2
+                    },
+                    "&:hover > .MuiOutlinedInput-notchedOutline": {
+                        borderColor: "primary.main"
+                    }
+                }} onChange={(e) => setState(e.target.value)} />
+            {errorStatus ?
+                <InputLabel sx={{ color: "warning.main", fontSize: "12px", marginTop: "10px", marginLeft: "5px" }}>{errorMessage}</InputLabel>
+                : null}
+        </Box>
+    )
+}
+
+export function DocumentField({ label, type = "text", errorStatus, errorMessage, state, setState, }) {
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
             <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
             <OutlinedInput value={state} type={type} required placeholder="Enter" variant="outlined" sx={{
-                width: "100%", height: "50px", fontSize: "16px", borderRadius: "10px",
+                width: "70%", height: "40px", fontSize: "16px", borderRadius: "10px",
                 "& .MuiOutlinedInput-notchedOutline": {
                     borderColor: "primary.light",
                     borderWidth: 2
@@ -28,9 +104,49 @@ export default function TextFields({ label, type = "text", errorStatus, errorMes
     )
 }
 
+export function SelectField({ label, type = "text", errorStatus, errorMessage, state, setState, inputLabel }) {
+
+    return (
+        <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
+            <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
+            <FormControl fullWidth>
+                {/* <InputLabel id="demo-simple-select-label">{inputLabel}</InputLabel> */}
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+
+                    sx={{
+                        // height: "50px",
+                        borderRadius: "10px",
+                        "& .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "primary.light",
+                            borderWidth: 2
+                        },
+                        "&:hover > .MuiOutlinedInput-notchedOutline": {
+                            borderColor: "primary.main"
+                        },
+                        height: "50px"
+                    }}
+                    value={state}
+                    onChange={(e) => setState(e.target.value)}
+                // value={age}
+                >
+                    <MenuItem value={10}>Ten</MenuItem>
+                    <MenuItem value={20}>Twenty</MenuItem>
+                    <MenuItem value={30}>Thirty</MenuItem>
+                </Select>
+
+
+            </FormControl>
+            {errorStatus ?
+                <InputLabel sx={{ color: "warning.main", fontSize: "12px", marginTop: "10px", marginLeft: "5px" }}>{errorMessage}</InputLabel>
+                : null}
+        </Box>
+    )
+}
+
 
 export const TextFieldPassword = ({ label, errorStatus, errorMessage, setState, isForgot = true }) => {
-    const navigate = useNavigate()
 
 
 
@@ -52,7 +168,7 @@ export const TextFieldPassword = ({ label, errorStatus, errorMessage, setState, 
                             onClick={handleClickShowPassword}
                             edge="end"
                         >
-                            {showPassword ? <VisibilityOff /> : <Visibility />}
+                            {showPassword ? <Visibility /> : <VisibilityOff />}
                         </IconButton>
                     </InputAdornment>
                 }

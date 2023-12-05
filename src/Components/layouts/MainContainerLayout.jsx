@@ -6,7 +6,6 @@ import TopAppBar from '../TopAppBar'
 function MainContainerLayout({ children }) {
   return (
     <Box sx={{ display: "flex", flexDirection: "row" }} style={{ maxHeight: '100vh', overflow: "hidden" }}>
-      {/* Different */}
       <Box sx={{ width: { lg: "270px", md: "270px", sm: "80px" }, height: "100vh" }}>
         <SideNavigation />
       </Box>

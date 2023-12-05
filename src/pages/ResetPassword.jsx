@@ -4,10 +4,13 @@ import SectionHeading from '../Components/SectionHeading'
 import SectionSubHeading from '../Components/SectionSubHeading'
 import TextFields from '../Components/TextFields'
 import Button from '../Components/Buttons';
+import { ForgotPasswordFunction } from '../services/firebase'
 
 
 const ResetPassword = () => {
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState("");
+  const [isEmailSent, setIsEmailSent] = useState(false);
+  const [isLoading, setIsloading] = useState(false);
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   const [validations, setValidations] = useState({
@@ -20,26 +23,42 @@ const ResetPassword = () => {
 
   const warningMessages = ["* Input is required", "* Incorrect email", "* Invalid email"]
 
-  const handleReset = () => {
-    validateInput()
+  const handleReset = async () => {
+    const isFieldValid = validateInput();
+    if (!isFieldValid) return;
 
+    try {
+      setIsloading(true);
+      const response = await ForgotPasswordFunction(email);
+      console.log("reset password email response", response);
+      setIsEmailSent(true)
+    } catch (error) {
+      console.log("Unable to update password:", error);
+    } finally {
+      setIsloading(false)
+
+    }
   }
+
   const validateInput = () => {
+    let isFieldValid = true;
     if (email === "") {
       setValidations(prev => {
         return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[0] } }
       })
-
-    }else if (!emailRegex.test(email)) {
+      isFieldValid = false;
+    } else if (!emailRegex.test(email)) {
       setValidations(prev => {
         return { ...prev, email: { errorStatus: "yes", errorMessage: warningMessages[2] } };
       });
+      isFieldValid = false;
     }
-     else {
+    else {
       setValidations(prev => {
         return { ...prev, email: { errorStatus: "", errorMessage: "" } }
       })
     }
+    return isFieldValid;
   }
 
 
@@ -50,12 +69,13 @@ const ResetPassword = () => {
     <Box width={"100%"} height={"100vh"} sx={{ display: "flex" }}>
       {!isMobile && (
         <Box bgcolor={"#fff"} sx={{ width: "35%", height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-          <img src={require("../assets/Logo.jpg")} width={"80%"} alt="Ezamazwe Logo"/>
+          <img src={require("../assets/Logo.jpg")} width={"80%"} alt="Ezamazwe Logo" />
         </Box>
       )}
 
       <Box bgcolor={"#1C3F53"} sx={{ width: { sm: "100%", lg: "65%" }, height: "100vh", display: "flex", alignItems: "center", justifyContent: "center" }}>
-        <Paper sx={{ maxWidth: "500px", width: "60%", height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
+        <Paper sx={{ maxWidth: "500px", width: { xs: "85%", md: "60%", lg: "60%" }, height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "60px" }}>
+
           <Box sx={{ width: "100%", height: "fit-content", display: "flex", flexDirection: "column", gap: "30px", justifyContent: "center", alignItems: "center" }}>
             <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
               <SectionHeading>
@@ -65,13 +85,16 @@ const ResetPassword = () => {
                 Reset your password
               </SectionSubHeading>
             </Box>
-            <TextFields label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
+            <TextFields isOutComes={false} label={"Email"} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
 
-            <Typography sx={{ color: "primary.main", lineHeight: "24px", textAlign:"center" }}>
-              You will receive a reset password link in your email  if provided email is recognized
-            </Typography>
+            {
+              isEmailSent &&
+              <Typography sx={{ color: "primary.main", lineHeight: "24px", textAlign: "center" }}>
+                A reset link has been sent to {email} provided that the email is recognized.
+              </Typography>
+            }
             <Box sx={{ marginTop: "30px" }}>
-              <Button text={"Reset"} buttonFunction={() => { handleReset() }} />
+              <Button text={"Reset"} buttonFunction={() => { handleReset() }}   isIconButton={isLoading} iconType='loader'/>
             </Box>
           </Box>
         </Paper>
