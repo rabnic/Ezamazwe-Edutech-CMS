@@ -66,7 +66,7 @@ export function TextAreas({ label, type = "text", errorStatus, errorMessage, sta
             <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
             <TextField multiline
                 rows={3} value={state} type={type} required placeholder="Enter" variant="outlined" sx={{
-                    width: "100%", height: "100px", fontSize: "16px", borderRadius: "10px",
+                    width: "100%", height: "100px", fontSize: "16px", borderRadius: "20px",
                     "& .MuiOutlinedInput-notchedOutline": {
                         borderColor: "primary.light",
                         borderWidth: 2

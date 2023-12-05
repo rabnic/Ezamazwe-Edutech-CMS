@@ -312,7 +312,7 @@ function AddNewCourse() {
         subHeading="Some sub heading for this page"
       />
       <Box sx={{ display: "flex", flexDirection: "column", gap: "30px", marginTop: "50px", maxWidth: { sm: "600px", lg: "1000px" }, width: "100%", height: "100vh", marginLeft: "auto", marginRight: "auto" }}>
-        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row", lg: "row" }, gap: { xs: "30px", sm: "2px", md: "8px", lg: "20px" } }}>
+        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row", lg: "row" }, gap: { xs: "30px", sm: "2px", md: "3px", lg: "20px" } }}>
           <TextFields isOutComes={false} label={"Course Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
           <TextFields isOutComes={false} label={"Type of Course:"} errorStatus={validations.courseType.errorStatus} errorMessage={validations.courseType.errorMessage} setState={setCourseType} state={courseType} />
         </Box>
