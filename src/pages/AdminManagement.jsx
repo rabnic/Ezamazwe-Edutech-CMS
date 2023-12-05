@@ -25,6 +25,7 @@ function AdminManagement() {
     const [statusAlert, setStatusAlert] = useState({ show: false, message: "", severity: "" });
     const [isAlertDialogOpen, setIsAlertDialogOpen] = useState(false)
     const [isDeleteConfirmed, setIsDeleteConfirmed] = useState(false)
+    const [isUnderEdit, setIsUnderEdit] = useState(false)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     const phoneNumberRegex = /^(\+27|0)[1-9]\d{8}$/;
 
@@ -130,14 +131,56 @@ function AdminManagement() {
 
 
     //udates admin with new information
-    const updateAdmin = async () => {
-        // setItem(item)
-        // setQuantity(quantity)
-        // setID(id)
+    const handleUpdateAdmin = async () => {
 
-        const shopItem = doc(database, "List", id);
-        // await updateDoc(shopItem, { Item: updatedItem });
-        await updateDoc(shopItem, { fullName: fullName, phoneNumber: phoneNumber, email: email });
+        const allFieldsValid = validateInput()
+        if (!allFieldsValid) return;
+
+        try {
+            setIsloading(true)
+            const responseData = await createNewAdmin(email, fullName, phoneNumber)
+            console.log("response", responseData)
+
+            if (responseData === null) {
+                setStatusAlert(
+                    {
+                        show: true,
+                        message: "Could not create admin",
+                        severity: "error"
+                    }
+                )
+            } else if (responseData.error) {
+
+                setStatusAlert(
+                    {
+                        show: true,
+                        message: responseData.error,
+                        severity: "error"
+                    }
+                )
+            } else if (responseData.message) {
+
+
+                setStatusAlert(
+                    {
+                        show: true,
+                        message: "You have successfully created a new admin and default password has been sent to email address",
+                        severity: "success"
+                    }
+                )
+            }
+        } catch (error) {
+            console.log('Error creating admin', error)
+            setStatusAlert(
+                {
+                    show: true,
+                    message: "Could not create admin",
+                    severity: "error"
+                }
+            )
+        } finally {
+            setIsloading(false)
+        }
         alert("Item was updated")
         // setShow(false)
 
@@ -200,7 +243,7 @@ function AdminManagement() {
                 )
             } else if (responseData.message) {
 
-   
+
                 setStatusAlert(
                     {
                         show: true,
@@ -319,7 +362,18 @@ function AdminManagement() {
                             <TextFields label={"Email"} placeholder='E.g zuluj@gmail.com' isOutComes={false} errorStatus={validations.email.errorStatus} errorMessage={validations.email.errorMessage} setState={setEmail} state={email} />
                             <TextFields label={"Phone Number"} placeholder='E.g +27812345678' isOutComes={false} errorStatus={validations.phoneNumber.errorStatus} errorMessage={validations.phoneNumber.errorMessage} setState={setPhoneNumber} state={phoneNumber} />
                         </Box>
-                        <Button text={"Save"} buttonFunction={() => { handleCreateAdmin() }} isIconButton={isLoading} iconType='loader' />
+                        {
+                            isUnderEdit ?
+                                (
+                                    <Button text={"Save"} buttonFunction={() => { handleCreateAdmin() }} isIconButton={isLoading} iconType='loader' />
+
+                                )
+                                :
+                                (
+                                    <Button text={"Update"} buttonFunction={() => { handleUpdateAdmin() }} isIconButton={isLoading} iconType='loader' />
+
+                                )
+                        }
                     </Box>
                 }
                 {

@@ -10,8 +10,8 @@ import AppBarSubHeading from './AppBarSubHeading';
 import { useAdminContext } from '../context/adminContext';
 
 function TopAppBar() {
-  const {admin} = useAdminContext()
-  console.log("admin",admin)
+  const { admin } = useAdminContext()
+  console.log("admin", admin)
   function getFormattedDate() {
     const daysOfWeek = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
     const monthsOfYear = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -37,7 +37,7 @@ function TopAppBar() {
 
           <Box sx={{ flexGrow: 0 }}>
             <IconButton onClick={() => { }} sx={{ p: 0 }}>
-              <Avatar sx={{ bgcolor: "primary.light" }}>ET</Avatar>
+              <Avatar sx={{ bgcolor: "primary.light" }}>{admin.fullName?.trim()[0].toUpperCase()}</Avatar>
             </IconButton>
           </Box>
 

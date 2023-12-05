@@ -97,7 +97,7 @@ export const createNewAdmin = async (email, fullName, phoneNumber) => {
     });
 
     const responseData = await response.json();
-    
+
     if (responseData.message) {
       // Add a new document in collection "cities"
       const setDocResponse = await setDoc(doc(database, "admins", responseData.userRecord.uid), {
@@ -185,18 +185,18 @@ export const AdminLogin = async (emailA, password) => {
 export const getAdminDocument = async (id) => {
   let adminDoc = null
   try {
-    const docRef = doc(database, "admins",id);
-const docSnap = await getDoc(docRef);
+    const docRef = doc(database, "admins", id);
+    const docSnap = await getDoc(docRef);
 
-if (docSnap.exists()) {
-  console.log("Document data:", docSnap.data());
-  adminDoc = docSnap.data();
-} else {
-  // docSnap.data() will be undefined in this case
-  console.log("No such document!");
-}
+    if (docSnap.exists()) {
+      console.log("Document data:", docSnap.data());
+      adminDoc = docSnap.data();
+    } else {
+      // docSnap.data() will be undefined in this case
+      console.log("No such document!");
+    }
   } catch (error) {
-    console.log("Error getting admin document",error)
+    console.log("Error getting admin document", error)
   } finally {
     return adminDoc;
   }
@@ -372,9 +372,11 @@ export const getUserCustomClaims = async (user) => {
   const idTokenResult = await getIdTokenResult(user, true);
   const customClaims = idTokenResult.claims;
   // console.log("Custom claims", customClaims);
+  const adminDoc = await getAdminDocument(customClaims.user_id)
+  // console.log("Admin document", adminDoc)
 
   const adminData = {
-    fullname: "Admin",
+    fullName: adminDoc.fullName,
     email: customClaims.email,
     passwordChanged: !customClaims.forcePasswordReset,
     phoneNumber: customClaims.phone_number,

@@ -29,7 +29,7 @@ export const AdminProvider = ({ children }) => {
         onAuthStateChanged(auth, async (_user) => {
             // console.log("user after onAuthState", _user)
             const user = _user ? await getUserCustomClaims(_user) : _user;
-            console.log("user after getUserCustomClaims", _user)
+            console.log("user after getUserCustomClaims", user)
             if (user && user.admin) {
                 loadAdmin(user);
                 signIn();
