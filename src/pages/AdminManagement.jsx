@@ -38,6 +38,13 @@ function AdminManagement() {
         getAdminList()
     }, [])
 
+    const clearFields = () => {
+        setFullName("")
+        setPhoneNumber("")
+        setEmail("")
+        setID("")
+    }
+
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
             backgroundColor: "#1C3F53",
@@ -169,6 +176,10 @@ function AdminManagement() {
             //         }
             //     )
             // }
+            clearFields();
+            setIsUnderEdit(false)
+            handleToggleForm()
+
         } catch (error) {
             console.log('Error creating admin', error)
             setStatusAlert(
