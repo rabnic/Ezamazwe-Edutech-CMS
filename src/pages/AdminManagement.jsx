@@ -138,37 +138,37 @@ function AdminManagement() {
 
         try {
             setIsloading(true)
-            const responseData = await createNewAdmin(email, fullName, phoneNumber)
-            console.log("response", responseData)
+            // const responseData = await createNewAdmin(email, fullName, phoneNumber)
+            // console.log("response", responseData)
 
-            if (responseData === null) {
-                setStatusAlert(
-                    {
-                        show: true,
-                        message: "Could not create admin",
-                        severity: "error"
-                    }
-                )
-            } else if (responseData.error) {
+            // if (responseData === null) {
+            //     setStatusAlert(
+            //         {
+            //             show: true,
+            //             message: "Could not create admin",
+            //             severity: "error"
+            //         }
+            //     )
+            // } else if (responseData.error) {
 
-                setStatusAlert(
-                    {
-                        show: true,
-                        message: responseData.error,
-                        severity: "error"
-                    }
-                )
-            } else if (responseData.message) {
+            //     setStatusAlert(
+            //         {
+            //             show: true,
+            //             message: responseData.error,
+            //             severity: "error"
+            //         }
+            //     )
+            // } else if (responseData.message) {
 
 
-                setStatusAlert(
-                    {
-                        show: true,
-                        message: "You have successfully created a new admin and default password has been sent to email address",
-                        severity: "success"
-                    }
-                )
-            }
+            //     setStatusAlert(
+            //         {
+            //             show: true,
+            //             message: "You have successfully created a new admin and default password has been sent to email address",
+            //             severity: "success"
+            //         }
+            //     )
+            // }
         } catch (error) {
             console.log('Error creating admin', error)
             setStatusAlert(
