@@ -6,7 +6,7 @@ import { initializeApp } from "firebase/app";
 
 import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword, onAuthStateChanged, getIdTokenResult, signOut as signOutFirebase } from 'firebase/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"
-import { addDoc, collection, doc, documentId, getDoc, getDocs, getFirestore, setDoc, query, where } from "firebase/firestore";
+import { addDoc, collection, doc, documentId, getDoc, getDocs, getFirestore, setDoc, query, where, deleteDoc, updateDoc } from "firebase/firestore";
 
 import { getAuth } from 'firebase/auth'
 // TODO: Add SDKs for Firebase products that you want to use
@@ -108,7 +108,6 @@ export const createNewAdmin = async (email, fullName, phoneNumber) => {
       // console.log("setDocResponse", setDocResponse);
 
     }
-
     // console.log("Details: ", email, fullName, phoneNumber);
     // console.log("Creating user: ", responseData);
     uid = responseData
@@ -117,6 +116,44 @@ export const createNewAdmin = async (email, fullName, phoneNumber) => {
     // setMessage('Unable to create user. Please try again later.');
   } finally {
     return uid;
+  }
+}
+
+export const updateAdminDetails = async (uid, fullName, email, phoneNumber) => {
+  console.log("Updating", uid, fullName, email, phoneNumber);
+  let response = null;
+  try {
+    console.log("before fetch")
+    const fetchResponse = await fetch('https://ezamazwe-edutech-nodejs.onrender.com/admin-update', {
+
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ uid, email, fullName, phoneNumber }),
+    });
+
+    const responseData = await fetchResponse.json();
+    console.log("before assignment  responseData", responseData)
+    response = responseData;
+    if (responseData.message) {
+      // console.log("before sdk")
+
+      const docRef = doc(database, "admins", uid);
+      await updateDoc(docRef, {
+        fullName,
+        email,
+        phoneNumber
+      });
+    }
+
+    console.log("responseData", responseData)
+
+  } catch (error) {
+    console.log("Error updating admin document", error)
+  } finally {
+    console.log("Finally responseData", response)
+    return response;
   }
 }
 
@@ -174,12 +211,30 @@ export const AdminLogin = async (emailA, password) => {
 
     return result
 
-
   } catch (error) {
     console.log("Error login in: ", error)
   }
+}
 
+export const deleteAdminAccount = async (id) => {
+  const url = 'https://ezamazwe-edutech-nodejs.onrender.com/delete-user';
 
+  try {
+    const admin = doc(database, "admins", id);
+    await deleteDoc(admin);
+    const response = await fetch(url, {
+
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ uid: id }),
+
+    })
+    const result = await response.json()
+  } catch (error) {
+    console.log("Couldn't delete admin account: ", error)
+  }
 }
 
 export const getAdminDocument = async (id) => {
@@ -243,7 +298,6 @@ export const logout = () => {
     // navigate('/login')
   })
 }
-
 
 // try {
 //   const response = await fetch('https://ezamazwe-edutech-nodejs.onrender.com/admin-login', {
@@ -387,7 +441,6 @@ export const getUserCustomClaims = async (user) => {
   // console.log("====", adminData)
   return adminData;
 }
-
 // /////
 // //creates new admin
 const createAdminToFirestore = async (admin) => {

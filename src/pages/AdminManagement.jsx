@@ -10,7 +10,7 @@ import PageHeading from '../Components/PageHeading';
 import PageSubHeading from '../Components/PageSubHeading';
 import PageHeadingContainer from '../Components/PageHeadingContainer';
 import PhoneNumber, { parsePhoneNumberFromString } from 'libphonenumber-js';
-import { createNewAdmin, database } from '../services/firebase';
+import { createNewAdmin, database, deleteAdminAccount, updateAdminDetails } from '../services/firebase';
 import TableLayout from '../Components/TableLayout';
 import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
 import AlertDialog from '../Components/AlertDialog';
@@ -37,6 +37,13 @@ function AdminManagement() {
     useEffect(() => {
         getAdminList()
     }, [])
+
+    const clearFields = () => {
+        setFullName("")
+        setPhoneNumber("")
+        setEmail("")
+        setID("")
+    }
 
     const StyledTableCell = styled(TableCell)(({ theme }) => ({
         [`&.${tableCellClasses.head}`]: {
@@ -111,10 +118,15 @@ function AdminManagement() {
     //deletes admin
     const deleteAdmin = async (id) => {
 
-        const admin = doc(database, "admins", id);
-        await deleteDoc(admin);
-        alert("This item was deleted")
-        getAdminList()
+        try {
+            const deleteResponse = await deleteAdminAccount(id);
+            alert("This item was deleted")
+            getAdminList()
+
+        } catch (error) {
+
+        }
+
 
     }
 
@@ -124,8 +136,8 @@ function AdminManagement() {
         setEmail(email)
         setPhoneNumber(phoneNumber)
         setID(id)
-
-        handleToggleForm()
+        setIsUnderEdit(true)
+        setIsShowForm(true)
 
     };
 
@@ -138,53 +150,53 @@ function AdminManagement() {
 
         try {
             setIsloading(true)
-            // const responseData = await createNewAdmin(email, fullName, phoneNumber)
-            // console.log("response", responseData)
+            const responseData = await updateAdminDetails(id,fullName ,email, phoneNumber)
+            console.log("response", responseData)
 
-            // if (responseData === null) {
-            //     setStatusAlert(
-            //         {
-            //             show: true,
-            //             message: "Could not create admin",
-            //             severity: "error"
-            //         }
-            //     )
-            // } else if (responseData.error) {
+            if (responseData === null) {
+                setStatusAlert(
+                    {
+                        show: true,
+                        message: "Could not update admin details",
+                        severity: "error"
+                    }
+                )
+            } else if (responseData?.hasOwnProperty('error')) {
 
-            //     setStatusAlert(
-            //         {
-            //             show: true,
-            //             message: responseData.error,
-            //             severity: "error"
-            //         }
-            //     )
-            // } else if (responseData.message) {
+                setStatusAlert(
+                    {
+                        show: true,
+                        message: responseData.error,
+                        severity: "error"
+                    }
+                )
+            } else if (responseData?.hasOwnProperty('message')) {
 
 
-            //     setStatusAlert(
-            //         {
-            //             show: true,
-            //             message: "You have successfully created a new admin and default password has been sent to email address",
-            //             severity: "success"
-            //         }
-            //     )
-            // }
+                setStatusAlert(
+                    {
+                        show: true,
+                        message: "You have successfully updated admin details",
+                        severity: "success"
+                    }
+                )
+            }
+            getAdminList()
+            clearFields()
         } catch (error) {
-            console.log('Error creating admin', error)
+            console.log('Error updating admin', error)
             setStatusAlert(
                 {
                     show: true,
-                    message: "Could not create admin",
+                    message: "Could not update admin details",
                     severity: "error"
                 }
             )
         } finally {
             setIsloading(false)
         }
-        alert("Item was updated")
+        // alert("Item was updated")
         // setShow(false)
-
-
     };
 
 
@@ -211,7 +223,6 @@ function AdminManagement() {
             console.error("Error fetching collection", error);
         }
     };
-
 
 
 
@@ -247,10 +258,12 @@ function AdminManagement() {
                 setStatusAlert(
                     {
                         show: true,
-                        message: "You have successfully created a new admin and default password has been sent to email address",
+                        message: "You have successfully created a new admin and default password has been sent to their email address",
                         severity: "success"
                     }
                 )
+                getAdminList()
+                clearFields()
             }
         } catch (error) {
             console.log('Error creating admin', error)
@@ -363,7 +376,7 @@ function AdminManagement() {
                             <TextFields label={"Phone Number"} placeholder='E.g +27812345678' isOutComes={false} errorStatus={validations.phoneNumber.errorStatus} errorMessage={validations.phoneNumber.errorMessage} setState={setPhoneNumber} state={phoneNumber} />
                         </Box>
                         {
-                            isUnderEdit ?
+                            !isUnderEdit ?
                                 (
                                     <Button text={"Save"} buttonFunction={() => { handleCreateAdmin() }} isIconButton={isLoading} iconType='loader' />
 
