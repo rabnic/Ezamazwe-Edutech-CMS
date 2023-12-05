@@ -63,11 +63,9 @@ function AddNewCourse() {
     return [];
   };
 
-
   // const handleBlur = (id, newlearningOutcome) => {
   //   learningOutcomesUpdate(id, newlearningOutcome);
   // };
-
 
   const learningOutcomesDelete = (index) => {
 
@@ -82,8 +80,6 @@ function AddNewCourse() {
       console.log('Invalid index!');
     }
   };
-
-
 
   const editOutcome = (index, learningOutcome) => {
     console.log(index, learningOutcome);
@@ -112,11 +108,6 @@ function AddNewCourse() {
       console.log('Invalid index!');
     }
   };
-
-
-
-
-
 
   const [validations, setValidations] = useState({
     courseName: {
