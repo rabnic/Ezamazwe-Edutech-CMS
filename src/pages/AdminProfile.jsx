@@ -152,36 +152,34 @@ function AdminProfile() {
             />
 
             <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: "100%", height: "100%", marginLeft: "auto", marginRight: "auto" }}>
-
-                <Box sx={{ display: "flex", flexDirection: "column", gap: "50px", marginTop: "50px", width: "100%", height: "100%", marginLeft: "auto", marginRight: "auto", marginLeft: { xs: "10px" } }}>
-                    <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
-                        <Paper sx={{ boxShadow: 5, maxWidth: { xs: "460px", md: "460px", lg: "550px" }, width: { xs: "90%", md: "80%", lg: "100%" }, height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "50px", marginBottom: "20px" }}>
-                            <Box sx={{ width: "100%", height: "fit-content", display: "flex", flexDirection: "column", gap: "30px", justifyContent: "center", alignItems: "center" }}>
-                                <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-                                    <SectionSubHeading>
-                                        Change Your Password
-                                    </SectionSubHeading>
-                                </Box>
-                                {
-                                    statusAlert.show &&
-                                    <Alert severity={statusAlert.severity} >
-                                        {statusAlert.message}
-                                    </Alert>
-                                }
-                                <TextFieldPassword isForgot={false} label={"Old Password"} errorStatus={validations.oldPassword.errorMessage} errorMessage={validations.oldPassword.errorMessage} setState={setOldPassword} state={oldPassword} />
-                                <TextFieldPassword isForgot={false} label={"New Password"} errorStatus={validations.newPassword.errorMessage} errorMessage={validations.newPassword.errorMessage} setState={setNewPassword} state={newPassword} />
-                                <TextFieldPassword isForgot={false} label={"Confirm Password"} errorStatus={validations.confirmPassword.errorMessage} errorMessage={validations.confirmPassword.errorMessage} setState={setConfirmPassWord} state={confirmPassword} />
-                                <Box sx={{ marginTop: "30px" }}>
-                                    <Button text={"Save"} buttonFunction={() => handleChangePassword()} isIconButton={isLoading} iconType='loader' />
-                                </Box>
+                <Box sx={{ display: "flex", justifyContent: "center", alignItems: "center", width: "100%", height: "100%" }}>
+                    <Paper sx={{ boxShadow: 5, maxWidth: { xs: "460px", md: "460px", lg: "550px" }, width: { xs: "90%", md: "80%", lg: "100%" }, height: "fit-content", display: "flex", flexDirection: "column", marginLeft: "auto", marginRight: "auto", borderRadius: "10px", paddingX: "60px", paddingY: "50px", marginBottom: "20px" }}>
+                        <Box sx={{ width: "100%", height: "fit-content", display: "flex", flexDirection: "column", gap: "30px", justifyContent: "center", alignItems: "center" }}>
+                            <Box sx={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+                                <SectionSubHeading>
+                                    Change Your Password
+                                </SectionSubHeading>
                             </Box>
-                        </Paper>
-                    </Box>
+                            {
+                                statusAlert.show &&
+                                <Alert severity={statusAlert.severity} >
+                                    {statusAlert.message}
+                                </Alert>
+                            }
+                            <TextFieldPassword isForgot={false} label={"Old Password"} errorStatus={validations.oldPassword.errorMessage} errorMessage={validations.oldPassword.errorMessage} setState={setOldPassword} state={oldPassword} />
+                            <TextFieldPassword isForgot={false} label={"New Password"} errorStatus={validations.newPassword.errorMessage} errorMessage={validations.newPassword.errorMessage} setState={setNewPassword} state={newPassword} />
+                            <TextFieldPassword isForgot={false} label={"Confirm Password"} errorStatus={validations.confirmPassword.errorMessage} errorMessage={validations.confirmPassword.errorMessage} setState={setConfirmPassWord} state={confirmPassword} />
+                            <Box sx={{ marginTop: "30px" }}>
+                                <Button text={"Save"} buttonFunction={() => handleChangePassword()} isIconButton={isLoading} iconType='loader' />
+                            </Box>
+                        </Box>
+                    </Paper>
                 </Box>
-
             </Box>
 
-            )
+        </Box>
+
+    )
 }
 
-            export default AdminProfile
+export default AdminProfile
