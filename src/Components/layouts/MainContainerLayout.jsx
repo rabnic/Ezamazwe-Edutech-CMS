@@ -13,7 +13,7 @@ function MainContainerLayout({ children }) {
         <Box sx={{ width: "100%", height: "100px", display: "flex", flexDirection: "row" }}>
           <TopAppBar />
         </Box>
-        <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", paddingTop: "15px" }} style={{ overflow: 'scroll' }}>
+        <Box sx={{ width: "100%", height: "100%", display: "flex", flexDirection: "column", paddingTop: "15px" }} style={{ overflowX: 'hidden' }}>
           {children}
         </Box>
       </Box>

@@ -16,7 +16,7 @@ export default function Breadcrumb() {
     const navigate = useNavigate();
 
     const paths = location.pathname.split("/").slice(1)
-    // console.info('paths:', paths)
+    console.info('paths:', paths)
     const styles = {
         separator: {
             fontSize: '20px',

@@ -15,16 +15,30 @@ function CourseList() {
   const location = useLocation();
   // console.log("params", params);
   // console.log("location", location.pathname);
-  console.log('Inside CourseList')
-  fetchFilteredCourseDocuments()
+  // console.log('Inside CourseList')
 
+const replaceAllDashesWithSpace = (text) => {
+    return text.replaceAll("-"," ")
+  }
 
+  const replaceAllSpacesWithUderscore = (text) => {
+    return replaceAllDashesWithSpace(text).replaceAll(" ", "_")
+  }
+const courseFilterOptions = {
+    courseCategory: params.subCategory.toLowerCase(),
+    grade: replaceAllSpacesWithUderscore(params.subjects),
+    subject: replaceAllDashesWithSpace(params.course),
+  }
+
+  console.log("courseFilterOptions", courseFilterOptions)
+
+  
   useEffect(() => {
     const tester = async () => {
       try {
         setIsloading(true)
         console.log("trying to fetch")
-        const data = await fetchFilteredCourseDocuments()
+        const data = await fetchFilteredCourseDocuments(courseFilterOptions.courseCategory,courseFilterOptions.grade,courseFilterOptions.subject);
         console.log(data)
         setFilteredCourseDocuments(data)
       } catch (error) {
@@ -62,7 +76,8 @@ function CourseList() {
           justifyContent: "center",
           alignItems: "center",
           padding: "10px",
-          gap: "20px"
+          gap: "20px",
+          width: "100%"
         }}
       >
         {

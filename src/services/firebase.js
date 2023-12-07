@@ -620,15 +620,16 @@ export const uploadLessonSupportingDocs = async (courseId, documents) => {
   return updatedDocuments;
 };
 
-export const fetchFilteredCourseDocuments = async () => {
+export const fetchFilteredCourseDocuments = async (courseCategory,grade,subject) => {
   let filteredDocs = []
+  console.log(courseCategory,grade,subject)
   try {
     // console.log("qqqqqqqqqqqqqqqqqqqqqqqq")
     const coursesRef = collection(database, "courses");
     const q = query(coursesRef,
-      where("courseCategory", "==", "caps"),
-      where("grade", "==", "Grade_1"),
-      where("subject", "==", "Reading"),
+      where("courseCategory", "==", courseCategory),
+      where("grade", "==", grade),
+      where("subject", "==", subject),
     );
     // console.log("coursesRef", coursesRef)
 
