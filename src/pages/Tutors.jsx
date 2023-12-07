@@ -54,8 +54,8 @@ function Tutors() {
                 <StyledTableCell >FullName</StyledTableCell>
                 <StyledTableCell >Phone Number</StyledTableCell>
                 <StyledTableCell >Email Address</StyledTableCell>
-                {/* <StyledTableCell >Role</StyledTableCell> */}
                 <StyledTableCell >Actions</StyledTableCell>
+                {/* <StyledTableCell >Role</StyledTableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -63,8 +63,8 @@ function Tutors() {
 
               <TableRow >
                 <TableCell colSpan={4}>
-                  <Typography sx={{justifyContent:"center", alignItems: 'center', textAlign:"center", paddingTop: "30px", marginLeft: "auto",  marginRight: "auto", fontSize: '15px' }}>
-                  No Tutors are registered at the moment...
+                  <Typography sx={{ justifyContent: "center", alignItems: 'center', textAlign: "center", paddingTop: "30px", paddingBottom: "30px", marginLeft: "auto", marginRight: "auto", fontSize: '15px' }}>
+                    No Tutors are registered at the moment...
                   </Typography>
                 </TableCell>
                 {/* <TableCell rowSpan={5}>
@@ -106,9 +106,6 @@ function Tutors() {
                                     </StyledTableCell>
                                 </StyledTableRow>
   ))} */}
-
-
-
             </TableBody>
           </Table>
         </TableContainer>
