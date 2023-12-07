@@ -2,11 +2,11 @@ import React from "react";
 import { Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-function CategoryCard({ children, uri,category,path }) {
+function CategoryCard({ children, uri, category, path }) {
   const navigate = useNavigate();
 
   return (
-    <Box onClick={() => {navigate(path)}}
+    <Box onClick={() => { navigate(path) }}
       sx={{
         // maxWidth: "100%",
         maxHeight: "500px",
@@ -20,7 +20,7 @@ function CategoryCard({ children, uri,category,path }) {
         objectFit: "cover",
         gap: "50px",
         margin: "20px",
-        cursor:"pointer",
+        cursor: "pointer",
       }}
     >
       <Box
