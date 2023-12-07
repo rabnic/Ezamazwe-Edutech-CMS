@@ -199,9 +199,9 @@ function Subscribers() {
             <TableContainer sx={{ width: "fullWidth", maxHeight: 440 }}>
               <Table stickyHeader aria-label="sticky table">
                 <TableHead>
-                  <TableRow>
+                  <TableRow >
                     {columns.map((column) => (
-                      <TableCell
+                      <TableCell sx={{backgroundColor: "#1C3F53", color: "#fff"}} style={{textDecoration: 'white'}}
                         key={column.id}
                         align={column.align}
                       >
