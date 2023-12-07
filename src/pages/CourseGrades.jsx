@@ -76,7 +76,7 @@ function CourseGrades() {
                 // console.log(grade);
                 return (
                   <Grid item xs={12} md={6} key={index} >
-                    <GradesCard path={`${location.pathname}/${grade.toLowerCase().replace(" ", "-")}`} Grade={grade} />
+                    <GradesCard path={`${location.pathname}/${grade.trim().replace(" ", "-")}`} Grade={grade} />
 
                   </Grid>
                 )
