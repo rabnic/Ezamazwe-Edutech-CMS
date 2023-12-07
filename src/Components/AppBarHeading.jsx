@@ -4,7 +4,7 @@ import { Typography } from '@mui/material'
 const AppBarHeading
   = ({ children }) => {
     return (
-      <Typography variant="h5" component="h5" sx={{ color: 'primary.main', fontWeight: "bold", lineHeight: "125%", letterSpacing: "0.25px", fontSize: { xs: "1.5rem" }, textAlign: { xs: "center", sm: "left", lg: "left" } }}>
+      <Typography variant="h5" component="h5" sx={{ color: 'primary.main', fontWeight: "bold", lineHeight: "125%", letterSpacing: "0.25px", fontSize: { xs: "1.1rem" }, textAlign: { xs: "center", sm: "left", lg: "left" } }}>
         {children}
       </Typography>
     )
