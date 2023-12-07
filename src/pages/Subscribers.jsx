@@ -245,7 +245,7 @@ function Subscribers() {
                 <TableHead>
                   <TableRow>
                     {columns.map((column) => (
-                      <TableCell
+                      <TableCell  sx={{backgroundColor: "#1C3F53", color: "#fff"}} style={{textDecoration: 'white'}}
                         key={column.id}
                         align={column.align}
                       >

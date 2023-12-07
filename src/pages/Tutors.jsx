@@ -63,7 +63,7 @@ function Tutors() {
 
               <TableRow >
                 <TableCell colSpan={4}>
-                  <Typography sx={{justifyContent:"center", alignItems: 'center', textAlign:"center", paddingTop: "30px", marginLeft: "auto",  marginRight: "auto", fontSize: '15px' }}>
+                  <Typography sx={{justifyContent:"center", alignItems: 'center', textAlign:"center", paddingTop: "30px", paddingBottom:"30px", marginLeft: "auto",  marginRight: "auto", fontSize: '15px' }}>
                   No Tutors are registered at the moment...
                   </Typography>
                 </TableCell>
