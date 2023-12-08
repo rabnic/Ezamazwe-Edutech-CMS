@@ -2,12 +2,12 @@ import React from "react";
 import { Typography, Box } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 
-function SubjectCategory({ children, Subject, Desc,path }) {
+function SubjectCategory({ children, Subject, Desc, path }) {
   const navigate = useNavigate();
-  
+
   return (
     <Box
-    onClick={() => navigate(path)}
+      onClick={() => navigate(path)}
       sx={{
         display: "flex",
         flexDirection: "row",
@@ -45,11 +45,11 @@ function SubjectCategory({ children, Subject, Desc,path }) {
             variant="h5"
             sx={{
               color: "#396781",
-              fontWeight: {xs: "700", sm: "700", md: "700" ,lg: "700", xl: "700"},
+              fontWeight: { xs: "700", sm: "700", md: "700", lg: "700", xl: "700" },
               fontFamily: "Roboto",
               fontSize: "30px",
               lineHeight: "32px",
-              marginLeft: {xs: "10px", sm: "10px", md: "30px" ,lg: "50px", xl: "50px"},
+              marginLeft: { xs: "10px", sm: "10px", md: "30px", lg: "50px", xl: "50px" },
             }}
           >
             {Subject}
@@ -64,7 +64,7 @@ function SubjectCategory({ children, Subject, Desc,path }) {
               fontSize: "14px",
               lineHeight: "20px",
               letterSpacing: "0.17px",
-              marginLeft: {xs: "10px", sm: "10px", md: "30px" ,lg: "50px", xl: "50px"},
+              marginLeft: { xs: "10px", sm: "10px", md: "30px", lg: "50px", xl: "50px" },
               marginTop: "5px"
             }}
           >

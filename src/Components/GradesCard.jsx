@@ -8,7 +8,7 @@ function GradesCard({ children, Grade, path }) {
 
   return (
     <Box
-    onClick={() => navigate(path)}
+      onClick={() => navigate(path)}
       sx={{
         display: "flex",
         flexDirection: "row",
@@ -26,7 +26,7 @@ function GradesCard({ children, Grade, path }) {
           display: "flex",
           flexDirection: "row",
           padding: "20px",
-          width: { xs: "250px",sm: "250px",md: "300px",lg: "500px", xl: "700px"},
+          width: { xs: "250px", sm: "250px", md: "300px", lg: "500px", xl: "700px" },
           height: "Hug 70px",
           alignItems: "center",
         }}

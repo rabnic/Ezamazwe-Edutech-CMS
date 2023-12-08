@@ -571,7 +571,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                         {
                                             supportingLinks.map((value, index) => {
                                                 return (
-                                                    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", maxWidth: "100%",height:"auto"}}>
+                                                    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between", maxWidth: "100%", height: "auto" }}>
                                                         <Box sx={{ width: "90%" }}>
                                                             <li key={index}>
                                                                 <span style={{ color: "#000", fontSize: "20px", position: "relative", marginLeft: "0px", wordWrap: "break-word", overflowWrap: "anywhere" }}>
@@ -579,7 +579,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId }) {
                                                                 </span>
                                                             </li>
                                                         </Box>
-                                                        <Box sx={{ display: "flex", flexDirection: "row", gap: "20px", marginLeft: "auto",width:"10%" }}>
+                                                        <Box sx={{ display: "flex", flexDirection: "row", gap: "20px", marginLeft: "auto", width: "10%" }}>
                                                             <Edit sx={{ color: "primary.main" }} onClick={(e) => { editOutcome(index, value) }} />
                                                             <Delete sx={{ color: "primary.main" }} onClick={(e) => { learningOutcomesDelete(index) }} />
                                                         </Box>

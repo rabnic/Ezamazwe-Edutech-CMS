@@ -35,14 +35,13 @@ function SubjectView() {
 
     return (
         <div>
-        {selectedSubject.map((course) => (
-            <div key={course.id}>
-                <h2>{course.courseName}</h2>
-                <p>{course.shortdescription}</p>
-                {/* Render other course details here */}
-            </div>
-        ))}
-    </div>
+            {selectedSubject.map((course) => (
+                <div key={course.id}>
+                    <h2>{course.courseName}</h2>
+
+                </div>
+            ))}
+        </div>
     )
 }
 

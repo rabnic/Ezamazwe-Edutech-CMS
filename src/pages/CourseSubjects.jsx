@@ -75,7 +75,7 @@ function CourseSubjects() {
                 return (
                   <Grid key={index} item xs={12} md={6}  >
                     {/* <GradesCard path={`${location.pathname}/${grade.toLowerCase().replace(" ", "-")}`} Grade={grade} /> */}
-                    <SubjectCategory path={`${location.pathname}/${subject}`} Subject={subject} Desc={"Pure"} />
+                    <SubjectCategory path={`${location.pathname}/${subject.trim().replaceAll(" ", "-")}`} Subject={subject} Desc={"Pure"} />
 
                   </Grid>
                 )
