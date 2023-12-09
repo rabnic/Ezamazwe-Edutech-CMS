@@ -430,7 +430,7 @@ export const getUserCustomClaims = async (user) => {
   // console.log("Admin document", adminDoc)
 
   const adminData = {
-    fullName: adminDoc.fullName,
+    fullName: adminDoc.fullName ? adminDoc.fullName : "",
     email: customClaims.email,
     passwordChanged: !customClaims.forcePasswordReset,
     phoneNumber: customClaims.phone_number,
@@ -620,9 +620,9 @@ export const uploadLessonSupportingDocs = async (courseId, documents) => {
   return updatedDocuments;
 };
 
-export const fetchFilteredCourseDocuments = async (courseCategory,grade,subject) => {
+export const fetchFilteredCourseDocuments = async (courseCategory, grade, subject) => {
   let filteredDocs = []
-  console.log(courseCategory,grade,subject)
+  console.log(courseCategory, grade, subject)
   try {
     // console.log("qqqqqqqqqqqqqqqqqqqqqqqq")
     const coursesRef = collection(database, "courses");
