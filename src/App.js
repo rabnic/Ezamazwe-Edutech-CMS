@@ -18,6 +18,7 @@ import { Route, Routes, Navigate } from 'react-router-dom';
 import MainContainerLayout from './Components/layouts/MainContainerLayout';
 import ProtectedRoute from './routes/ProtectedRoute';
 import LoadingScreen from './pages/LoadingScreen';
+import NotFound404 from './pages/NotFound404';
 
 function App() {
   const { isAuthenticated, } = useAuthContext();
@@ -47,6 +48,7 @@ function App() {
           <Route path="subscribers" element={<ProtectedRoute component={Subscribers} />} />
           <Route path="admin-management" element={<ProtectedRoute component={AdminManagement} />} />
           <Route path="admin-profile" element={<AdminProfile />} />
+          <Route path="*" element={<NotFound404 />} />
         </Routes>
       </MainContainerLayout>
     );

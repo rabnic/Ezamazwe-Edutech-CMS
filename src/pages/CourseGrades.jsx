@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PageHeadingContainer from "../Components/PageHeadingContainer";
 import GradesCard from "../Components/GradesCard";
@@ -72,7 +72,9 @@ function CourseGrades() {
           <Grid container spacing={4}>
 
             {
-              grades(params.subCategory).map((grade,index) => {
+              grades(params.subCategory).length > 0 &&
+
+              grades(params.subCategory).map((grade, index) => {
                 // console.log(grade);
                 return (
                   <Grid item xs={12} md={6} key={index} >
@@ -81,6 +83,17 @@ function CourseGrades() {
                   </Grid>
                 )
               })
+            }
+            {
+              // grades(params.subCategory).length < 1 &&
+              // <Typography
+              //   align="center"
+              //   color="text.secondary"
+              //   variant="body1"
+              //   sx={{ width: { xs: "100%", md: "80%" }, textAlign: "center" }}
+              // >
+              //   Sorry, no content for your selection as yet.
+              // </Typography>
             }
           </Grid>
         </Box>

@@ -1,4 +1,4 @@
-import { Box, Grid } from "@mui/material";
+import { Box, Grid, Typography } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PageHeadingContainer from "../Components/PageHeadingContainer";
 import SubjectCategory from "../Components/SubjectsCategory";
@@ -69,7 +69,9 @@ function CourseSubjects() {
           <Grid container spacing={4}>
 
             {
-              subjects(subCategory, subject.replace("-", "_")).map((subject,index) => {
+              subjects(subCategory, subject.replace("-", "_")).length > 0 &&
+
+              subjects(subCategory, subject.replace("-", "_")).map((subject, index) => {
 
                 // console.log(subject);
                 return (
@@ -80,6 +82,17 @@ function CourseSubjects() {
                   </Grid>
                 )
               })
+            }
+            {
+              // subjects(subCategory, subject.replace("-", "_")).length < 1 &&
+              // <Typography
+              //   align="center"
+              //   color="text.secondary"
+              //   variant="body1"
+              //   sx={{ width: { xs: "100%", md: "80%" }, textAlign: "center" }}
+              // >
+              //   Sorry, no content for your selection as yet.
+              // </Typography>
             }
           </Grid>
         </Box>

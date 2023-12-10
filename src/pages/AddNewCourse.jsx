@@ -10,6 +10,7 @@ import MediaFields from '../Components/AddMedia'
 import { getCategoryData, saveCourseToFirestore } from '../services/firebase'
 import SelectField from '../Components/SelectField'
 import { Delete, Edit } from '@mui/icons-material'
+import SnackBar from '../Components/SnackBar';
 
 
 function AddNewCourse() {
@@ -35,7 +36,7 @@ function AddNewCourse() {
   const [selectedCategory, setSelectedCategory] = useState("")
   const [selectedGrade, setSelectedGrade] = useState("")
   const [selectedSubject, setSelectedSubject] = useState("")
-
+  const [snackBarStatus, setSnackBarStatus] = useState({ isOpen: false })
 
   useEffect(() => {
     const category = async () => {
@@ -268,10 +269,10 @@ function AddNewCourse() {
         createDate: new Date()
       }
 
-      if (courseDocumentId === "") {
-        const courseId = await saveCourseToFirestore(courseObject);
-        setCourseDocumentId(courseId);
-      }
+      // if (courseDocumentId === "") {
+      const courseId = await saveCourseToFirestore(courseObject);
+      setCourseDocumentId(courseId);
+      // }
       setCourseName("")
       setCourseType("")
       setCourseShortDescription("")
@@ -283,11 +284,13 @@ function AddNewCourse() {
       setSelectedCategory("")
       setSelectedGrade("")
       setSelectedSubject("")
-
+      setSnackBarStatus({ isOpen: true, message: "Course initialised successfully!" })
       setOpenModal(true)
     } catch (error) {
 
     } finally {
+      setSnackBarStatus({ isOpen: false })
+
       setIsloading(false)
     }
 
@@ -295,94 +298,98 @@ function AddNewCourse() {
 
 
   return (
-    <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100vh", paddingTop: "10px", marginLeft: "auto", marginRight: "auto" }}>
+    <>
+      <SnackBar status={snackBarStatus} />
 
-      <PageHeadingContainer
-        heading="Add New Course"
-        subHeading="Some sub heading for this page"
-      />
-      <Box sx={{ display: "flex", flexDirection: "column", gap: "30px", marginTop: "50px", maxWidth: { sm: "600px", lg: "1000px" }, width: "100%", height: "100vh", marginLeft: "auto", marginRight: "auto" }}>
-        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row", lg: "row" }, gap: { xs: "30px", sm: "2px", md: "8px", lg: "20px" } }}>
-          <TextFields isOutComes={false} placeholder='E.g Calculus' label={"Course Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
-          {/* <TextFields isOutComes={false} label={"Type of Course:"} errorStatus={validations.courseType.errorStatus} errorMessage={validations.courseType.errorMessage} setState={setCourseType} state={courseType} /> */}
+      <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100vh", paddingTop: "10px", marginLeft: "auto", marginRight: "auto" }}>
 
-          <SelectField inputLabel={"Select Type"} label={"Select Type:"} errorStatus={validations.courseType.errorStatus} errorMessage={validations.courseType.errorMessage} setState={setCourseType} state={courseType}>
-                <MenuItem  value="Free">Free</MenuItem>
-                <MenuItem  value="Paid">Paid</MenuItem>
-          </SelectField>
-        </Box>
-        <TextAreas isOutComes={false} label={"Course Short Description:"} errorStatus={validations.courseShortDescription.errorStatus} errorMessage={validations.courseShortDescription.errorMessage} setState={setCourseShortDescription} state={courseShortDescription} />
-        <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "column", lg: "row" }, gap: "30px" }}>
-          <SelectField inputLabel={"Select Category"} label={"Course Category:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedCategory} state={selectedCategory}>
-            {categories &&
-              Object.entries(categories).map(([key, object]) => {
+        <PageHeadingContainer
+          heading="Add New Course"
+          subHeading="Some sub heading for this page"
+        />
+        <Box sx={{ display: "flex", flexDirection: "column", gap: "30px", marginTop: "50px", maxWidth: { sm: "600px", lg: "1000px" }, width: "100%", height: "100vh", marginLeft: "auto", marginRight: "auto" }}>
+          <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row", lg: "row" }, gap: { xs: "30px", sm: "2px", md: "8px", lg: "20px" } }}>
+            <TextFields isOutComes={false} placeholder='E.g Calculus' label={"Course Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
+            {/* <TextFields isOutComes={false} label={"Type of Course:"} errorStatus={validations.courseType.errorStatus} errorMessage={validations.courseType.errorMessage} setState={setCourseType} state={courseType} /> */}
+
+            <SelectField inputLabel={"Select Type"} label={"Select Type:"} errorStatus={validations.courseType.errorStatus} errorMessage={validations.courseType.errorMessage} setState={setCourseType} state={courseType}>
+              <MenuItem value="Free">Free</MenuItem>
+              <MenuItem value="Paid">Paid</MenuItem>
+            </SelectField>
+          </Box>
+          <TextAreas isOutComes={false} label={"Course Short Description:"} errorStatus={validations.courseShortDescription.errorStatus} errorMessage={validations.courseShortDescription.errorMessage} setState={setCourseShortDescription} state={courseShortDescription} />
+          <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "column", lg: "row" }, gap: "30px" }}>
+            <SelectField inputLabel={"Select Category"} label={"Course Category:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedCategory} state={selectedCategory}>
+              {categories &&
+                Object.entries(categories).map(([key, object]) => {
+                  return (
+                    <MenuItem key={key} value={object.id}>
+                      {object.name}
+                    </MenuItem>
+                  );
+                })}
+            </SelectField>
+            <SelectField inputLabel={"Select Grade"} label={"Course Grade:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedGrade} state={selectedGrade} isDisabled={selectedCategory === ""}>
+              {selectedCategory && grades(selectedCategory).map((value, index) => {
+                console.log(value, index)
                 return (
-                  <MenuItem key={key} value={object.id}>
-                    {object.name}
-                  </MenuItem>
-                );
-              })}
-          </SelectField>
-          <SelectField inputLabel={"Select Grade"} label={"Course Grade:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedGrade} state={selectedGrade} isDisabled={selectedCategory === ""}>
-            {selectedCategory && grades(selectedCategory).map((value, index) => {
-              console.log(value, index)
-              return (
-                <MenuItem key={index} value={value.replace(" ", "_")}>
-                  {value}
-                </MenuItem>
-              );
-            })}
-          </SelectField>
-          <SelectField inputLabel={"Select Subject"} label={"Course Subject:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedSubject} state={selectedSubject} isDisabled={selectedCategory === "" || selectedGrade === ""}>
-            {selectedCategory &&
-              selectedGrade &&
-              subjects(selectedCategory, selectedGrade).map((value, index) => {
-                return (
-                  <MenuItem key={index} value={value}>
+                  <MenuItem key={index} value={value.replace(" ", "_")}>
                     {value}
                   </MenuItem>
                 );
               })}
-          </SelectField>
-        </Box>
-        <Box>
-          <TextFields isOutComes={true} show={show} label={"Learning Outcomes:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLink} state={supportingLink} addOutcomes={setSavedLearningOutcomes} editOutcome={() => { UpdateOutcomes(supportingLink) }} />
-          {
-            savedLearningOutcomes.length > 0 &&
-            (
-              <Typography variant='h6' sx={{ color: "primary.light", fontSize: "18px", fontWeight: "500" }}>Outcomes</Typography>
-
-            )
-          }
-          {
-            savedLearningOutcomes.map((value, index) => {
-              return (
-                <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
-                  <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
-                    <li key={index}>
-                    </li>
-                    <span style={{ color: "#000", fontSize: "20px", position: "relative", marginLeft: "0px" }}>
+            </SelectField>
+            <SelectField inputLabel={"Select Subject"} label={"Course Subject:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedSubject} state={selectedSubject} isDisabled={selectedCategory === "" || selectedGrade === ""}>
+              {selectedCategory &&
+                selectedGrade &&
+                subjects(selectedCategory, selectedGrade).map((value, index) => {
+                  return (
+                    <MenuItem key={index} value={value}>
                       {value}
-                    </span>
-                  </Box>
-                  <Box sx={{ display: "flex", flexDirection: "row", gap: "20px" }}>
-                    <Edit sx={{ color: "primary.main" }} onClick={(e) => { editOutcome(index, value) }} />
-                    <Delete sx={{ color: "primary.main" }} onClick={(e) => { learningOutcomesDelete(index) }} />
-                  </Box>
-                </Box>
-              )
-            })
-          }
-        </Box>
-        <TextAreas label={"Course Full Description:"} errorStatus={validations.courseFullDescription.errorStatus} errorMessage={validations.courseFullDescription.errorMessage} setState={setCourseFullDescription} state={courseFullDescription} />
-        {/* <InputFileUpload handleFileChange={handleFileChange} label={"Add Video Content"} /> */}
-        <Box sx={{ marginLeft: "auto", marginRight: "auto", marginTop: "30px" }}>
-          <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} isIconButton={isLoading} iconType='loader' />
+                    </MenuItem>
+                  );
+                })}
+            </SelectField>
+          </Box>
+          <Box>
+            <TextFields isOutComes={true} show={show} label={"Learning Outcomes:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLink} state={supportingLink} addOutcomes={setSavedLearningOutcomes} editOutcome={() => { UpdateOutcomes(supportingLink) }} />
+            {
+              savedLearningOutcomes.length > 0 &&
+              (
+                <Typography variant='h6' sx={{ color: "primary.light", fontSize: "18px", fontWeight: "500" }}>Outcomes</Typography>
 
+              )
+            }
+            {
+              savedLearningOutcomes.map((value, index) => {
+                return (
+                  <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+                    <Box sx={{ display: "flex", flexDirection: "row", alignItems: "center" }}>
+                      <li key={index}>
+                      </li>
+                      <span style={{ color: "#000", fontSize: "20px", position: "relative", marginLeft: "0px" }}>
+                        {value}
+                      </span>
+                    </Box>
+                    <Box sx={{ display: "flex", flexDirection: "row", gap: "20px" }}>
+                      <Edit sx={{ color: "primary.main" }} onClick={(e) => { editOutcome(index, value) }} />
+                      <Delete sx={{ color: "primary.main" }} onClick={(e) => { learningOutcomesDelete(index) }} />
+                    </Box>
+                  </Box>
+                )
+              })
+            }
+          </Box>
+          <TextAreas label={"Course Full Description:"} errorStatus={validations.courseFullDescription.errorStatus} errorMessage={validations.courseFullDescription.errorMessage} setState={setCourseFullDescription} state={courseFullDescription} />
+          {/* <InputFileUpload handleFileChange={handleFileChange} label={"Add Video Content"} /> */}
+          <Box sx={{ marginLeft: "auto", marginRight: "auto", marginTop: "30px" }}>
+            <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} isIconButton={isLoading} iconType='loader' />
+
+          </Box>
         </Box>
-      </Box>
-      {openModal && <AddCourseContent setOpenModal={setOpenModal} courseDocumentId={courseDocumentId} />}
-    </Box >
+        {openModal && <AddCourseContent setOpenModal={setOpenModal} courseDocumentId={courseDocumentId} setCourseDocumentId={setCourseDocumentId} />}
+      </Box >
+    </>
   )
 }
 

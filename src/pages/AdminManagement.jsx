@@ -150,7 +150,7 @@ function AdminManagement() {
 
         try {
             setIsloading(true)
-            const responseData = await updateAdminDetails(id,fullName ,email, phoneNumber)
+            const responseData = await updateAdminDetails(id, fullName, email, phoneNumber)
             console.log("response", responseData)
 
             if (responseData === null) {
@@ -390,8 +390,10 @@ function AdminManagement() {
                     </Box>
                 }
                 {
-                    setIsAlertDialogOpen &&
-                    <AlertDialog message={"Are you really sure you want to delete this admin?"} setIsDeleteConfirmed={setIsDeleteConfirmed} isAlertDialogOpen={isAlertDialogOpen} setIsAlertDialogOpen={setIsAlertDialogOpen} deleteAdmin={deleteAdmin} adminId={id} />
+                    isAlertDialogOpen &&
+                    <AlertDialog message={"Are you really sure you want to delete this admin?"}
+                        setIsDeleteConfirmed={setIsDeleteConfirmed} isAlertDialogOpen={isAlertDialogOpen}
+                        setIsAlertDialogOpen={setIsAlertDialogOpen} deleteAdmin={deleteAdmin} adminId={id} />
                 }
 
                 <TableContainer component={Paper}>
