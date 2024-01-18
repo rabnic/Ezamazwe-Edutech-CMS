@@ -1,5 +1,5 @@
 import { Box, Container, Grid, Typography } from '@mui/material'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import PageHeading from '../Components/PageHeading'
 import PageSubHeading from '../Components/PageSubHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
@@ -10,11 +10,53 @@ import CurrencyDollarIcon from '@heroicons/react/24/solid/CurrencyDollarIcon';
 import UsersIcon from '@heroicons/react/24/solid/UsersIcon';
 import AcademicCapIcon from '@heroicons/react/24/solid/AcademicCapIcon';
 import UserGroupIcon from '@heroicons/react/24/solid/UserGroupIcon';
-
-
-
+import { getUsers } from '../services/firebase'
 
 function Home() {
+  const subscriptionFee = 100.00;
+  const [usersData, setUsersData] = useState([])
+
+  useEffect(() => {
+    getUsers().then((res) => {
+      console.log('users', res)
+      setUsersData(res)
+    }).catch((err) => {
+      console.log('error getting usersData', err)
+    })
+  }, [])
+
+  const getTotalUsers = () => {
+    return usersData.filter((data) => data.role === "user").length;
+  }
+
+  const getTotalSubscribers = () => {
+    //data.subscription === "subscribed" &&
+    return usersData.filter((data) => data.subscription === "subscribed" && data.subscriptionStartDate).length;
+  }
+
+  const getSubscribersDifference = () => {
+
+    const totalSubscribers = usersData.filter((data) => data.subscription === "subscribed" && data.subscriptionStartDate);
+    const currentMonthSubscribers = totalSubscribers.filter((data) => data.subscriptionStartDate.includes(getCurrentYearAndMonth())).length;
+    if (currentMonthSubscribers === totalSubscribers.length) return 0;
+    return currentMonthSubscribers / totalSubscribers.length
+  }
+
+  const getCurrentYearAndMonth = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    let month = today.getMonth() + 1;
+    if (month < 10) {
+      month = '0' + month;
+    }
+    return year + '-' + month;
+  }
+
+  if (usersData) {
+    console.log("Total Users =", getTotalUsers())
+    console.log("Total Subscribers =", getTotalSubscribers())
+    console.log("Total Subscribers Diff =", getSubscribersDifference())
+  }
   return (
     <Box sx={{ display: "flex", flexDirection: "column", alignItems: "center", width: "100%", height: "100%", paddingTop: "10px" }}>
 
@@ -41,7 +83,7 @@ function Home() {
                 difference={5}
                 positive={false}
                 sx={{ height: '100%' }}
-                value="5k"
+                value={usersData ? getTotalUsers() : 0}
                 title={"Total Users"}
                 icon={<UsersIcon />}
               />
@@ -53,10 +95,10 @@ function Home() {
               lg={3}
             >
               <SummaryCardOverview
-                difference={9}
+                difference={getSubscribersDifference()}
                 positive
                 sx={{ height: '100%' }}
-                value="2k"
+                value={usersData ? getTotalSubscribers() : 0}
                 title={"Total Subscriptions"}
                 icon={<AcademicCapIcon />}
               />
@@ -69,7 +111,7 @@ function Home() {
             >
               <SummaryCardOverview
                 difference={0}
-                positive={false}
+                positive
                 sx={{ height: '100%' }}
                 value="0"
                 title={"Total Tutors"}
@@ -83,10 +125,10 @@ function Home() {
               lg={3}
             >
               <SummaryCardOverview
-                difference={9}
+                difference={getSubscribersDifference()}
                 positive
                 sx={{ height: '100%' }}
-                value="R24k"
+                value={`R${usersData ? getTotalSubscribers() * subscriptionFee : 0.00}`}
                 title={"Subscriptions Profit"}
                 icon={<CurrencyDollarIcon />}
               />
@@ -143,10 +185,10 @@ function Home() {
                     name: 'This year',
                     data: [18, 16, 5, 8, 3, 14, 14, 16, 17, 19, 18, 20]
                   },
-                  {
-                    name: 'Last year',
-                    data: [12, 11, 4, 6, 2, 9, 9, 10, 11, 12, 13, 13]
-                  }
+                  // {
+                  //   name: 'Last year',
+                  //   data: [12, 11, 4, 6, 2, 9, 9, 10, 11, 12, 13, 13]
+                  // }
                 ]}
                 sx={{ height: '100%' }}
               />
