@@ -6,15 +6,25 @@ import { Visibility, VisibilityOff } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 
 
-export default function SelectField({ label,  errorStatus, errorMessage, state, setState, children, isDisabled=false }) {
+export default function SelectField({ label, errorStatus, errorMessage, state, setState, children, setIsShowGradeDialog = null, setIsShowSubjectDialog = null, isDisabled = false }) {
+
+    const handleSetState = (value) => {
+        if (value === "addNewGrade") {
+            setIsShowGradeDialog(true);
+        }
+        if (value === "addNewSubject") {
+            setIsShowSubjectDialog(true);
+        }
+        setState(value)
+    }
 
     return (
         <Box sx={{ display: "flex", flexDirection: "column", height: "auto", width: "100%", minWidth: "300px", alignItems: "flex-start" }}>
             <InputLabel sx={{ marginBottom: "10px", color: "primary.light", fontSize: "18px", textAlign: "left" }}>{label}</InputLabel>
-            <FormControl variant="outlined"  style={{ width: "100%", height: "50px", fontSize: "16px", borderRadius: "10px" }} disabled={isDisabled}>
+            <FormControl variant="outlined" style={{ width: "100%", height: "50px", fontSize: "16px", borderRadius: "10px" }} disabled={isDisabled}>
                 <Select
                     value={state}
-                    onChange={(e) => setState(e.target.value)}
+                    onChange={(e) => handleSetState(e.target.value)}
                     required
                     sx={{
                         width: "100%", height: "50px", fontSize: "16px", borderRadius: "10px",
@@ -30,7 +40,7 @@ export default function SelectField({ label,  errorStatus, errorMessage, state, 
                     {
                         children
                     }
-                   
+
                 </Select>
             </FormControl>
             {errorStatus ?

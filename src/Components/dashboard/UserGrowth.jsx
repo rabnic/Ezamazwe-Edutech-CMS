@@ -96,7 +96,7 @@ const useChartOptions = () => {
         },
         yaxis: {
             labels: {
-                formatter: (value) => (value > 0 ? `${value}K` : `${value}`),
+                formatter: (value) => (value > 1000 ? `${value}K` : `${value}`),
                 offsetX: -10,
                 style: {
                     colors: theme.palette.text.secondary
@@ -134,7 +134,7 @@ export const UserGrowthOverview = (props) => {
                         Sync
                     </Button>
                 )}
-                title="User Growth Prev-Current Year"
+                title="User Growth "
             />
             <CardContent>
                 <Chart

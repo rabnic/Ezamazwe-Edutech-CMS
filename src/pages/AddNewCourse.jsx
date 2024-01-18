@@ -11,6 +11,8 @@ import { getCategoryData, saveCourseToFirestore } from '../services/firebase'
 import SelectField from '../Components/SelectField'
 import { Delete, Edit } from '@mui/icons-material'
 import SnackBar from '../Components/SnackBar';
+import AddNewGradeDialog from '../Components/AddGradeDialog';
+import AddNewSubjectDialog from '../Components/AddSubjectDialog';
 
 
 function AddNewCourse() {
@@ -31,21 +33,36 @@ function AddNewCourse() {
   const [openModal, setOpenModal] = useState(false)
   const [isLoading, setIsloading] = useState(false);
 
-  const [categories, setCategories] = useState()
+  const [categories, setCategories] = useState([])
 
   const [selectedCategory, setSelectedCategory] = useState("")
   const [selectedGrade, setSelectedGrade] = useState("")
   const [selectedSubject, setSelectedSubject] = useState("")
   const [snackBarStatus, setSnackBarStatus] = useState({ isOpen: false })
 
+  const [isShowGradeDialog, setIsShowGradeDialog] = useState(false);
+  const [isShowSubjectDialog, setIsShowSubjectDialog] = useState(false);
+
   useEffect(() => {
-    const category = async () => {
-      await getCategoryData().then(data => {
-        setCategories(data)
-      })
-    }
-    category()
+    fetchCategoryData()
   }, [])
+
+  useEffect(() => {
+    setSelectedSubject("")
+  }, [selectedGrade])
+
+  useEffect(() => {
+    setSelectedSubject("")
+    setSelectedGrade("")
+  }, [selectedCategory])
+
+
+
+  const fetchCategoryData = async () => {
+    await getCategoryData().then(data => {
+      setCategories(data)
+    })
+  }
 
   const categoryNames = () => {
     return Object.keys(categories).map(key => {
@@ -329,7 +346,7 @@ function AddNewCourse() {
                   );
                 })}
             </SelectField>
-            <SelectField inputLabel={"Select Grade"} label={"Course Grade:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedGrade} state={selectedGrade} isDisabled={selectedCategory === ""}>
+            <SelectField inputLabel={"Select Grade"} label={"Course Grade:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedGrade} setIsShowGradeDialog={setIsShowGradeDialog} state={selectedGrade} isDisabled={selectedCategory === ""}>
               {selectedCategory && grades(selectedCategory).map((value, index) => {
                 console.log(value, index)
                 return (
@@ -338,8 +355,11 @@ function AddNewCourse() {
                   </MenuItem>
                 );
               })}
+              <MenuItem key={grades(selectedCategory).length} value={"addNewGrade"}>
+                * Add New Item
+              </MenuItem>
             </SelectField>
-            <SelectField inputLabel={"Select Subject"} label={"Course Subject:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedSubject} state={selectedSubject} isDisabled={selectedCategory === "" || selectedGrade === ""}>
+            <SelectField inputLabel={"Select Subject"} label={"Course Subject:"} errorStatus={validations.courseCategory.errorStatus} errorMessage={validations.courseCategory.errorMessage} setState={setSelectedSubject} setIsShowSubjectDialog={setIsShowSubjectDialog} state={selectedSubject} isDisabled={selectedCategory === "" || selectedGrade === "" || selectedGrade === "addNewGrade"}>
               {selectedCategory &&
                 selectedGrade &&
                 subjects(selectedCategory, selectedGrade).map((value, index) => {
@@ -349,8 +369,19 @@ function AddNewCourse() {
                     </MenuItem>
                   );
                 })}
+              <MenuItem key={subjects(selectedCategory, selectedGrade).length} value={"addNewSubject"}>
+                * Add New Item
+              </MenuItem>
             </SelectField>
           </Box>
+          {
+            isShowGradeDialog &&
+            <AddNewGradeDialog isShowGradeDialog={isShowGradeDialog} setIsShowGradeDialog={setIsShowGradeDialog} categoryID={selectedCategory} refreshData={fetchCategoryData} />
+          }
+          {
+            isShowSubjectDialog &&
+            <AddNewSubjectDialog isShowSubjectDialog={isShowSubjectDialog} setIsShowSubjectDialog={setIsShowSubjectDialog} gradeKey={selectedGrade} categoryID={selectedCategory} refreshData={fetchCategoryData} />
+          }
           <Box>
             <TextFields isOutComes={true} show={show} label={"Learning Outcomes:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLink} state={supportingLink} addOutcomes={setSavedLearningOutcomes} editOutcome={() => { UpdateOutcomes(supportingLink) }} />
             {

@@ -6,7 +6,7 @@ import { initializeApp } from "firebase/app";
 
 import { initializeAuth, get, signInWithEmailAndPassword, EmailAuthProvider, signOut, reauthenticateWithCredential, updatePassword, onAuthStateChanged, getIdTokenResult, signOut as signOutFirebase } from 'firebase/auth';
 import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage"
-import { addDoc, collection, doc, documentId, getDoc, getDocs, getFirestore, setDoc, query, where, deleteDoc, updateDoc } from "firebase/firestore";
+import { addDoc, collection, doc, documentId, getDoc, getDocs, getFirestore, setDoc, query, where, deleteDoc, updateDoc, arrayUnion } from "firebase/firestore";
 
 import { getAuth } from 'firebase/auth'
 // TODO: Add SDKs for Firebase products that you want to use
@@ -528,6 +528,65 @@ export const getCategoryData = async () => {
   } catch (error) {
 
     console.error("Error fetching collection", error);
+  }
+}
+
+export const getUsers = async () => {
+  //get data from database 
+  // console.log("before try");
+
+  try {
+    const data = await getDocs(collection(database, "users"));
+
+    const usersData = data.docs.map((doc) => ({
+
+      //this fucntion  returns the values in the collection
+      ...doc.data(),
+      id: doc.id
+    }));
+
+    return usersData
+
+  } catch (error) {
+
+    console.error("Error fetching collection", error);
+  }
+}
+
+export const addNewGradesToDB = async (categoryID, newGrades) => {
+  try {
+    // Get a reference to the document
+    const docRef = doc(database, 'Content', categoryID);
+
+    // To add multiple elements to the array
+    await updateDoc(docRef, {
+      grades: arrayUnion(...newGrades)
+    });
+  } catch (error) {
+    console.log("Error saving grades", error)
+  }
+}
+
+export const addNewSubjectsToDB = async (categoryID, gradeKey, newSubjects) => {
+  try {
+
+    // Get a reference to the document
+    const docRef = doc(database, 'Content', categoryID);
+
+    // To add multiple elements to the array
+    // await updateDoc(docRef, {
+    //   subjects: { [gradeKey]: arrayUnion(...newSubjects) }
+    // });
+    await updateDoc(docRef, {
+      [`subjects.${gradeKey}`]: arrayUnion(...newSubjects)
+    });
+    // Get a reference to the document
+    // const docRef = doc(database, 'Content', categoryID);
+
+    // To add multiple elements to the array
+
+  } catch (error) {
+    console.log("Error saving grades", error)
   }
 }
 
