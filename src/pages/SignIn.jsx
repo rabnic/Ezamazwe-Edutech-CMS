@@ -1,5 +1,5 @@
 import { Alert, Box, Paper, useMediaQuery } from '@mui/material'
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import SectionHeading from '../Components/SectionHeading'
 import SectionSubHeading from '../Components/SectionSubHeading'
 import TextFields, { TextFieldPassword } from '../Components/TextFields';
@@ -42,7 +42,6 @@ export default function SignIn() {
 
     try {
       setIsloading(true);
-      // console.time("Sign-in")
 
       const response = await AdminLogin(email, password)
       console.log("response", response)
@@ -72,7 +71,6 @@ export default function SignIn() {
                 admin: customClaims.admin,
                 permissions: customClaims.permissions
               }
-              // console.log("Custom obj",  adminData );
               setStatusAlert(
                 {
                   show: true,
@@ -130,7 +128,6 @@ export default function SignIn() {
     } catch (error) {
 
     } finally {
-      // console.timeEnd("Sign-in")
 
       setIsloading(false)
     }

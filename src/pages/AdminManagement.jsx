@@ -1,18 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import Button from '../Components/Buttons';
 import { Alert, Box, IconButton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, styled, tableCellClasses, } from '@mui/material';
-// import { IconButton } from '@mui/material';
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import EditIcon from '@mui/icons-material/Edit';
 import Paper from '@mui/material/Paper';
 import TextFields from '../Components/TextFields';
-import PageHeading from '../Components/PageHeading';
-import PageSubHeading from '../Components/PageSubHeading';
 import PageHeadingContainer from '../Components/PageHeadingContainer';
-import PhoneNumber, { parsePhoneNumberFromString } from 'libphonenumber-js';
+import  { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { createNewAdmin, database, deleteAdminAccount, updateAdminDetails } from '../services/firebase';
-import TableLayout from '../Components/TableLayout';
-import { addDoc, collection, deleteDoc, doc, getDocs, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, getDocs } from 'firebase/firestore';
 import AlertDialog from '../Components/AlertDialog';
 
 
@@ -27,7 +23,6 @@ function AdminManagement() {
     const [isDeleteConfirmed, setIsDeleteConfirmed] = useState(false)
     const [isUnderEdit, setIsUnderEdit] = useState(false)
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const phoneNumberRegex = /^(\+27|0)[1-9]\d{8}$/;
 
     const [adminList, setAdminList] = useState([]);
     const [id, setID] = useState('')
@@ -61,7 +56,6 @@ function AdminManagement() {
         '&:nth-of-type(odd)': {
             backgroundColor: theme.palette.action.hover,
         },
-        // hide last border
         '&:last-child td, &:last-child th': {
             border: 0,
         },
@@ -100,24 +94,18 @@ function AdminManagement() {
 
     const warningMessages = ["* Input is required", "* Incorrect email or password", "* Invalid email", "* Please enter a 10-digit number starting with +27."]
 
-    // Invalid phone number. Please enter a 10-digit number starting with +27.
 
-    //creates new admin
     const newUsers = async (e,) => {
 
         e.preventDefault();
 
         alert("User has been registered successfully")
 
-        // CreateNewUser(email, firstName, lastName, phoneNumber, role, image)
         const newAdmin = { fullName: fullName, phoneNumber: phoneNumber, email: email, }
         await addDoc(adminCollection, { fullName: fullName, phoneNumber: phoneNumber, email: email, })
-        // const docRef = await setDoc(doc(database, "admins", email), newAdmin)
-        // console.log("Doc Reff ===== ",docRef);
 
     };
 
-    //deletes admin
     const deleteAdmin = async (id) => {
 
         try {
@@ -132,7 +120,6 @@ function AdminManagement() {
 
     }
 
-    //edit admin
     const editAdmin = async (id, fullName, phoneNumber, email,) => {
         setFullName(fullName)
         setEmail(email)
@@ -144,7 +131,6 @@ function AdminManagement() {
     };
 
 
-    //udates admin with new information
     const handleUpdateAdmin = async () => {
 
         const allFieldsValid = validateInput()
@@ -197,28 +183,22 @@ function AdminManagement() {
         } finally {
             setIsloading(false)
         }
-        // alert("Item was updated")
-        // setShow(false)
     };
 
 
-    //gets information from firestore
     const getAdminList = async () => {
 
-        //get data from database 
         try {
             const data = await getDocs(adminCollection);
 
             const filtereddata = data.docs.map((doc) => ({
 
-                //this fucntion  returns the values in the collection
                 ...doc.data(),
                 id: doc.id,
 
             }));
 
             setAdminList(filtereddata);
-            // setShoppingList(data);
 
             console.log(filtereddata);
         } catch (error) {
@@ -347,7 +327,6 @@ function AdminManagement() {
 
 
     const handleToggleForm = () => {
-        // console.log(isShowForm)
         setIsShowForm(!isShowForm)
     }
     return (
@@ -405,18 +384,15 @@ function AdminManagement() {
                                 <StyledTableCell >FullName</StyledTableCell>
                                 <StyledTableCell >Phone Number</StyledTableCell>
                                 <StyledTableCell >Email Address</StyledTableCell>
-                                {/* <StyledTableCell >Role</StyledTableCell> */}
                                 <StyledTableCell >Actions</StyledTableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
                             {adminList.map((data) => (
                                 <StyledTableRow key={data.email}>
-                                    {/* <StyledTableCell >{data.firstName}</StyledTableCell> */}
                                     <StyledTableCell >{data.fullName || data.firstName}</StyledTableCell>
                                     <StyledTableCell >{data.phoneNumber}</StyledTableCell>
                                     <StyledTableCell >{data.email}</StyledTableCell>
-                                    {/* <StyledTableCell >{data.protein}</StyledTableCell> */}
                                     <StyledTableCell sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
                                         <IconButton onClick={() => editAdmin(data.id, data.fullName, data.phoneNumber, data.email)}>
                                             <EditIcon />

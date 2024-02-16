@@ -1,7 +1,5 @@
 import { Box } from '@mui/material'
 import React from 'react'
-import PageHeading from '../Components/PageHeading'
-import PageSubHeading from '../Components/PageSubHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
 
 function TutorApplications() {

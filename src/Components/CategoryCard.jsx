@@ -8,14 +8,11 @@ function CategoryCard({ children, uri, category, path }) {
   return (
     <Box onClick={() => { navigate(path) }}
       sx={{
-        // maxWidth: "100%",
         maxHeight: "500px",
         height: "300px",
-        // width: "100%",
         borderRadius: "15px",
         backgroundSize: "cover",
         backgroundPosition: "center",
-        // backgroundImage: `url(${require(`../assets/${category}`)})`,
         backgroundImage: `url(${uri})`,
         objectFit: "cover",
         gap: "50px",

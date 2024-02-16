@@ -7,7 +7,6 @@ function Courses() {
 
     const [categoryData, setCategoryData] = useState([]);
 
-    // Handles fetching courses category 
     const fetchCategoryData = async () => {
 
         try {
@@ -17,14 +16,13 @@ function Courses() {
                 ...doc.data()
             }));
             console.log("CollectionTest", data)
-            setCategoryData(data); // Update state with fetched data
+            setCategoryData(data); 
         } catch (error) {
             console.error('Error fetching Firestore data:', error);
         }
     };
 
     useEffect(() => {
-        // Call the function to fetch data
         fetchCategoryData();
     }, [])
 

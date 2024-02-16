@@ -13,7 +13,6 @@ import {
     styled,
     useTheme
 } from '@mui/material';
-// import { Chart } from 'src/components/chart';
 import { Chart } from './Chart'
 
 const useChartOptions = (labels) => {

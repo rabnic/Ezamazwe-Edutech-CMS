@@ -1,7 +1,5 @@
 import * as React from 'react';
 import InputLabel from '@mui/material/InputLabel';
-import { TextareaAutosize } from '@mui/base/TextareaAutosize';
-import { styled } from '@mui/system';
 import { Box, TextField } from '@mui/material';
 
 export default function TextareaField({ state, setState, errorStatus, errorMessage, label, }) {

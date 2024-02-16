@@ -3,8 +3,6 @@ import React, { useState } from 'react'
 import { TextFieldPassword } from '../Components/TextFields'
 import SectionSubHeading from '../Components/SectionSubHeading'
 import Button from '../Components/Buttons';
-import PageHeading from '../Components/PageHeading';
-import PageSubHeading from '../Components/PageSubHeading';
 import PageHeadingContainer from '../Components/PageHeadingContainer';
 import { ResetPasswordFunction, updatePasswordReset } from '../services/firebase';
 import { useAdminContext } from '../context/adminContext';

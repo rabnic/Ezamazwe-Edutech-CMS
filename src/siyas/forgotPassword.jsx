@@ -11,7 +11,7 @@ export default function forgotPassword() {
         try {
             await ForgotPasswordFunction(email);
             alert("Password updated successfully.")
-            navigate('/Login'); // Navigate to sign in page
+            navigate('/Login'); 
         } catch (error) {
             console.log("Unable to update password:", error);
         }
@@ -32,7 +32,6 @@ export default function forgotPassword() {
                     <button type="submit" onClick={forgotPassword}>Login</button>
                 </form>
 
-                {/* <p style={{ color: 'red' }}>{message}</p> */}
             </div>
         </>
     )

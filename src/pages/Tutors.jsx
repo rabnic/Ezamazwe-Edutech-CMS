@@ -19,7 +19,6 @@ function Tutors() {
     '&:nth-of-type(odd)': {
       backgroundColor: theme.palette.action.hover,
     },
-    // hide last border
     '&:last-child td, &:last-child th': {
       border: 0,
     },
@@ -55,7 +54,6 @@ function Tutors() {
                 <StyledTableCell >Phone Number</StyledTableCell>
                 <StyledTableCell >Email Address</StyledTableCell>
                 <StyledTableCell >Actions</StyledTableCell>
-                {/* <StyledTableCell >Role</StyledTableCell> */}
               </TableRow>
             </TableHead>
             <TableBody>
@@ -67,49 +65,10 @@ function Tutors() {
                     No Tutors are registered at the moment...
                   </Typography>
                 </TableCell>
-                {/* <TableCell rowSpan={5}>
-                  <Typography sx={{justifyContent:"center", alignItems: 'center', paddingTop: "30px", paddingLeft: "0px", fontSize: '15px' }}>
-                  No Tutors are registered at the moment...
-                  </Typography>
-                </TableCell>
-                <TableCell rowSpan={5}>
-                  <Typography sx={{justifyContent:"center", alignItems: 'center', paddingTop: "30px", paddingLeft: "0px", fontSize: '15px' }}>
-                  No Tutors are registered at the moment...
-                  </Typography>
-                </TableCell>
-                <TableCell rowSpan={5}>
-                  <Typography sx={{justifyContent:"center", alignItems: 'center', paddingTop: "30px", paddingLeft: "0px", fontSize: '15px' }}>
-                  No Tutors are registered at the moment...
-                  </Typography>
-                </TableCell> */}
               </TableRow>
-
-
-              {/* {/* {adminList.map((data) => ( 
-              <StyledTableRow key={data.email}>*/}
-              {/* <StyledTableRow rowSpan={4} >
-               <StyledTableCell  rowSpan={4}> <Typography sx={{ alignSelf: 'center', paddingTop: "50px", fontSize: '15px' }}>No Tutors are registered at the moment...</Typography></StyledTableCell>
-              </StyledTableRow> */}
-
-              {/* <StyledTableCell >{data.fullName || data.firstName}</StyledTableCell>
-                                    <StyledTableCell >{data.phoneNumber}</StyledTableCell>
-                                    <StyledTableCell >{data.email}</StyledTableCell>
-                                    
-                                    <StyledTableCell sx={{ display: "flex", flexDirection: "row", gap: 3 }}>
-                                        <IconButton onClick={() => editAdmin(data.id, data.fullName, data.phoneNumber, data.email)}>
-                                            <EditIcon />
-                                        </IconButton>
-
-                                        <IconButton onClick={() => { setID(data.id); setIsAlertDialogOpen(true) }}>
-                                            <DeleteForeverIcon />
-                                        </IconButton>
-                                    </StyledTableCell>
-                                </StyledTableRow>
-  ))} */}
             </TableBody>
           </Table>
         </TableContainer>
-        {/* <Typography sx={{ alignSelf: 'center', paddingTop: "200px", fontSize: '20px' }}>No Tutors are registered at the moment...</Typography> */}
 
       </Box>
 

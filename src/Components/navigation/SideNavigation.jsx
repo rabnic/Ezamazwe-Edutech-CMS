@@ -38,14 +38,11 @@ function SideNavigation() {
   const paths = location.pathname.split("/").slice(1)
   const currentPath = paths[0]
 
-  // console.log("currentPath", currentPath, paths)
   const [activeTab, setActiveTab] = useState(routePaths[currentPath]);
-  // console.log("activeTab", activeTab)
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // console.log('Current path', currentPath)
     if (activeTab !== currentPath) {
       setActiveTab(routePaths[currentPath])
     }

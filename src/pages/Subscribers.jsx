@@ -1,7 +1,5 @@
 import { Box, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-import PageHeading from '../Components/PageHeading'
-import PageSubHeading from '../Components/PageSubHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
 import PropTypes from 'prop-types';
 import Tabs from '@mui/material/Tabs';
@@ -52,30 +50,15 @@ const columns = [
 
     label: 'Phone Number',
     minWidth: 100,
-    // align: 'right',
 
   },
   {
 
     label: 'Email Address',
     minWidth: 100,
-    // align: 'right',
 
   },
-  // {
-  //   id: 'density',
-  //   label: 'Subscription',
-  //   minWidth: 100,
-  //   align: 'right',
-  //   format: (value) => value.toFixed(2),
-  // },
-  // {
-  //   id: 'density',
-  //   label: 'Expiry Date',
-  //   minWidth: 100,
-  //   align: 'right',
-  //   format: (value) => value.toFixed(2),
-  // },
+
 ];
 
 function createData(name, code, population, size) {
@@ -117,7 +100,6 @@ function Subscribers() {
 
 
   useEffect(() => {
-    // getUsersList()
     getSubscribedUsersList()
     getUnsubscribedUsersList()
     handleChange(value,value)
@@ -133,7 +115,7 @@ function Subscribers() {
           ...doc.data(),
           id: doc.id,
         }))
-        .filter((user) => user.subscription === 'subscribed'); // Modify this line to match your subscription field condition
+        .filter((user) => user.subscription === 'subscribed'); 
 
       setSubscribedUserList(filteredData);
 
@@ -152,7 +134,7 @@ function Subscribers() {
           ...doc.data(),
           id: doc.id,
         }))
-        .filter((user) => user.subscription === 'unsubscribed'); // Modify this line to match your subscription field condition
+        .filter((user) => user.subscription === 'unsubscribed'); 
 
       setUnsubscribedUserList(filteredData);
 
@@ -213,7 +195,6 @@ function Subscribers() {
                 </TableHead>
                 <TableBody>
                   {
-                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     subscribedUserList.map((data, index) => {
                       return (
                         <TableRow hover role="checkbox" tabIndex={-1} key={index}>
@@ -221,7 +202,6 @@ function Subscribers() {
                           <TableCell>{data.lastName}</TableCell>
                           <TableCell>{data.phoneNum}</TableCell>
                           <TableCell>{data.email}</TableCell>
-                          {/* <TableCell>{data.subscription}</TableCell> */}
                         </TableRow>
                       );
                     })}
@@ -257,7 +237,6 @@ function Subscribers() {
                 </TableHead>
                 <TableBody>
                   {
-                    // .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                     unsubscribedUserList.map((data, index) => {
                       return (
                         <TableRow hover role="checkbox" tabIndex={-1} key={index}>
@@ -265,7 +244,6 @@ function Subscribers() {
                           <TableCell>{data.lastName}</TableCell>
                           <TableCell>{data.phoneNum}</TableCell>
                           <TableCell>{data.email}</TableCell>
-                          {/* <TableCell>{data.subscription}</TableCell> */}
                         </TableRow>
                       );
                     })}

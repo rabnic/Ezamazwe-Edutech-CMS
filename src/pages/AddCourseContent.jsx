@@ -1,24 +1,18 @@
-import { Box, Button as ButtonMUI, Drawer, Paper, TextField, Typography, styled, useMediaQuery } from '@mui/material'
+import { Box, Button as ButtonMUI, Drawer, Typography, styled, useMediaQuery } from '@mui/material'
 import React, { useState } from 'react'
-import PageHeading from '../Components/PageHeading'
-import PageSubHeading from '../Components/PageSubHeading'
-import PageHeadingContainer from '../Components/PageHeadingContainer'
-import TextFields, { DocumentField, SelectField, TextFieldPassword } from '../Components/TextFields'
-import { Add, ArrowBack, ArrowBackRounded, BackHand, Cancel, CloseRounded, Delete, Done, Edit, PlayArrow, PlayArrowRounded, PlayCircleFilledWhiteRounded } from '@mui/icons-material'
+import { Add, ArrowBackRounded, Cancel, Delete, Edit, PlayArrow, PlayArrowRounded } from '@mui/icons-material'
 import backgroundImage from '../assets/placeholderImg.png'
-import MediaFields from '../Components/AddMedia'
 import InputFileUpload from '../Components/InputFileUpload'
 import Button from '../Components/Buttons';
-import PriorityHighIcon from '@mui/icons-material/PriorityHigh';
-import DoneIcon from '@mui/icons-material/Done';
 import SaveIcon from '@mui/icons-material/Save';
 import IconButton from '@mui/material/IconButton';
 import CircleIcon from '@mui/icons-material/Circle';
 import CircleOutlinedIcon from '@mui/icons-material/CircleOutlined';
 import MenuIcon from '@mui/icons-material/Menu';
-import { saveCourseToFirestore, saveLessonToFirestore, saveTopicToFirestore, updateVideosWithFirebaseURLs, uploadAllVideos, uploadCourseVideos, uploadLessonSupportingDocs } from '../services/firebase'
+import { saveLessonToFirestore, saveTopicToFirestore, uploadCourseVideos, uploadLessonSupportingDocs } from '../services/firebase'
 import SnackBar from '../Components/SnackBar'
 import AlertDialogCourseContent from '../Components/CourseContentAlertDialog'
+import TextFields from '../Components/TextFields'
 
 
 function AddCourseContent({ setOpenModal, courseDocumentId, setCourseDocumentId }) {
@@ -29,7 +23,6 @@ function AddCourseContent({ setOpenModal, courseDocumentId, setCourseDocumentId 
     const [courseCategory, setCourseCategory] = useState("")
     const [grade, setGrade] = useState("")
     const [subject, setSubject] = useState("")
-    // const [supportingLinks, setSupportingLinks] = useState("")
     const [supportingDocuments, setSupportingDocuments] = useState([])
     const [showBox, setShowBox] = useState(false);
     const [HideBox, setHideBox] = useState(true)
@@ -55,14 +48,12 @@ function AddCourseContent({ setOpenModal, courseDocumentId, setCourseDocumentId 
 
     const handleAddButtonClick = async () => {
         if (lessonName?.trim() === "") {
-            // alert("Lesson name required!");
             setSnackBarStatus({ isOpen: true, message: "Lesson name required!", severity: "warning" })
 
             return;
         }
 
         if (videos.length === 0) {
-            // alert("Please select videos for this lesson");
             setSnackBarStatus({ isOpen: true, message: "Please select videos for this lesson", severity: "warning" })
 
             return;
@@ -321,7 +312,6 @@ function AddCourseContent({ setOpenModal, courseDocumentId, setCourseDocumentId 
 
     const handleSaveTopic = async () => {
         if (selectedVideoIndex === undefined) {
-            // alert('Please select a video to be linked to this topic');
             setSnackBarStatus({ isOpen: true, message: "Please select a video to be linked to this topic", severity: "warning" })
             return;
         }
@@ -359,7 +349,6 @@ function AddCourseContent({ setOpenModal, courseDocumentId, setCourseDocumentId 
         try {
             setIsloading(true);
             if (!lessonDocumentID) {
-                // alert("You need to add lesson and content");
                 setSnackBarStatus({ isOpen: true, message: "Please create at least one lesson", severity: "error" })
                 return;
             }
@@ -484,11 +473,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId, setCourseDocumentId 
                                         }
 
                                     </Box>
-                                    {/* <ButtonMUI startIcon={<Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />} variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
-                                    <VisuallyHiddenInput type="file" />
-                                    Add More
-                                    <VisuallyHiddenInput type="file" />
-                                </ButtonMUI> */}
+                                   
                                     <ButtonMUI component="label" variant="text" startIcon={<Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />} sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }}>
                                         Add More
                                         <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
@@ -519,10 +504,7 @@ function AddCourseContent({ setOpenModal, courseDocumentId, setCourseDocumentId 
                                 }
 
                             </Box>
-                            {/* <ButtonMUI variant="text" sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }} >
-                            <Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />
-                            Add More
-                        </ButtonMUI> */}
+                          
                             <ButtonMUI component="label" variant="text" startIcon={<Add sx={{ backgroundColor: "#fff", color: "primary.light", borderRadius: 100 }} />} sx={{ display: "flex", flexDirection: "row", alignItems: "center", gap: "10px", width: "100%", marginBottom: "20px", justifyContent: "center", color: "#fff", textTransform: 'none', }}>
                                 Add More
                                 <VisuallyHiddenInput type="file" multiple onChange={handleFileChange} />
@@ -596,7 +578,6 @@ function AddCourseContent({ setOpenModal, courseDocumentId, setCourseDocumentId 
                                             <TextFields isOutComes={false} label={"Topic Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setTopicName} state={topicName} />
 
                                         </Box>
-                                        {/* <TextFields label={"Supporting Links:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLinks} state={supportingLinks} /> */}
                                         <Box>
                                             <TextFields isOutComes={true} show={show} label={"SupportingLinks:"} errorStatus={validations.learningOutComes.errorStatus} errorMessage={validations.learningOutComes.errorMessage} setState={setSupportingLinkText} state={supportingLinkText} addOutcomes={setSupportingLinks} editOutcome={() => { UpdateOutcomes(supportingLinkText) }} />
                                             <Typography variant='h6' sx={{ color: "primary.light", fontSize: "18px", fontWeight: "500" }}>Supporting Links</Typography>

@@ -3,9 +3,6 @@ import React, { useEffect, useState } from "react";
 import PageHeadingContainer from "../Components/PageHeadingContainer";
 import CategoryCard from "../Components/CategoryCard";
 import CourseHeading from "../Components/CourseHeading";
-import CourseGrades from "./CourseGrades";
-import CourseSubjects from "./CourseSubjects";
-import CourseList from "./CourseList"
 import { useLocation } from "react-router-dom";
 import { getCategoryData } from "../services/firebase";
 import Breadcrumb from "../Components/navigation/Breadcrumb";
@@ -31,8 +28,6 @@ function Courses() {
   }
 
   if (true) {
-    // console.log("Categories", categoryNames())
-    // console.log("Categories", categories)
   }
 
   return (
@@ -67,7 +62,6 @@ function Courses() {
 
             {
               categoryNames().map((category, index) => {
-                // console.log('---------------------', category)
                 const key = category[0];
                 return (
                   <Grid item xs={12} md={index <= 1 ? 6 : 12} key={index} >
@@ -80,36 +74,7 @@ function Courses() {
             }
           </Grid>
         </Box>
-        {/* <Box
-          sx={{
-            display: "flex",
-            flexDirection: { xs: "column", sm: "row", lg: "row" },
-            justifyContent: "center",
-            marginLeft: "auto",
-            marginRight: "auto",
-          }}
-        >
-          <CategoryCard category={"Caps.png"}>
-            <CourseHeading>CAPS.</CourseHeading>
-          </CategoryCard>
-          <CategoryCard category={"IEB.png"}>
-            <CourseHeading>IEB.</CourseHeading>
-          </CategoryCard>
-        </Box> */}
-
-        {/* <Box
-          sx={{
-            display: "flex",
-            width: "100%",
-            justifyContent: "center",
-            marginLeft: { xs: "15px", sm: "0px", md: "0px", lg: "0px" },
-          }}
-        >
-          <CategoryCard category={"Entrepreneur.png"}>
-            <CourseHeading>Entrepreneur.</CourseHeading>
-          </CategoryCard>
-        </Box> */}
-
+        
       </Box>
 
     </Box>

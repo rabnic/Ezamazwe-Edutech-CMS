@@ -1,11 +1,8 @@
 import React, { useState } from 'react';
 import { Button as ButtonMUI, CircularProgress, IconButton, List, ListItem, ListItemText, Stack } from '@mui/material';
-import Button from './Buttons';
-import TextField from '@mui/material/TextField';
 import Dialog from '@mui/material/Dialog';
 import DialogActions from '@mui/material/DialogActions';
 import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import AddIcon from '@mui/icons-material/Add';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -62,7 +59,6 @@ export default function AddNewGradeDialog({ categoryID, refreshData, isShowGrade
                 onSubmit: (event) => {
                     event.preventDefault();
 
-                    // setIsShowGradeDialog(false);
                 },
             }}
         >
@@ -107,7 +103,6 @@ export default function AddNewGradeDialog({ categoryID, refreshData, isShowGrade
                 <ButtonMUI endIcon={isLoading ? <CircularProgress thickness={6} color="primary" size={18} /> : null} disabled={newGrades.length === 0} onClick={saveGrades}>
                     {isLoading ? null : "Save"}
                 </ButtonMUI>
-                {/* <Button text={"Save"} buttonFunction={() => { }} isIconButton={true} iconType='loader' /> */}
 
             </DialogActions>
         </Dialog>

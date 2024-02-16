@@ -1,5 +1,4 @@
 import PropTypes from 'prop-types';
-// import CurrencyDollarIcon from '@heroicons/react/24/solid/CurrencyDollarIcon';
 import ArrowDownIcon from '@heroicons/react/24/solid/ArrowDownIcon';
 import ArrowUpIcon from '@heroicons/react/24/solid/ArrowUpIcon';
 import ArrowsUpDownIcon from '@heroicons/react/24/solid/ArrowsUpDownIcon';

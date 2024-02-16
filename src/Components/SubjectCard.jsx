@@ -4,16 +4,7 @@ import PlayArrowSharpIcon from "@mui/icons-material/PlayArrowSharp";
 
 function SubjectCard({ children, Topic, category, Duration, Description }) {
   return (
-    // <Box
-    //   sx={{
-    //     justifyContent: "center",
-    //     alignItems: "center",
-    //     width: "100%",
-    //     height: "auto",
-    //     padding: "10px",
-
-    //   }}
-    // >
+   
     <Box
       sx={{
         display: "flex",
@@ -24,7 +15,6 @@ function SubjectCard({ children, Topic, category, Duration, Description }) {
         justifyContent: "center",
       }}
     >
-      {/* The box for the images that are on the left */}
       <Box
         sx={{
           display: "flex",
@@ -70,7 +60,6 @@ function SubjectCard({ children, Topic, category, Duration, Description }) {
 
       <Box
         sx={{
-          // width: { xs: "60%", sm: "60%", md: "70%", lg: "100%", xl: "100%" },
           width: "70%",
           height: "205px",
           borderTopRightRadius: "10px",
@@ -143,7 +132,6 @@ function SubjectCard({ children, Topic, category, Duration, Description }) {
         {children}
       </Box>
     </Box>
-    // </Box>
   );
 }
 

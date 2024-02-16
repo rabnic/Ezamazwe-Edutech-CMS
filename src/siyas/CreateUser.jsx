@@ -44,14 +44,12 @@ export default function CreateUser() {
 
 
 
-    // onSubmit={handleCreateUser} images:images 
 
     useEffect(() => {
         getAdminList()
     }, [])
 
 
-    //creates new admin
     const newUsers = async (e,) => {
 
         e.preventDefault();
@@ -60,14 +58,12 @@ export default function CreateUser() {
 
         CreateNewUser(email, firstName, lastName, phoneNumber, role, image)
         const newAdmin = { firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, image: uri, passwordChanged: passwordChanged }
-        // await addDoc(adminCollection, { firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, image: uri, passwordChanged: passwordChanged })
         const docRef = await setDoc(doc(database, "admins", email), newAdmin)
         console.log("Doc Reff ===== ",docRef);
 
     };
 
 
-    //deletes admin
     const deleteAdmin = async (id) => {
 
         const admin = doc(database, "admins", id);
@@ -76,7 +72,6 @@ export default function CreateUser() {
 
     }
 
-    //edit admin
     const editAdmin = async (id, email, firstName, lastName, phoneNumber, role) => {
         setEmail(email)
         setFirstName(firstName)
@@ -86,48 +81,36 @@ export default function CreateUser() {
         setPasswordChanged(passwordChanged)
         setID(id)
 
-        // setShow(true)
 
         const shopItem = doc(database, "List", id);
-        // await updateDoc(shopItem, { Item: updatedItem });
 
 
     };
 
 
-    //udates admin with new information
     const updateAdmin = async () => {
-        // setItem(item)
-        // setQuantity(quantity)
-        // setID(id)
 
         const shopItem = doc(database, "List", id);
-        // await updateDoc(shopItem, { Item: updatedItem });
         await updateDoc(shopItem, { firstName: firstName, lastName: lastName, phoneNumber: phoneNumber, email: email, role: role, });
         alert("Item was updated")
-        // setShow(false)
 
 
     };
 
 
-    //gets information from firestore
     const getAdminList = async () => {
 
-        //get data from database 
         try {
             const data = await getDocs(adminCollection);
 
             const filtereddata = data.docs.map((doc) => ({
 
-                //this fucntion  returns the values in the collection
                 ...doc.data(),
                 id: doc.id,
 
             }));
 
             setAdminList(filtereddata);
-            // setShoppingList(data);
 
             console.log(filtereddata);
         } catch (error) {
@@ -165,21 +148,18 @@ export default function CreateUser() {
                     <input
                         value={firstName}
                         onChange={e => setFirstName(e.target.value)}
-                    // type='email'
                     />
 
                     <label>Last name:</label>
                     <input
                         value={lastName}
                         onChange={e => setLastName(e.target.value)}
-                    // type='email'
                     />
 
                     <label>phone:</label>
                     <input
                         value={phoneNumber}
                         onChange={e => setPhoneNumber(e.target.value)}
-                    // type='email'
                     />
 
                     <label>Email address:</label>
@@ -189,11 +169,6 @@ export default function CreateUser() {
                         type='email'
                     />
 
-                    {/* <input
-               value={email}
-               onChange={e => setEmail(e.target.value)}
-               type='email'
-           /> */}
                     <label>Select role:</label>
 
                     <select

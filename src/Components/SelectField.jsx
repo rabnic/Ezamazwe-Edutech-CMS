@@ -1,9 +1,6 @@
 import InputLabel from '@mui/material/InputLabel';
-import { Box, FormControl, IconButton, InputAdornment, Link, MenuItem, OutlinedInput, Select, Typography } from '@mui/material';
-import { useState } from 'react';
-import { Visibility, VisibilityOff } from '@mui/icons-material';
+import { Box, FormControl, Select} from '@mui/material';
 
-import { useNavigate } from 'react-router-dom';
 
 
 export default function SelectField({ label, errorStatus, errorMessage, state, setState, children, setIsShowGradeDialog = null, setIsShowSubjectDialog = null, isDisabled = false }) {
@@ -49,9 +46,3 @@ export default function SelectField({ label, errorStatus, errorMessage, state, s
         </Box>
     )
 }
-//  <MenuItem key={1} value="test1">
-//                         Test 1
-//                     </MenuItem>
-//                     <MenuItem key={2} value="test2">
-//                         Test 2
-//                     </MenuItem>

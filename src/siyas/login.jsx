@@ -1,8 +1,7 @@
-import { doc, getDoc, setDoc } from 'firebase/firestore';
 import React, { useState } from 'react'
-import { AdminLogin, auth, database, logout } from '../services/firebase';
-import { Router, Routes, Route, useNavigate } from 'react-router-dom'
-import { signInWithCredential, signInWithEmailAndPassword } from 'firebase/auth';
+import { AdminLogin, auth} from '../services/firebase';
+import {  useNavigate } from 'react-router-dom'
+import { signInWithEmailAndPassword } from 'firebase/auth';
 
 export default function Login() {
 
@@ -18,11 +17,9 @@ export default function Login() {
 
     const navigate = useNavigate()
 
-    // function Login()  }onSubmit={AdminLogin}
 
     const handleInputChange = (e) => {
         setPassword(e.target.value);
-        // setEmail(e.target.value)
 
         if (!e.target.value) {
             setMessage(true);
@@ -31,28 +28,6 @@ export default function Login() {
         }
     };
 
-    // const getAdminDoc = async () => {
-
-    //     //get data from database 
-    //     try {
-    //         const data = await getDoc(adminCollection);
-
-    //         const filtereddata = data.docs.map((doc) => ({
-
-    //             //this fucntion  returns the values in the collection
-    //             ...doc.data(),
-    //             id: doc.id,
-
-    //         }));
-
-    //         setAdminList(filtereddata);
-    //         // setShoppingList(data);
-
-    //         console.log(filtereddata);
-    //     } catch (error) {
-    //         console.error("Error fetching collection", error);
-    //     }
-    // };
 
 
     const login = async (e) => {
@@ -62,7 +37,6 @@ export default function Login() {
 
         e.preventDefault();
 
-        // alert("User has been registered successfully")
 
 
 
@@ -70,7 +44,6 @@ export default function Login() {
             setMessage('The text input field is empty.');
         } else {
             setMessage('');
-            // Continue with form submission or any other actions you need
         }
 
 
@@ -80,8 +53,6 @@ export default function Login() {
         console.log(response);
 
         if (response.message === 'Authorized') {
-            // e.preventDefault();
-            // gotohomePage()
 
             signInWithEmailAndPassword(auth, email, password).then((data) => {
 
@@ -92,24 +63,10 @@ export default function Login() {
                 } else {
                     setMessage('');
                     alert("Successfully Logged in")
-                    // setUP()
 
-                    //if statement to see if the user has reset ther password
 
                     navigate("/Reset", { email: email, password: response.password })
 
-                    // if (data.user.customClaims.forcePasswordChange === true) {
-
-                    //     navigate("/ResetPassword", { email: data.email, password: data.password })
-
-                    // } else {
-
-                    //     navigate("/CreateAdmin")
-                    // }
-
-
-                    // navigate('/CreateAdmin')
-                    // Continue with form submission or any other actions you need
                 }
 
 
@@ -119,9 +76,6 @@ export default function Login() {
                 console.log(error);
 
                 alert("Cannot Login")
-                // document.getElementById('message').style.display = "block"
-                // document.getElementById('message').style.color = "red"
-                // document.getElementById('message').hidden = false
 
             })
 
@@ -142,120 +96,6 @@ export default function Login() {
 
     };
 
-
-    // const gotohomePage = async ((e) => {
-    //     e.preventDefault();
-
-    //    await signInWithEmailAndPassword(auth, email, password).then(() => {
-
-
-
-    //         alert("Successfully Logged in")
-    //         // setUP()
-    //         navigate('/CreateAdmin')
-
-    //     }).catch((error) => {
-
-    //         alert("Cannot Login")
-    //         // document.getElementById('message').style.display = "block"
-    //         // document.getElementById('message').style.color = "red"
-    //         // document.getElementById('message').hidden = false
-
-    //     })
-
-    // })
-
-    // const loginUser = (e) => {
-
-
-    //     e.preventDefault();
-    //     login().then(() => {
-    //         gotohomePage
-    //     })
-
-    // }
-
-
-    //  const logout = () => {
-
-    //     const auth = getAuth();
-    //     signOut(auth).then(() => {
-    //       alert("User has logged out Successfully")
-    //       navigate('/login')
-    //     })
-    //   }
-    // const AdminLogin = async (e, email, password, ) => {
-
-    //     e.preventDefault()
-
-    //     try {
-    //       fetch('https://ezamazwe-edutech-nodejs.onrender.com/admin-login', {
-
-    //         method: 'POST',
-    //         headers: {
-    //           'Content-Type': 'application/json',
-    //         },
-    //         body: JSON.stringify({ email: email, password: password}),
-
-    //       }).then( response => response.json()).then( data => {
-    //         // console.log(response);
-
-    //         // Handle the response data
-    //         if (data.message === 'Authorised') {
-
-    //           console.log('Admin:', data.message);
-
-    //           // Further actions for an authorized user
-
-    //           // signInWithEmailAndPassword(auth, email, password).then(() => {
-
-    //           //   alert("Successfully Logged in")
-    //           //   setUP()
-    //           //   navigate('/CreateUser', { email: data.email, password: data.password })
-    //           //   // navigate('/CreateUser')
-
-    //           // }).catch((error) => {
-
-    //           //   document.getElementById('message').style.display = "block"
-    //           //   document.getElementById('message').style.color = "red"
-    //           //   document.getElementById('message').hidden = false
-
-    //           // })
-
-    //         } else {
-
-    //           console.log('Not Admin:', data.message);
-    //           // Further actions for an unauthorized user
-
-
-    //           // alert('Sorry we cant log you into the administration portal')
-
-    //           //   signInWithEmailAndPassword(auth, email, password).then(() => {
-
-    //           //     alert("Successfully Logged in")
-    //           //     setUP()
-    //           //     navigate('/')
-
-    //           // }).catch((error) => {
-
-    //           //     document.getElementById('message').style.display = "block"
-    //           //     document.getElementById('message').style.color = "red"
-    //           //     document.getElementById('message').hidden = false
-
-    //           // })
-
-    //         }
-    //       })
-    //         .catch(error => {
-    //           console.error('Error during authentication:', error);
-    //           // Handle errors, such as network issues or server errors
-    //         });
-    //     } catch (error) {
-    //       console.log("Error login in: ", error)
-    //     }
-
-
-    //   }
 
     return (
 

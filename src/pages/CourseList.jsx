@@ -1,4 +1,4 @@
-import { Box, Typography } from "@mui/material";
+import { Box } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import PageHeadingContainer from "../Components/PageHeadingContainer";
 import SubjectCard from "../Components/SubjectCard";
@@ -10,12 +10,8 @@ import { useParams, useLocation } from "react-router-dom";
 function CourseList() {
   const [filteredCourseDocuments, setFilteredCourseDocuments] = useState([]);
   const [isLoading, setIsloading] = useState(false)
-  // console.log("********************************")
   const params = useParams();
   const location = useLocation();
-  // console.log("params", params);
-  // console.log("location", location.pathname);
-  // console.log('Inside CourseList')
 
   const replaceAllDashesWithSpace = (text) => {
     return text.replaceAll("-", " ")
@@ -97,46 +93,9 @@ function CourseList() {
             )
           })
         }
-        {
-          // filteredCourseDocuments.length < 1 &&
-          // <Typography
-          //   align="center"
-          //   color="text.secondary"
-          //   variant="body1"
-          //   sx={{ width: { xs: "100%", md: "80%" }, textAlign: "center" }}
-          // >
-          //   Sorry, no content for your selection as yet.
-          // </Typography>
-        }
+      
 
-        {/* <Box
-          sx={{
-            gap: "10px",
-          }}
-        >
-          <SubjectCard
-            Topic={"Calculus"}
-            Duration={"Duration: 1 h 30 m"}
-            Description={
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquamgestas metus nulla, et tincidunt sapien faucibus quis."
-            }
-            category={"Paid"}
-          />
-        </Box>
-        <Box
-          sx={{
-            gap: "10px",
-          }}
-        >
-          <SubjectCard
-            Topic={"Geometry"}
-            Duration={"Duration: 1 h 30 m"}
-            Description={
-              "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquamgestas metus nulla, et tincidunt sapien faucibus quis."
-            }
-            category={"Free"}
-          />
-        </Box> */}
+        
       </Box>
 
     </Box>

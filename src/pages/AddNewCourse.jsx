@@ -1,12 +1,9 @@
 import { Box, MenuItem, Typography } from '@mui/material'
 import React, { useEffect, useState } from 'react'
-// import PageSubHeading from '../Components/PageSubHeading'
-// import PageHeading from '../Components/PageHeading'
 import PageHeadingContainer from '../Components/PageHeadingContainer'
-import TextFields, { OutcomesFields, SelectFieldGrade, TextAreas } from '../Components/TextFields'
+import TextFields, { TextAreas } from '../Components/TextFields'
 import Button from '../Components/Buttons';
 import AddCourseContent from './AddCourseContent'
-import MediaFields from '../Components/AddMedia'
 import { getCategoryData, saveCourseToFirestore } from '../services/firebase'
 import SelectField from '../Components/SelectField'
 import { Delete, Edit } from '@mui/icons-material'
@@ -20,9 +17,7 @@ function AddNewCourse() {
   const [courseType, setCourseType] = useState("")
   const [courseShortDescription, setCourseShortDescription] = useState("")
   const [courseFullDescription, setCourseFullDescription] = useState("")
-  // const [courseCategory, setCourseCategory] = useState("")
-  // const [grade, setGrade] = useState("")
-  // const [subject, setSubject] = useState("")
+
 
   const [supportingLink, setSupportingLink] = useState("")
   const [savedLearningOutcomes, setSavedLearningOutcomes] = useState([])
@@ -82,9 +77,6 @@ function AddNewCourse() {
     return [];
   };
 
-  // const handleBlur = (id, newlearningOutcome) => {
-  //   learningOutcomesUpdate(id, newlearningOutcome);
-  // };
 
   const learningOutcomesDelete = (index) => {
 
@@ -286,10 +278,8 @@ function AddNewCourse() {
         createDate: new Date()
       }
 
-      // if (courseDocumentId === "") {
       const courseId = await saveCourseToFirestore(courseObject);
       setCourseDocumentId(courseId);
-      // }
       setCourseName("")
       setCourseType("")
       setCourseShortDescription("")
@@ -327,7 +317,6 @@ function AddNewCourse() {
         <Box sx={{ display: "flex", flexDirection: "column", gap: "30px", marginTop: "50px", maxWidth: { sm: "600px", lg: "1000px" }, width: "100%", height: "100vh", marginLeft: "auto", marginRight: "auto" }}>
           <Box sx={{ display: "flex", flexDirection: { xs: "column", sm: "row", lg: "row" }, gap: { xs: "30px", sm: "2px", md: "8px", lg: "20px" } }}>
             <TextFields isOutComes={false} placeholder='E.g Calculus' label={"Course Name:"} errorStatus={validations.courseName.errorStatus} errorMessage={validations.courseName.errorMessage} setState={setCourseName} state={courseName} />
-            {/* <TextFields isOutComes={false} label={"Type of Course:"} errorStatus={validations.courseType.errorStatus} errorMessage={validations.courseType.errorMessage} setState={setCourseType} state={courseType} /> */}
 
             <SelectField inputLabel={"Select Type"} label={"Select Type:"} errorStatus={validations.courseType.errorStatus} errorMessage={validations.courseType.errorMessage} setState={setCourseType} state={courseType}>
               <MenuItem value="Free">Free</MenuItem>
@@ -412,7 +401,6 @@ function AddNewCourse() {
             }
           </Box>
           <TextAreas label={"Course Full Description:"} errorStatus={validations.courseFullDescription.errorStatus} errorMessage={validations.courseFullDescription.errorMessage} setState={setCourseFullDescription} state={courseFullDescription} />
-          {/* <InputFileUpload handleFileChange={handleFileChange} label={"Add Video Content"} /> */}
           <Box sx={{ marginLeft: "auto", marginRight: "auto", marginTop: "30px" }}>
             <Button text={"Add Content"} buttonFunction={() => { handleAddNewCourse() }} isIconButton={isLoading} iconType='loader' />
 

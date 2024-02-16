@@ -12,7 +12,6 @@ function SubjectView() {
         try {
             const courseRef = collection(db, "Courses");
 
-            // Create a query against the collection.
             const subjectQuery = query(courseRef, where("courseCategory.categoryTopic", "==", "Maths"));
 
             const querySnapshot = await getDocs(subjectQuery);

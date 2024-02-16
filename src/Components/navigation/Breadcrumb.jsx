@@ -8,7 +8,6 @@ import { Box } from '@mui/material';
 
 function handleClick(event) {
     event.preventDefault();
-    // console.info('You clicked a breadcrumb.');
 }
 
 export default function Breadcrumb() {
@@ -23,7 +22,6 @@ export default function Breadcrumb() {
         },
     };
     return (
-        // <div role="presentation" onClick={handleClick}>
         <Box sx={{ paddingBottom: "4px", paddingTop: "4px", bgcolor: "greys.light" }} style={{ borderTop: "2px solid #777", borderBottom: "2px solid #777", width: "100%" }}>
             <Breadcrumbs separator={<span style={styles.separator}>/</span>} aria-label="breadcrumb" sx={{ height: "fit-content" }} >
                 {
@@ -58,7 +56,6 @@ export default function Breadcrumb() {
 
             </Breadcrumbs>
         </Box>
-        // </div> 
     );
 }
 

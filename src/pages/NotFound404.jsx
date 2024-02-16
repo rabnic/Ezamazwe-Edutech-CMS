@@ -1,7 +1,4 @@
-import Head from 'next/head';
-import NextLink from 'next/link';
-import ArrowLeftIcon from '@heroicons/react/24/solid/ArrowLeftIcon';
-import { Box, Button, Container, SvgIcon, Typography } from '@mui/material';
+import { Box, Container, Typography } from '@mui/material';
 
 const NotFound404 = () => (
     <Box
@@ -54,18 +51,6 @@ const NotFound404 = () => (
                     Sorry, we could not find the page you are looking for.
                     Perhaps you have mistyped the URL? Be sure to check your spelling.
                 </Typography>
-                {/* <Button
-                    onClick={() => { }}
-                    startIcon={(
-                        <SvgIcon fontSize="small">
-                            <ArrowLeftIcon />
-                        </SvgIcon>
-                    )}
-                    sx={{ mt: 3 }}
-                    variant="contained"
-                >
-                    Go back to home
-                </Button> */}
             </Box>
         </Container>
     </Box>

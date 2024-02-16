@@ -1,6 +1,6 @@
-import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
 import React, { createContext, useContext, useEffect, useState } from 'react';
-import { auth, checkAuthState, getUserCustomClaims } from '../services/firebase';
+import { auth, getUserCustomClaims } from '../services/firebase';
 import { useAuthContext } from './authContext';
 
 const AdminContext = createContext();
@@ -17,7 +17,6 @@ export const AdminProvider = ({ children }) => {
         admin: false,
         permissions: "",
     })
-    // console.log("---admin-context", admin)
 
     const loadAdmin = (_admin) => {
         setAdmin(_admin)
@@ -38,20 +37,7 @@ export const AdminProvider = ({ children }) => {
             }
         });
 
-        // const unsubscribe = () => {
-        //     console.log({ checkAuthState });
-        //     checkAuthState().then((adminData) => {
-        //         console.log("authState", adminData);
-        //         if (adminData && adminData.admin === true) {
-        //             loadAdmin(adminData)
-        //             signIn()
-        //         } else {
-        //             signOut()
-        //         }
-        //     })
-        // }
-
-        // return () => unsubscribe();
+    
     }, []);
 
     return (

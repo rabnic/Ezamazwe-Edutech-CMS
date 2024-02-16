@@ -18,7 +18,7 @@ function Grades() {
         if (gradesSnapshot.exists()) {
           const data = gradesSnapshot.data();
 
-          setGradesData(data); // Update state with fetched grades data
+          setGradesData(data); 
         } else {
           console.log('No grades data found');
         }
